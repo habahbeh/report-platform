@@ -209,6 +209,7 @@ export function Sidebar({ user, collapsed, onCollapse, onLogout, isMobile = fals
             onClick={handleLinkClick}
             className={cn(
               'flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all',
+              dir === 'rtl' && 'flex-row-reverse',
               isActive('/dashboard') && pathname === '/dashboard'
                 ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg shadow-blue-500/25'
                 : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800'
@@ -243,6 +244,7 @@ export function Sidebar({ user, collapsed, onCollapse, onLogout, isMobile = fals
                       onClick={() => toggleGroup(group.titleKey)}
                       className={cn(
                         'w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all',
+                        dir === 'rtl' && 'flex-row-reverse',
                         hasActiveItem ? colors.bg : 'hover:bg-gray-50 dark:hover:bg-gray-800/50'
                       )}
                     >
@@ -290,6 +292,7 @@ export function Sidebar({ user, collapsed, onCollapse, onLogout, isMobile = fals
                             onClick={handleLinkClick}
                             className={cn(
                               'flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-all',
+                              dir === 'rtl' && 'flex-row-reverse',
                               active
                                 ? colors.active
                                 : cn('text-gray-600 dark:text-gray-400', colors.hover)
