@@ -1,5 +1,6 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Button } from '@/components/ui/button';
@@ -9,11 +10,15 @@ import { useTranslation } from '@/contexts/LanguageContext';
 import {
   Bell,
   Search,
-  Plus,
   Menu,
   HelpCircle,
   Globe,
   Calendar,
+  ChevronLeft,
+  ChevronRight,
+  Sun,
+  Moon,
+  Home,
 } from 'lucide-react';
 
 interface BreadcrumbItem {
@@ -74,6 +79,24 @@ export function Header({ onMenuClick, sidebarCollapsed }: HeaderProps) {
   const pathname = usePathname();
   const { t, language, setLanguage, dir } = useTranslation();
   const breadcrumbs = getBreadcrumbs(pathname || '/dashboard');
+  const [isDark, setIsDark] = useState(false);
+
+  useEffect(() => {
+    const isDarkMode = document.documentElement.classList.contains('dark');
+    setIsDark(isDarkMode);
+  }, []);
+
+  const toggleDarkMode = () => {
+    const newMode = !isDark;
+    setIsDark(newMode);
+    if (newMode) {
+      document.documentElement.classList.add('dark');
+      localStorage.setItem('theme', 'dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+      localStorage.setItem('theme', 'light');
+    }
+  };
 
   const getBreadcrumbLabel = (key: string): string => {
     const labels: Record<string, string> = {
@@ -105,7 +128,7 @@ export function Header({ onMenuClick, sidebarCollapsed }: HeaderProps) {
   };
 
   return (
-    <header className="sticky top-0 z-30 h-16 border-b bg-background/80 backdrop-blur-xl">
+    <header className="sticky top-0 z-30 h-16 border-b border-gray-200 dark:border-gray-800 bg-white/80 dark:bg-gray-950/80 backdrop-blur-xl">
       <div className="flex items-center justify-between h-full px-4 lg:px-6">
         {/* Mobile Menu */}
         <Button
@@ -118,23 +141,27 @@ export function Header({ onMenuClick, sidebarCollapsed }: HeaderProps) {
         </Button>
 
         {/* Breadcrumbs */}
-        <nav className="hidden md:flex items-center gap-2 text-sm">
+        <nav className="hidden md:flex items-center gap-1.5 text-sm">
           {breadcrumbs.map((crumb, index) => (
-            <div key={index} className="flex items-center gap-2">
+            <div key={index} className="flex items-center gap-1.5">
               {index > 0 && (
-                <span className="text-muted-foreground">
-                  {dir === 'rtl' ? '←' : '→'}
+                <span className="text-gray-300 dark:text-gray-600">
+                  {dir === 'rtl' ? <ChevronLeft size={14} /> : <ChevronRight size={14} />}
                 </span>
               )}
               {crumb.href ? (
                 <Link
                   href={crumb.href}
-                  className="text-muted-foreground hover:text-foreground transition-colors"
+                  className={cn(
+                    "flex items-center gap-1.5 px-2 py-1 rounded-md transition-colors",
+                    "text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800"
+                  )}
                 >
+                  {index === 0 && <Home size={14} />}
                   {getBreadcrumbLabel(crumb.labelKey)}
                 </Link>
               ) : (
-                <span className="font-medium text-foreground">
+                <span className="px-2 py-1 font-medium text-gray-900 dark:text-white bg-gray-100 dark:bg-gray-800 rounded-md">
                   {getBreadcrumbLabel(crumb.labelKey)}
                 </span>
               )}
@@ -143,40 +170,63 @@ export function Header({ onMenuClick, sidebarCollapsed }: HeaderProps) {
         </nav>
 
         {/* Search */}
-        <div className="hidden lg:flex items-center flex-1 max-w-md mx-8">
-          <div className="relative w-full">
-            <Search className="absolute end-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={18} />
+        <div className="hidden lg:flex items-center flex-1 max-w-sm mx-6">
+          <div className="relative w-full group">
+            <Search className="absolute start-3 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-blue-500 transition-colors" size={18} />
             <Input
               placeholder={t.common.search}
-              className="pe-10 bg-muted/50 border-0 focus-visible:ring-1"
+              className="ps-10 bg-gray-50 dark:bg-gray-800/50 border-gray-200 dark:border-gray-700 focus:border-blue-500 dark:focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 rounded-xl transition-all"
             />
           </div>
         </div>
 
         {/* Actions */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1">
+          {/* Dark Mode Toggle */}
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={toggleDarkMode}
+            className="text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
+            title={isDark ? 'Light Mode' : 'Dark Mode'}
+          >
+            {isDark ? <Sun size={20} /> : <Moon size={20} />}
+          </Button>
+
           {/* Language Switcher */}
           <Button
             variant="ghost"
             size="icon"
             onClick={toggleLanguage}
+            className="text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
             title={language === 'ar' ? 'Switch to English' : 'التبديل للعربية'}
           >
             <Globe size={20} />
           </Button>
 
-          <Button variant="ghost" size="icon" className="relative">
+          {/* Notifications */}
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            className="relative text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
+          >
             <Bell size={20} />
-            <span className="absolute top-2 end-2 w-2 h-2 bg-destructive rounded-full" />
+            <span className="absolute top-2 end-2 w-2 h-2 bg-red-500 rounded-full animate-pulse" />
           </Button>
 
-          <Button variant="ghost" size="icon">
+          {/* Help */}
+          <Button 
+            variant="ghost" 
+            size="icon"
+            className="text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
+          >
             <HelpCircle size={20} />
           </Button>
 
-          <Button asChild className="hidden sm:flex gradient-primary shadow-lg shadow-blue-500/20">
+          {/* New Period Button */}
+          <Button asChild className="hidden sm:flex ms-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-lg shadow-blue-500/25 rounded-xl">
             <Link href="/dashboard/data/periods">
-              <Calendar size={18} />
+              <Calendar size={18} className="me-2" />
               <span>{t.navItems.newPeriod}</span>
             </Link>
           </Button>
