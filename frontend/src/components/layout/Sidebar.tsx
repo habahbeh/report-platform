@@ -146,8 +146,7 @@ export function Sidebar({ user, collapsed, onCollapse, onLogout, isMobile = fals
   };
 
   const isActive = (href: string) => {
-    if (href === '/dashboard') return pathname === '/dashboard';
-    return pathname?.startsWith(href) || false;
+    return pathname === href;
   };
 
   const getNavTitle = (key: string): string => {
