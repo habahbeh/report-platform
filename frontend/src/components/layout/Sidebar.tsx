@@ -12,89 +12,112 @@ import { useTranslation } from '@/contexts/LanguageContext';
 import {
   LayoutDashboard,
   FileText,
-  FolderOpen,
-  Database,
   CheckCircle,
   Sparkles,
   Download,
   Settings,
   LogOut,
-  ChevronRight,
-  ChevronLeft,
-  Plus,
+  ChevronDown,
   Building2,
   Layers,
   Calendar,
   FileUp,
   FileCheck,
   PenTool,
-  FileOutput,
   Upload,
   FileEdit,
-  Bot,
   X,
+  Menu,
+  Zap,
 } from 'lucide-react';
 
 interface NavItem {
   titleKey: string;
   href: string;
-  icon: React.ReactNode;
-  badge?: number;
+  icon: React.ElementType;
 }
 
 interface NavGroup {
   titleKey: string;
+  icon: React.ElementType;
+  color: string;
   items: NavItem[];
 }
 
 const navigationConfig: NavGroup[] = [
   {
-    titleKey: 'main',
-    items: [
-      { titleKey: 'dashboard', href: '/dashboard', icon: <LayoutDashboard size={20} /> },
-      { titleKey: 'settings', href: '/dashboard/settings', icon: <Settings size={20} /> },
-    ],
-  },
-  {
     titleKey: 'templates',
+    icon: FileText,
+    color: 'blue',
     items: [
-      { titleKey: 'templates', href: '/dashboard/templates', icon: <FileText size={20} /> },
-      { titleKey: 'structure', href: '/dashboard/templates/structure', icon: <Layers size={20} /> },
-      { titleKey: 'entities', href: '/dashboard/templates/entities', icon: <Building2 size={20} /> },
+      { titleKey: 'templates', href: '/dashboard/templates', icon: FileText },
+      { titleKey: 'structure', href: '/dashboard/templates/structure', icon: Layers },
+      { titleKey: 'entities', href: '/dashboard/templates/entities', icon: Building2 },
     ],
   },
   {
     titleKey: 'dataCollection',
+    icon: Calendar,
+    color: 'emerald',
     items: [
-      { titleKey: 'periods', href: '/dashboard/data/periods', icon: <Calendar size={20} /> },
-      { titleKey: 'submissions', href: '/dashboard/data/submissions', icon: <FileUp size={20} /> },
-      { titleKey: 'files', href: '/dashboard/data/files', icon: <FileCheck size={20} /> },
-      { titleKey: 'importData', href: '/dashboard/import', icon: <Upload size={20} /> },
+      { titleKey: 'periods', href: '/dashboard/data/periods', icon: Calendar },
+      { titleKey: 'submissions', href: '/dashboard/data/submissions', icon: FileUp },
+      { titleKey: 'files', href: '/dashboard/data/files', icon: FileCheck },
+      { titleKey: 'importData', href: '/dashboard/import', icon: Upload },
     ],
   },
   {
     titleKey: 'review',
+    icon: CheckCircle,
+    color: 'amber',
     items: [
-      { titleKey: 'dataReview', href: '/dashboard/review/data', icon: <FileCheck size={20} /> },
-      { titleKey: 'contentReview', href: '/dashboard/review/content', icon: <CheckCircle size={20} /> },
+      { titleKey: 'dataReview', href: '/dashboard/review/data', icon: FileCheck },
+      { titleKey: 'contentReview', href: '/dashboard/review/content', icon: CheckCircle },
     ],
   },
   {
     titleKey: 'generation',
+    icon: Sparkles,
+    color: 'purple',
     items: [
-      { titleKey: 'aiGeneration', href: '/dashboard/generate', icon: <Sparkles size={20} /> },
-      { titleKey: 'drafts', href: '/dashboard/drafts', icon: <PenTool size={20} /> },
-      { titleKey: 'manualContent', href: '/dashboard/content/manual', icon: <FileEdit size={20} /> },
-    ],
-  },
-  {
-    titleKey: 'export',
-    items: [
-      { titleKey: 'exportReport', href: '/dashboard/export', icon: <Download size={20} /> },
-      { titleKey: 'reports', href: '/dashboard/reports', icon: <FileOutput size={20} /> },
+      { titleKey: 'aiGeneration', href: '/dashboard/generate', icon: Sparkles },
+      { titleKey: 'drafts', href: '/dashboard/drafts', icon: PenTool },
+      { titleKey: 'manualContent', href: '/dashboard/content/manual', icon: FileEdit },
+      { titleKey: 'exportReport', href: '/dashboard/export', icon: Download },
     ],
   },
 ];
+
+const colorStyles: Record<string, { bg: string; text: string; hover: string; active: string; icon: string }> = {
+  blue: {
+    bg: 'bg-blue-50 dark:bg-blue-950/40',
+    text: 'text-blue-600 dark:text-blue-400',
+    hover: 'hover:bg-blue-50 dark:hover:bg-blue-950/30',
+    active: 'bg-blue-600 text-white shadow-lg shadow-blue-500/30',
+    icon: 'bg-blue-100 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400',
+  },
+  emerald: {
+    bg: 'bg-emerald-50 dark:bg-emerald-950/40',
+    text: 'text-emerald-600 dark:text-emerald-400',
+    hover: 'hover:bg-emerald-50 dark:hover:bg-emerald-950/30',
+    active: 'bg-emerald-600 text-white shadow-lg shadow-emerald-500/30',
+    icon: 'bg-emerald-100 dark:bg-emerald-900/50 text-emerald-600 dark:text-emerald-400',
+  },
+  amber: {
+    bg: 'bg-amber-50 dark:bg-amber-950/40',
+    text: 'text-amber-600 dark:text-amber-400',
+    hover: 'hover:bg-amber-50 dark:hover:bg-amber-950/30',
+    active: 'bg-amber-600 text-white shadow-lg shadow-amber-500/30',
+    icon: 'bg-amber-100 dark:bg-amber-900/50 text-amber-600 dark:text-amber-400',
+  },
+  purple: {
+    bg: 'bg-purple-50 dark:bg-purple-950/40',
+    text: 'text-purple-600 dark:text-purple-400',
+    hover: 'hover:bg-purple-50 dark:hover:bg-purple-950/30',
+    active: 'bg-purple-600 text-white shadow-lg shadow-purple-500/30',
+    icon: 'bg-purple-100 dark:bg-purple-900/50 text-purple-600 dark:text-purple-400',
+  },
+};
 
 interface SidebarProps {
   user: any;
@@ -112,11 +135,8 @@ export function Sidebar({ user, collapsed, onCollapse, onLogout, isMobile = fals
     navigationConfig.map((g) => g.titleKey)
   );
 
-  // Close sidebar on mobile when clicking a link
   const handleLinkClick = () => {
-    if (isMobile && onClose) {
-      onClose();
-    }
+    if (isMobile && onClose) onClose();
   };
 
   const toggleGroup = (titleKey: string) => {
@@ -126,18 +146,16 @@ export function Sidebar({ user, collapsed, onCollapse, onLogout, isMobile = fals
   };
 
   const isActive = (href: string) => {
-    if (href === '/') return pathname === '/';
+    if (href === '/dashboard') return pathname === '/dashboard';
     return pathname?.startsWith(href) || false;
   };
 
   const getNavTitle = (key: string): string => {
     const navTitles: Record<string, string> = {
-      main: t.nav.main || 'الرئيسية',
       templates: t.nav.templates || 'القوالب',
       dataCollection: t.nav.dataCollection || 'جمع البيانات',
       review: t.nav.review || 'المراجعة',
-      generation: t.nav.generation || 'التوليد',
-      export: t.nav.export || 'التصدير',
+      generation: t.nav.generation || 'التوليد والتصدير',
     };
     return navTitles[key] || key;
   };
@@ -146,166 +164,189 @@ export function Sidebar({ user, collapsed, onCollapse, onLogout, isMobile = fals
     return (t.navItems as Record<string, string>)[key] || key;
   };
 
-  // Determine chevron based on direction
-  const CollapseIcon = dir === 'rtl' ? ChevronLeft : ChevronRight;
-  const ExpandIcon = dir === 'rtl' ? ChevronRight : ChevronLeft;
-
   return (
     <TooltipProvider delayDuration={0}>
       <aside
         className={cn(
-          'h-screen border-s flex flex-col',
-          // Mobile: relative position (parent handles transform)
-          // Desktop: fixed position
+          'h-screen flex flex-col border-e border-gray-200 dark:border-gray-800',
           isMobile 
-            ? 'relative w-[280px] max-w-[85vw] bg-white dark:bg-gray-900 shadow-2xl' 
+            ? 'relative w-[280px] max-w-[85vw] bg-white dark:bg-gray-950 shadow-2xl' 
             : cn(
-                'fixed top-0 z-40 transition-all duration-300 bg-card',
+                'fixed top-0 z-40 transition-all duration-300 bg-white dark:bg-gray-950',
                 dir === 'rtl' ? 'right-0' : 'left-0',
-                collapsed ? 'w-[80px]' : 'w-[280px]'
+                collapsed ? 'w-[72px]' : 'w-[260px]'
               )
         )}
       >
         {/* Logo */}
-        <div className="h-16 flex items-center justify-between px-4 border-b">
-          <Link href="/" className="flex items-center gap-3" onClick={handleLinkClick}>
-            <div className="w-10 h-10 rounded-xl gradient-primary flex items-center justify-center text-white font-bold text-lg shadow-lg shadow-blue-500/20">
-              {dir === 'rtl' ? 'ت' : 'T'}
+        <div className="h-16 flex items-center justify-between px-4 border-b border-gray-100 dark:border-gray-800">
+          <Link href="/dashboard" className="flex items-center gap-3" onClick={handleLinkClick}>
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center text-white font-bold text-lg shadow-lg shadow-blue-500/25">
+              <Zap className="w-5 h-5" />
             </div>
             {!collapsed && (
-              <div className="animate-fade-in">
-                <h1 className="font-bold text-foreground">{t.app.name}</h1>
-                <p className="text-xs text-muted-foreground">{t.app.tagline}</p>
+              <div>
+                <h1 className="font-bold text-gray-900 dark:text-white">{t.app.name}</h1>
+                <p className="text-[10px] text-gray-500 dark:text-gray-400">{t.app.tagline}</p>
               </div>
             )}
           </Link>
           {isMobile ? (
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={onClose}
-              className="text-muted-foreground hover:text-foreground"
-            >
-              <X size={20} />
-            </Button>
+            <button onClick={onClose} className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg">
+              <X className="w-5 h-5 text-gray-500" />
+            </button>
           ) : (
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => onCollapse(!collapsed)}
-              className="text-muted-foreground hover:text-foreground"
-            >
-              {collapsed ? <ExpandIcon size={18} /> : <CollapseIcon size={18} />}
-            </Button>
+            <button onClick={() => onCollapse(!collapsed)} className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg">
+              <Menu className="w-5 h-5 text-gray-500" />
+            </button>
           )}
         </div>
 
+        {/* Dashboard Link */}
+        <div className="px-3 pt-4 pb-2">
+          <Link
+            href="/dashboard"
+            onClick={handleLinkClick}
+            className={cn(
+              'flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all',
+              isActive('/dashboard') && pathname === '/dashboard'
+                ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg shadow-blue-500/25'
+                : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800'
+            )}
+          >
+            <div className={cn(
+              'w-9 h-9 rounded-lg flex items-center justify-center',
+              isActive('/dashboard') && pathname === '/dashboard'
+                ? 'bg-white/20'
+                : 'bg-gray-100 dark:bg-gray-800'
+            )}>
+              <LayoutDashboard className="w-5 h-5" />
+            </div>
+            {!collapsed && <span className="font-medium">لوحة التحكم</span>}
+          </Link>
+        </div>
+
         {/* Navigation */}
-        <ScrollArea className="flex-1 py-4">
-          <nav className="px-3 space-y-6">
-            {navigationConfig.map((group) => (
-              <div key={group.titleKey}>
-                {!collapsed && (
-                  <button
-                    onClick={() => toggleGroup(group.titleKey)}
-                    className={cn(
-                      'w-full flex items-center justify-between px-3 py-2 text-xs font-semibold text-muted-foreground tracking-wider hover:text-foreground transition-colors',
-                      dir === 'rtl' ? 'flex-row' : 'flex-row-reverse'
-                    )}
-                  >
-                    <ChevronLeft
-                      size={14}
+        <ScrollArea className="flex-1 px-3">
+          <nav className="space-y-4 py-2">
+            {navigationConfig.map((group) => {
+              const GroupIcon = group.icon;
+              const colors = colorStyles[group.color];
+              const isExpanded = expandedGroups.includes(group.titleKey);
+              const hasActiveItem = group.items.some(item => isActive(item.href));
+
+              return (
+                <div key={group.titleKey}>
+                  {/* Group Header */}
+                  {!collapsed ? (
+                    <button
+                      onClick={() => toggleGroup(group.titleKey)}
                       className={cn(
-                        'transition-transform',
-                        expandedGroups.includes(group.titleKey) && '-rotate-90',
-                        dir === 'ltr' && 'rotate-180',
-                        dir === 'ltr' && expandedGroups.includes(group.titleKey) && 'rotate-90'
+                        'w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all',
+                        hasActiveItem ? colors.bg : 'hover:bg-gray-50 dark:hover:bg-gray-800/50'
                       )}
-                    />
-                    <span>{getNavTitle(group.titleKey)}</span>
-                  </button>
-                )}
+                    >
+                      <div className={cn('w-9 h-9 rounded-lg flex items-center justify-center', colors.icon)}>
+                        <GroupIcon className="w-5 h-5" />
+                      </div>
+                      <span className={cn('flex-1 font-semibold text-sm text-right', hasActiveItem ? colors.text : 'text-gray-700 dark:text-gray-300')}>
+                        {getNavTitle(group.titleKey)}
+                      </span>
+                      <ChevronDown className={cn(
+                        'w-4 h-4 text-gray-400 transition-transform',
+                        isExpanded && 'rotate-180'
+                      )} />
+                    </button>
+                  ) : (
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <div className={cn('w-full flex justify-center py-2')}>
+                          <div className={cn('w-10 h-10 rounded-xl flex items-center justify-center', colors.icon)}>
+                            <GroupIcon className="w-5 h-5" />
+                          </div>
+                        </div>
+                      </TooltipTrigger>
+                      <TooltipContent side={dir === 'rtl' ? 'left' : 'right'}>
+                        <p>{getNavTitle(group.titleKey)}</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  )}
 
-                {(collapsed || expandedGroups.includes(group.titleKey)) && (
-                  <div className="space-y-1 mt-1">
-                    {group.items.map((item) => {
-                      const active = isActive(item.href);
-                      const linkContent = (
-                        <Link
-                          href={item.href}
-                          onClick={handleLinkClick}
-                          className={cn(
-                            'flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all',
-                            active
-                              ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/20'
-                              : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground',
-                            collapsed && 'justify-center px-0'
-                          )}
-                        >
-                          {!collapsed && (
-                            <>
-                              <span className={cn(
-                                'flex-1 font-medium text-sm',
-                                dir === 'rtl' ? 'text-right' : 'text-left'
-                              )}>
-                                {getItemTitle(item.titleKey)}
-                              </span>
-                              {item.badge && (
-                                <span className="px-2 py-0.5 text-xs rounded-full bg-destructive text-destructive-foreground">
-                                  {item.badge}
-                                </span>
-                              )}
-                            </>
-                          )}
-                          <span className={cn(active && 'text-primary-foreground')}>
-                            {item.icon}
-                          </span>
-                        </Link>
-                      );
+                  {/* Group Items */}
+                  {!collapsed && isExpanded && (
+                    <div className="mt-1 mr-6 space-y-1 border-r-2 border-gray-100 dark:border-gray-800 pr-3">
+                      {group.items.map((item) => {
+                        const ItemIcon = item.icon;
+                        const active = isActive(item.href);
 
-                      if (collapsed) {
+                        return (
+                          <Link
+                            key={item.href}
+                            href={item.href}
+                            onClick={handleLinkClick}
+                            className={cn(
+                              'flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-all',
+                              active
+                                ? colors.active
+                                : cn('text-gray-600 dark:text-gray-400', colors.hover)
+                            )}
+                          >
+                            <ItemIcon className="w-4 h-4" />
+                            <span className="font-medium">{getItemTitle(item.titleKey)}</span>
+                          </Link>
+                        );
+                      })}
+                    </div>
+                  )}
+
+                  {/* Collapsed Items */}
+                  {collapsed && (
+                    <div className="space-y-1 mt-1">
+                      {group.items.map((item) => {
+                        const ItemIcon = item.icon;
+                        const active = isActive(item.href);
+
                         return (
                           <Tooltip key={item.href}>
-                            <TooltipTrigger asChild>{linkContent}</TooltipTrigger>
+                            <TooltipTrigger asChild>
+                              <Link
+                                href={item.href}
+                                onClick={handleLinkClick}
+                                className={cn(
+                                  'flex justify-center py-2',
+                                )}
+                              >
+                                <div className={cn(
+                                  'w-9 h-9 rounded-lg flex items-center justify-center transition-all',
+                                  active ? colors.active : cn('text-gray-500 dark:text-gray-400', colors.hover)
+                                )}>
+                                  <ItemIcon className="w-4 h-4" />
+                                </div>
+                              </Link>
+                            </TooltipTrigger>
                             <TooltipContent side={dir === 'rtl' ? 'left' : 'right'}>
                               <p>{getItemTitle(item.titleKey)}</p>
                             </TooltipContent>
                           </Tooltip>
                         );
-                      }
-
-                      return <div key={item.href}>{linkContent}</div>;
-                    })}
-                  </div>
-                )}
-              </div>
-            ))}
+                      })}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
           </nav>
         </ScrollArea>
 
-        {/* Quick Action */}
-        {!collapsed && (
-          <div className="p-3 border-t">
-            <Button asChild className="w-full gradient-primary shadow-lg shadow-blue-500/20">
-              <Link href="/dashboard/data/periods" onClick={handleLinkClick}>
-                <Calendar size={18} />
-                <span>{t.navItems.newPeriod || 'فترة جمع جديدة'}</span>
-              </Link>
-            </Button>
-          </div>
-        )}
-
         {/* User Section */}
-        <div className="p-3 border-t">
+        <div className="p-3 border-t border-gray-100 dark:border-gray-800">
           {collapsed ? (
             <div className="flex flex-col items-center gap-2">
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <Avatar className="h-10 w-10 cursor-pointer">
-                    <AvatarFallback className="bg-primary/10 text-primary font-semibold">
-                      {user?.display_name?.charAt(0) || 'م'}
-                    </AvatarFallback>
-                  </Avatar>
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white font-bold cursor-pointer">
+                    {user?.display_name?.charAt(0) || 'م'}
+                  </div>
                 </TooltipTrigger>
                 <TooltipContent side={dir === 'rtl' ? 'left' : 'right'}>
                   <p>{user?.display_name || user?.username}</p>
@@ -313,9 +354,9 @@ export function Sidebar({ user, collapsed, onCollapse, onLogout, isMobile = fals
               </Tooltip>
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <Button variant="ghost" size="icon" onClick={onLogout}>
-                    <LogOut size={18} className="text-muted-foreground" />
-                  </Button>
+                  <button onClick={onLogout} className="p-2 hover:bg-red-50 dark:hover:bg-red-950/30 rounded-lg text-gray-400 hover:text-red-500 transition-colors">
+                    <LogOut className="w-4 h-4" />
+                  </button>
                 </TooltipTrigger>
                 <TooltipContent side={dir === 'rtl' ? 'left' : 'right'}>
                   <p>{t.auth.logout}</p>
@@ -323,31 +364,37 @@ export function Sidebar({ user, collapsed, onCollapse, onLogout, isMobile = fals
               </Tooltip>
             </div>
           ) : (
-            <div className="animate-fade-in">
-              <div className="flex items-center gap-3 p-3 rounded-xl bg-muted/50 mb-3">
-                <Avatar className="h-10 w-10">
-                  <AvatarFallback className="bg-primary/10 text-primary font-semibold">
-                    {user?.display_name?.charAt(0) || 'م'}
-                  </AvatarFallback>
-                </Avatar>
+            <div className="space-y-3">
+              {/* User Card */}
+              <div className="flex items-center gap-3 p-3 rounded-xl bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-800/50">
+                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white font-bold shadow-lg shadow-blue-500/20">
+                  {user?.display_name?.charAt(0) || 'م'}
+                </div>
                 <div className="flex-1 min-w-0">
-                  <p className="font-medium text-sm truncate">
+                  <p className="font-semibold text-sm text-gray-900 dark:text-white truncate">
                     {user?.display_name || user?.username}
                   </p>
-                  <p className="text-xs text-muted-foreground truncate">{user?.email}</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400 truncate">{user?.email}</p>
                 </div>
               </div>
+              
+              {/* Actions */}
               <div className="flex gap-2">
-                <Button variant="ghost" size="sm" asChild className="flex-1">
-                  <Link href="/dashboard/settings" onClick={handleLinkClick}>
-                    <Settings size={16} />
-                    <span>{t.navItems.settings}</span>
-                  </Link>
-                </Button>
-                <Button variant="ghost" size="sm" onClick={() => { handleLinkClick(); onLogout(); }} className="flex-1 text-destructive hover:text-destructive">
-                  <LogOut size={16} />
-                  <span>{t.navItems.logout}</span>
-                </Button>
+                <Link
+                  href="/dashboard/settings"
+                  onClick={handleLinkClick}
+                  className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 rounded-lg text-sm font-medium hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+                >
+                  <Settings className="w-4 h-4" />
+                  <span>الإعدادات</span>
+                </Link>
+                <button
+                  onClick={() => { handleLinkClick(); onLogout(); }}
+                  className="flex items-center justify-center gap-2 px-3 py-2 bg-red-50 dark:bg-red-950/30 text-red-600 dark:text-red-400 rounded-lg text-sm font-medium hover:bg-red-100 dark:hover:bg-red-900/30 transition-colors"
+                >
+                  <LogOut className="w-4 h-4" />
+                  <span>خروج</span>
+                </button>
               </div>
             </div>
           )}
