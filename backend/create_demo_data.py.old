@@ -1,0 +1,181 @@
+"""
+Create demo data for testing.
+"""
+import os
+import sys
+import django
+
+# Setup Django
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings')
+django.setup()
+
+from django.contrib.auth import get_user_model
+from apps.organizations.models import Organization
+from apps.templates_app.models import Template, TemplateSection
+from apps.reports.models import Report, ReportSection
+
+User = get_user_model()
+
+
+def create_demo_data():
+    print("Creating demo data...")
+    
+    # Create admin user
+    admin, created = User.objects.get_or_create(
+        username='admin',
+        defaults={
+            'email': 'admin@example.com',
+            'is_staff': True,
+            'is_superuser': True,
+        }
+    )
+    if created:
+        admin.set_password('admin123')
+        admin.save()
+        print("✅ Created admin user")
+    
+    # Create organization
+    org, created = Organization.objects.get_or_create(
+        name='جامعة البترا',
+        defaults={
+            'name_en': 'University of Petra',
+            'settings': {
+                'primary_color': '#1a365d',
+                'secondary_color': '#2c5282',
+            }
+        }
+    )
+    if created:
+        print("✅ Created organization: جامعة البترا")
+    
+    # Create template
+    template, created = Template.objects.get_or_create(
+        name='التقرير السنوي',
+        organization=org,
+        defaults={
+            'description': 'قالب التقرير السنوي للجامعة',
+            'is_default': True,
+            'is_active': True,
+        }
+    )
+    if created:
+        print("✅ Created template: التقرير السنوي")
+    
+    # Create template sections
+    sections_data = [
+        {
+            'title': 'المقدمة',
+            'section_type': 'text',
+            'order': 1,
+            'ai_prompt': 'اكتب مقدمة للتقرير السنوي تتضمن نبذة عن الجامعة ورؤيتها ورسالتها.',
+            'settings': {'target_word_count': 350},
+        },
+        {
+            'title': 'الحوكمة والإدارة',
+            'section_type': 'mixed',
+            'order': 2,
+            'ai_prompt': 'اكتب عن هيكل الحوكمة والإدارة في الجامعة.',
+            'settings': {'target_word_count': 500},
+        },
+        {
+            'title': 'البرامج الأكاديمية',
+            'section_type': 'mixed',
+            'order': 3,
+            'ai_prompt': 'اكتب عن البرامج الأكاديمية والكليات في الجامعة.',
+            'settings': {'target_word_count': 600},
+        },
+        {
+            'title': 'البحث العلمي والابتكار',
+            'section_type': 'mixed',
+            'order': 4,
+            'ai_prompt': 'اكتب عن إنجازات البحث العلمي والابتكار.',
+            'settings': {'target_word_count': 700},
+        },
+        {
+            'title': 'خدمة المجتمع',
+            'section_type': 'text',
+            'order': 5,
+            'ai_prompt': 'اكتب عن أنشطة خدمة المجتمع والمسؤولية الاجتماعية.',
+            'settings': {'target_word_count': 500},
+        },
+        {
+            'title': 'الطلاب والخريجون',
+            'section_type': 'mixed',
+            'order': 6,
+            'ai_prompt': 'اكتب عن إحصائيات الطلاب والخريجين والأنشطة الطلابية.',
+            'settings': {'target_word_count': 500},
+        },
+        {
+            'title': 'الموارد البشرية',
+            'section_type': 'table',
+            'order': 7,
+            'ai_prompt': 'اكتب عن أعضاء هيئة التدريس والموظفين.',
+            'settings': {'target_word_count': 400},
+        },
+        {
+            'title': 'الخاتمة والتوصيات',
+            'section_type': 'text',
+            'order': 8,
+            'ai_prompt': 'اكتب خاتمة تلخص الإنجازات والتطلعات المستقبلية.',
+            'settings': {'target_word_count': 350},
+        },
+    ]
+    
+    for section_data in sections_data:
+        section, created = TemplateSection.objects.get_or_create(
+            template=template,
+            title=section_data['title'],
+            defaults={
+                'section_type': section_data['section_type'],
+                'order': section_data['order'],
+                'ai_prompt': section_data['ai_prompt'],
+                'settings': section_data['settings'],
+            }
+        )
+        if created:
+            print(f"  ✅ Created section: {section_data['title']}")
+    
+    # Create demo report
+    from datetime import date
+    
+    report, created = Report.objects.get_or_create(
+        title='التقرير السنوي 2023-2024',
+        organization=org,
+        defaults={
+            'template': template,
+            'period_start': date(2023, 9, 1),
+            'period_end': date(2024, 8, 31),
+            'status': 'draft',
+            'created_by': admin,
+        }
+    )
+    if created:
+        print("✅ Created report: التقرير السنوي 2023-2024")
+        
+        # Create report sections from template
+        for ts in template.sections.all():
+            ReportSection.objects.get_or_create(
+                report=report,
+                template_section=ts,
+                defaults={
+                    'title': ts.title,
+                    'order': ts.order,
+                    'status': 'pending',
+                    'data': {},
+                }
+            )
+        print("  ✅ Created report sections")
+    
+    print("\n✨ Demo data created successfully!")
+    print("\nCredentials:")
+    print("  Username: admin")
+    print("  Password: admin123")
+    print("\nURLs:")
+    print("  Backend: http://localhost:8001")
+    print("  Admin: http://localhost:8001/admin/")
+    print("  Frontend: http://localhost:3000")
+
+
+if __name__ == '__main__':
+    create_demo_data()
