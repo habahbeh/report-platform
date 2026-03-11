@@ -1,8 +1,9 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import Link from 'next/link';
 import { api } from '@/lib/api';
+import { PageTransition, FadeIn, StaggerContainer, StaggerItem, ScaleHover } from '@/components/ui/motion';
+import { CheckCircle, FileText, Clock, XCircle, Calendar, Filter, Check, X, Eye, Edit3, Loader2, PenTool, Bot } from 'lucide-react';
 
 interface ItemDraft {
   id: string;
@@ -23,11 +24,11 @@ interface ItemDraft {
   word_count: number;
 }
 
-const statusConfig: Record<string, { label: string; color: string; icon: string }> = {
-  draft: { label: 'مسودة', color: 'bg-gray-100 text-gray-700', icon: '📝' },
-  pending: { label: 'قيد المراجعة', color: 'bg-yellow-100 text-yellow-700', icon: '⏳' },
-  approved: { label: 'معتمد', color: 'bg-green-100 text-green-700', icon: '✅' },
-  rejected: { label: 'مرفوض', color: 'bg-red-100 text-red-700', icon: '❌' },
+const statusConfig: Record<string, { label: string; color: string; icon: typeof Clock }> = {
+  draft: { label: 'مسودة', color: 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300', icon: PenTool },
+  pending: { label: 'قيد المراجعة', color: 'bg-yellow-100 dark:bg-yellow-900/50 text-yellow-700 dark:text-yellow-400', icon: Clock },
+  approved: { label: 'معتمد', color: 'bg-green-100 dark:bg-green-900/50 text-green-700 dark:text-green-400', icon: CheckCircle },
+  rejected: { label: 'مرفوض', color: 'bg-red-100 dark:bg-red-900/50 text-red-700 dark:text-red-400', icon: XCircle },
 };
 
 export default function ContentReviewPage() {
@@ -39,22 +40,11 @@ export default function ContentReviewPage() {
   const [periods, setPeriods] = useState<any[]>([]);
   const [selectedPeriod, setSelectedPeriod] = useState<number | null>(null);
 
+  useEffect(() => { loadPeriods(); }, []);
+  useEffect(() => { if (selectedPeriod) loadDrafts(selectedPeriod); }, [selectedPeriod]);
   useEffect(() => {
-    loadPeriods();
-  }, []);
-
-  useEffect(() => {
-    if (selectedPeriod) {
-      loadDrafts(selectedPeriod);
-    }
-  }, [selectedPeriod]);
-
-  useEffect(() => {
-    if (filter === 'all') {
-      setDrafts(allDrafts);
-    } else {
-      setDrafts(allDrafts.filter(d => d.status === filter));
-    }
+    if (filter === 'all') setDrafts(allDrafts);
+    else setDrafts(allDrafts.filter(d => d.status === filter));
   }, [filter, allDrafts]);
 
   async function loadPeriods() {
@@ -62,9 +52,7 @@ export default function ContentReviewPage() {
       const data = await api.data.periods.list();
       const periodList = data.results || data || [];
       setPeriods(periodList);
-      if (periodList.length > 0) {
-        setSelectedPeriod(periodList[0].id);
-      }
+      if (periodList.length > 0) setSelectedPeriod(periodList[0].id);
     } catch (error) {
       console.error('Failed to load periods:', error);
     }
@@ -88,227 +76,159 @@ export default function ContentReviewPage() {
     try {
       await api.generation.itemDrafts.approve(id);
       if (selectedPeriod) loadDrafts(selectedPeriod);
-      setSelectedDraft(null);
     } catch (error) {
       console.error('Failed to approve:', error);
     }
   }
 
-  async function handleRegenerate(id: string) {
+  async function handleReject(id: string) {
+    const notes = prompt('سبب الرفض:');
+    if (!notes) return;
     try {
-      await api.generation.itemDrafts.regenerate(id);
+      // Use update with rejected status or just log for now
+      await api.generation.itemDrafts.update(id, { content: `[مرفوض: ${notes}]` });
       if (selectedPeriod) loadDrafts(selectedPeriod);
-      setSelectedDraft(null);
     } catch (error) {
-      console.error('Failed to regenerate:', error);
+      console.error('Failed to reject:', error);
     }
   }
 
-  const stats = {
-    draft: allDrafts.filter(d => d.status === 'draft').length,
-    pending: allDrafts.filter(d => d.status === 'pending').length,
-    approved: allDrafts.filter(d => d.status === 'approved').length,
-    total: allDrafts.length,
-  };
+  const pendingCount = allDrafts.filter(d => d.status === 'draft' || d.status === 'pending').length;
+
+  if (loading && periods.length === 0) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <Loader2 className="w-12 h-12 animate-spin text-blue-600" />
+      </div>
+    );
+  }
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
-            <span>✅</span>
-            <span>مراجعة المحتوى المُولّد</span>
-          </h1>
-          <p className="text-gray-500 mt-1">
-            مراجعة واعتماد نصوص البنود المولّدة بالذكاء الاصطناعي
-          </p>
-        </div>
-        <div className="flex items-center gap-3">
-          <select
-            value={selectedPeriod || ''}
-            onChange={(e) => setSelectedPeriod(parseInt(e.target.value))}
-            className="input"
-          >
-            <option value="">اختر فترة...</option>
-            {periods.map((period) => (
-              <option key={period.id} value={period.id}>
-                {period.name} ({period.academic_year})
-              </option>
-            ))}
-          </select>
-          <Link href="/dashboard/generate" className="btn btn-primary">
-            🤖 توليد جديد
-          </Link>
-        </div>
-      </div>
+    <PageTransition>
+      <div className="space-y-6">
+        <FadeIn>
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
+                <CheckCircle className="w-7 h-7 text-green-600" />
+                <span>مراجعة المحتوى</span>
+                {pendingCount > 0 && (
+                  <span className="px-2 py-1 bg-yellow-100 dark:bg-yellow-900/50 text-yellow-700 dark:text-yellow-400 rounded-full text-sm">{pendingCount} للمراجعة</span>
+                )}
+              </h1>
+              <p className="text-gray-500 dark:text-gray-400 mt-1">مراجعة واعتماد المحتوى المولّد بالذكاء الاصطناعي</p>
+            </div>
+          </div>
+        </FadeIn>
 
-      {!selectedPeriod ? (
-        <div className="card text-center py-12">
-          <div className="text-6xl mb-4">📅</div>
-          <h3 className="text-xl font-bold text-gray-900 mb-2">اختر فترة جمع البيانات</h3>
-          <p className="text-gray-500">اختر فترة من القائمة أعلاه لعرض المسودات</p>
-        </div>
-      ) : loading ? (
-        <div className="flex items-center justify-center h-64">
-          <div className="animate-spin h-12 w-12 border-4 border-blue-600 border-t-transparent rounded-full"></div>
-        </div>
-      ) : (
-        <>
-          {/* Stats */}
-          <div className="grid grid-cols-4 gap-4">
-            {[
-              { key: 'draft', label: 'مسودة', count: stats.draft, icon: '📝', color: 'gray' },
-              { key: 'pending', label: 'قيد المراجعة', count: stats.pending, icon: '⏳', color: 'yellow' },
-              { key: 'approved', label: 'معتمد', count: stats.approved, icon: '✅', color: 'green' },
-              { key: 'all', label: 'الكل', count: stats.total, icon: '📋', color: 'blue' },
-            ].map((stat) => (
-              <button
-                key={stat.key}
-                onClick={() => setFilter(stat.key)}
-                className={`card text-center transition-all hover:shadow-md ${
-                  filter === stat.key ? 'ring-2 ring-blue-500' : ''
-                }`}
-              >
-                <div className="text-3xl mb-1">{stat.icon}</div>
-                <div className="text-2xl font-bold text-gray-900">{stat.count}</div>
-                <div className="text-sm text-gray-500">{stat.label}</div>
+        <FadeIn delay={0.1}>
+          <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 p-4 flex flex-wrap items-center gap-4">
+            <div className="flex items-center gap-2">
+              <Calendar className="w-5 h-5 text-gray-400" />
+              <select value={selectedPeriod || ''} onChange={(e) => setSelectedPeriod(parseInt(e.target.value))} className="px-4 py-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl">
+                <option value="">اختر فترة...</option>
+                {periods.map((p) => <option key={p.id} value={p.id}>{p.name}</option>)}
+              </select>
+            </div>
+            <Filter className="w-5 h-5 text-gray-400" />
+            {['draft', 'approved', 'rejected', 'all'].map((f) => (
+              <button key={f} onClick={() => setFilter(f)} className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${filter === f ? 'bg-green-600 text-white shadow-lg shadow-green-500/20' : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400'}`}>
+                {f === 'draft' ? 'للمراجعة' : f === 'approved' ? 'معتمد' : f === 'rejected' ? 'مرفوض' : 'الكل'}
               </button>
             ))}
           </div>
+        </FadeIn>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {/* Drafts List */}
-            <div className="card">
-              <h2 className="font-bold text-gray-900 mb-4">قائمة المسودات ({drafts.length})</h2>
-              {drafts.length === 0 ? (
-                <div className="text-center py-8 text-gray-500">
-                  <div className="text-4xl mb-2">📝</div>
-                  <p>لا توجد مسودات في هذه الحالة</p>
-                </div>
-              ) : (
-                <div className="space-y-3 max-h-[600px] overflow-y-auto">
-                  {drafts.map((draft) => {
-                    const status = statusConfig[draft.status] || statusConfig.draft;
-                    return (
-                      <button
-                        key={draft.id}
-                        onClick={() => setSelectedDraft(draft)}
-                        className={`w-full text-right p-4 rounded-xl border-2 transition-all ${
-                          selectedDraft?.id === draft.id
-                            ? 'border-blue-500 bg-blue-50'
-                            : 'border-gray-200 hover:border-gray-300'
-                        }`}
-                      >
-                        <div className="flex items-start justify-between mb-2">
-                          <div>
-                            <h3 className="font-medium text-gray-900">{draft.item_name}</h3>
-                            <p className="text-sm text-gray-500">{draft.axis_name}</p>
-                          </div>
-                          <span className={`px-2 py-1 rounded-full text-xs ${status.color}`}>
-                            {status.icon} {status.label}
-                          </span>
-                        </div>
-                        <p className="text-sm text-gray-600 line-clamp-2">
-                          {draft.content?.substring(0, 100) || 'بدون محتوى'}...
-                        </p>
-                        <div className="flex items-center gap-4 mt-2 text-xs text-gray-400">
-                          <span>{draft.word_count || 0} كلمة</span>
-                          {draft.model_used && <span>🤖 {draft.model_used}</span>}
-                          {draft.current_value && <span>📊 {draft.current_value}</span>}
-                        </div>
-                      </button>
-                    );
-                  })}
-                </div>
-              )}
-            </div>
-
-            {/* Content Preview */}
-            <div className="card">
-              <h2 className="font-bold text-gray-900 mb-4">معاينة المحتوى</h2>
-              {selectedDraft ? (
-                <div>
-                  <div className="mb-4 pb-4 border-b border-gray-100">
-                    <h3 className="font-bold text-lg text-gray-900">{selectedDraft.item_name}</h3>
-                    <p className="text-sm text-gray-500">{selectedDraft.axis_name} • {selectedDraft.item_code}</p>
-                  </div>
-
-                  {/* Values comparison */}
-                  {(selectedDraft.current_value || selectedDraft.previous_value) && (
-                    <div className="grid grid-cols-3 gap-4 mb-4 p-4 bg-gray-50 rounded-xl">
-                      <div>
-                        <div className="text-xs text-gray-500">القيمة الحالية</div>
-                        <div className="text-lg font-bold text-blue-600">
-                          {selectedDraft.current_value || '—'}
-                        </div>
-                      </div>
-                      <div>
-                        <div className="text-xs text-gray-500">القيمة السابقة</div>
-                        <div className="text-lg font-bold text-gray-600">
-                          {selectedDraft.previous_value || '—'}
-                        </div>
-                      </div>
-                      <div>
-                        <div className="text-xs text-gray-500">نسبة التغيير</div>
-                        <div className={`text-lg font-bold ${
-                          (selectedDraft.change_percentage || 0) > 0 ? 'text-green-600' : 
-                          (selectedDraft.change_percentage || 0) < 0 ? 'text-red-600' : 'text-gray-600'
-                        }`}>
-                          {selectedDraft.change_percentage 
-                            ? `${selectedDraft.change_percentage > 0 ? '+' : ''}${selectedDraft.change_percentage.toFixed(1)}%`
-                            : '—'
-                          }
-                        </div>
-                      </div>
-                    </div>
-                  )}
-
-                  <div className="prose prose-sm max-w-none mb-6 p-4 bg-gray-50 rounded-xl max-h-[300px] overflow-y-auto">
-                    <div className="whitespace-pre-wrap text-gray-700">
-                      {selectedDraft.content || 'لم يتم توليد محتوى بعد'}
-                    </div>
-                  </div>
-
-                  <div className="flex items-center gap-4 text-sm text-gray-500 mb-6">
-                    <span>📊 {selectedDraft.word_count || 0} كلمة</span>
-                    {selectedDraft.model_used && <span>🤖 {selectedDraft.model_used}</span>}
-                    <span>📅 {new Date(selectedDraft.updated_at).toLocaleDateString('ar')}</span>
-                  </div>
-
-                  {selectedDraft.status !== 'approved' && (
-                    <div className="flex gap-3">
-                      <button
-                        onClick={() => handleApprove(selectedDraft.id)}
-                        className="flex-1 py-3 bg-green-600 text-white rounded-xl font-medium hover:bg-green-700 transition-colors"
-                      >
-                        ✅ اعتماد
-                      </button>
-                      <button
-                        onClick={() => handleRegenerate(selectedDraft.id)}
-                        className="flex-1 py-3 bg-blue-600 text-white rounded-xl font-medium hover:bg-blue-700 transition-colors"
-                      >
-                        🔄 إعادة توليد
-                      </button>
-                    </div>
-                  )}
-                  
-                  {selectedDraft.status === 'approved' && (
-                    <div className="text-center py-4 bg-green-50 rounded-xl text-green-700 font-medium">
-                      ✅ تم اعتماد هذا المحتوى
-                    </div>
-                  )}
-                </div>
-              ) : (
-                <div className="text-center py-12 text-gray-500">
-                  <div className="text-4xl mb-2">👈</div>
-                  <p>اختر مسودة لمعاينة المحتوى</p>
-                </div>
-              )}
-            </div>
+        {loading ? (
+          <div className="flex items-center justify-center py-12">
+            <Loader2 className="w-8 h-8 animate-spin text-green-600" />
           </div>
-        </>
-      )}
-    </div>
+        ) : drafts.length === 0 ? (
+          <FadeIn delay={0.2}>
+            <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 p-12 text-center">
+              <FileText className="w-16 h-16 text-gray-300 dark:text-gray-600 mx-auto mb-4" />
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">لا توجد مسودات</h3>
+              <p className="text-gray-500 dark:text-gray-400">{filter === 'draft' ? 'لا توجد مسودات للمراجعة' : 'لا توجد مسودات بهذه الحالة'}</p>
+            </div>
+          </FadeIn>
+        ) : (
+          <FadeIn delay={0.2}>
+            <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 overflow-hidden">
+              <div className="p-4 border-b border-gray-100 dark:border-gray-800">
+                <span className="text-sm text-gray-500 dark:text-gray-400">{drafts.length} مسودة</span>
+              </div>
+              <StaggerContainer className="divide-y divide-gray-100 dark:divide-gray-800">
+                {drafts.map((draft) => {
+                  const config = statusConfig[draft.status] || statusConfig.draft;
+                  const StatusIcon = config.icon;
+                  return (
+                    <StaggerItem key={draft.id}>
+                      <div className="p-4 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
+                        <div className="flex items-start gap-4">
+                          <div className="w-10 h-10 rounded-lg bg-green-50 dark:bg-green-900/50 flex items-center justify-center flex-shrink-0">
+                            <FileText className="w-5 h-5 text-green-600 dark:text-green-400" />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-3 mb-1">
+                              <span className="font-medium text-blue-600 dark:text-blue-400">{draft.item_code}</span>
+                              <span className="font-semibold text-gray-900 dark:text-white">{draft.item_name}</span>
+                              <span className={`flex items-center gap-1 px-2 py-0.5 rounded-full text-xs ${config.color}`}>
+                                <StatusIcon className="w-3 h-3" /> {config.label}
+                              </span>
+                            </div>
+                            <div className="flex items-center gap-3 text-sm text-gray-500 dark:text-gray-400 mb-2">
+                              <span>{draft.axis_name}</span>
+                              <span>{draft.word_count} كلمة</span>
+                              {draft.model_used && <span className="flex items-center gap-1"><Bot className="w-3 h-3" /> {draft.model_used}</span>}
+                            </div>
+                            {draft.content && (
+                              <p className="text-sm text-gray-600 dark:text-gray-300 line-clamp-2">{draft.content}</p>
+                            )}
+                          </div>
+                          <div className="flex gap-2 flex-shrink-0">
+                            <button onClick={() => setSelectedDraft(draft)} className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/50 rounded-lg"><Eye className="w-4 h-4" /></button>
+                            {(draft.status === 'draft' || draft.status === 'pending') && (
+                              <>
+                                <button onClick={() => handleApprove(draft.id)} className="p-2 text-green-600 hover:bg-green-50 dark:hover:bg-green-900/50 rounded-lg"><Check className="w-4 h-4" /></button>
+                                <button onClick={() => handleReject(draft.id)} className="p-2 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/50 rounded-lg"><X className="w-4 h-4" /></button>
+                              </>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    </StaggerItem>
+                  );
+                })}
+              </StaggerContainer>
+            </div>
+          </FadeIn>
+        )}
+
+        {selectedDraft && (
+          <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+            <FadeIn className="bg-white dark:bg-gray-900 rounded-2xl w-full max-w-3xl max-h-[90vh] overflow-hidden">
+              <div className="p-4 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between">
+                <h2 className="text-lg font-semibold text-gray-900 dark:text-white">{selectedDraft.item_code} - {selectedDraft.item_name}</h2>
+                <button onClick={() => setSelectedDraft(null)} className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg"><X className="w-5 h-5" /></button>
+              </div>
+              <div className="p-6 overflow-y-auto max-h-[70vh]">
+                <div className="prose dark:prose-invert max-w-none">
+                  <p className="whitespace-pre-wrap">{selectedDraft.content}</p>
+                </div>
+              </div>
+              <div className="p-4 border-t border-gray-100 dark:border-gray-800 flex justify-end gap-3">
+                <button onClick={() => setSelectedDraft(null)} className="px-4 py-2 bg-gray-100 dark:bg-gray-800 rounded-xl">إغلاق</button>
+                {(selectedDraft.status === 'draft' || selectedDraft.status === 'pending') && (
+                  <>
+                    <button onClick={() => { handleReject(selectedDraft.id); setSelectedDraft(null); }} className="flex items-center gap-2 px-4 py-2 bg-red-600 text-white rounded-xl"><X className="w-4 h-4" /> رفض</button>
+                    <button onClick={() => { handleApprove(selectedDraft.id); setSelectedDraft(null); }} className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-xl"><Check className="w-4 h-4" /> اعتماد</button>
+                  </>
+                )}
+              </div>
+            </FadeIn>
+          </div>
+        )}
+      </div>
+    </PageTransition>
   );
 }

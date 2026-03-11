@@ -78,8 +78,8 @@ export function useLanguage() {
   return context;
 }
 
-// Helper hook for just translations
+// Helper hook for translations + setLanguage
 export function useTranslation() {
-  const { t, language, dir } = useLanguage();
-  return { t, language, dir };
+  const { t, language, dir, setLanguage } = useLanguage();
+  return { t, language, dir, setLanguage };
 }

@@ -5,59 +5,58 @@ import { usePathname } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
+import { useTranslation } from '@/contexts/LanguageContext';
 import {
   Bell,
   Search,
   Plus,
   Menu,
   HelpCircle,
+  Globe,
+  Calendar,
 } from 'lucide-react';
 
 interface BreadcrumbItem {
-  label: string;
+  labelKey: string;
   href?: string;
 }
 
-const pathMap: Record<string, string> = {
-  '/dashboard': 'لوحة التحكم',
-  '/dashboard/templates': 'القوالب',
-  '/dashboard/templates/structure': 'المحاور والبنود',
-  '/dashboard/templates/entities': 'الجهات',
-  '/dashboard/projects': 'المشاريع',
-  '/dashboard/projects/new': 'مشروع جديد',
-  '/dashboard/data': 'البيانات',
-  '/dashboard/data/periods': 'فترات الجمع',
-  '/dashboard/data/submissions': 'تسليمات الجهات',
-  '/dashboard/data/files': 'الملفات',
-  '/dashboard/data/entities': 'الجهات',
-  '/dashboard/data/review': 'المراجعة',
-  '/dashboard/review': 'المراجعة',
-  '/dashboard/review/data': 'مراجعة البيانات',
-  '/dashboard/review/content': 'مراجعة المحتوى',
-  '/dashboard/generate': 'توليد AI',
-  '/dashboard/drafts': 'المسودات',
-  '/dashboard/export': 'تصدير التقرير',
-  '/dashboard/reports': 'التقارير',
-  '/dashboard/settings': 'الإعدادات',
-  '/dashboard/content/manual': 'المحتوى اليدوي',
-  '/dashboard/import': 'استيراد البيانات',
-  '/dashboard/ai': 'إعدادات AI',
+const pathConfig: Record<string, string> = {
+  '/dashboard': 'dashboard',
+  '/dashboard/templates': 'templates',
+  '/dashboard/templates/structure': 'structure',
+  '/dashboard/templates/entities': 'entities',
+  '/dashboard/data': 'data',
+  '/dashboard/data/periods': 'periods',
+  '/dashboard/data/submissions': 'submissions',
+  '/dashboard/data/files': 'files',
+  '/dashboard/data/entities': 'entities',
+  '/dashboard/review': 'review',
+  '/dashboard/review/data': 'dataReview',
+  '/dashboard/review/content': 'contentReview',
+  '/dashboard/generate': 'aiGeneration',
+  '/dashboard/drafts': 'drafts',
+  '/dashboard/export': 'exportReport',
+  '/dashboard/reports': 'reports',
+  '/dashboard/settings': 'settings',
+  '/dashboard/content/manual': 'manualContent',
+  '/dashboard/import': 'importData',
 };
 
 function getBreadcrumbs(pathname: string): BreadcrumbItem[] {
-  const crumbs: BreadcrumbItem[] = [{ label: 'الرئيسية', href: '/' }];
+  const crumbs: BreadcrumbItem[] = [{ labelKey: 'home', href: '/dashboard' }];
 
-  if (pathname === '/') return crumbs;
+  if (pathname === '/dashboard') return crumbs;
 
   const segments = pathname.split('/').filter(Boolean);
   let currentPath = '';
 
   for (let i = 0; i < segments.length; i++) {
     currentPath += '/' + segments[i];
-    const label = pathMap[currentPath];
-    if (label) {
+    const labelKey = pathConfig[currentPath];
+    if (labelKey) {
       crumbs.push({
-        label,
+        labelKey,
         href: i < segments.length - 1 ? currentPath : undefined,
       });
     }
@@ -73,7 +72,37 @@ interface HeaderProps {
 
 export function Header({ onMenuClick, sidebarCollapsed }: HeaderProps) {
   const pathname = usePathname();
-  const breadcrumbs = getBreadcrumbs(pathname || '/');
+  const { t, language, setLanguage, dir } = useTranslation();
+  const breadcrumbs = getBreadcrumbs(pathname || '/dashboard');
+
+  const getBreadcrumbLabel = (key: string): string => {
+    const labels: Record<string, string> = {
+      home: t.nav.main,
+      dashboard: t.navItems.dashboard,
+      templates: t.navItems.templates,
+      structure: t.navItems.structure,
+      entities: t.navItems.entities,
+      data: t.nav.dataCollection,
+      periods: t.navItems.periods,
+      submissions: t.navItems.submissions,
+      files: t.navItems.files,
+      review: t.nav.review,
+      dataReview: t.navItems.dataReview,
+      contentReview: t.navItems.contentReview,
+      aiGeneration: t.navItems.aiGeneration,
+      drafts: t.navItems.drafts,
+      exportReport: t.navItems.exportReport,
+      reports: t.navItems.reports,
+      settings: t.navItems.settings,
+      manualContent: t.navItems.manualContent,
+      importData: t.navItems.importData,
+    };
+    return labels[key] || key;
+  };
+
+  const toggleLanguage = () => {
+    setLanguage(language === 'ar' ? 'en' : 'ar');
+  };
 
   return (
     <header className="sticky top-0 z-30 h-16 border-b bg-background/80 backdrop-blur-xl">
@@ -92,16 +121,22 @@ export function Header({ onMenuClick, sidebarCollapsed }: HeaderProps) {
         <nav className="hidden md:flex items-center gap-2 text-sm">
           {breadcrumbs.map((crumb, index) => (
             <div key={index} className="flex items-center gap-2">
-              {index > 0 && <span className="text-muted-foreground">/</span>}
+              {index > 0 && (
+                <span className="text-muted-foreground">
+                  {dir === 'rtl' ? '←' : '→'}
+                </span>
+              )}
               {crumb.href ? (
                 <Link
                   href={crumb.href}
                   className="text-muted-foreground hover:text-foreground transition-colors"
                 >
-                  {crumb.label}
+                  {getBreadcrumbLabel(crumb.labelKey)}
                 </Link>
               ) : (
-                <span className="font-medium text-foreground">{crumb.label}</span>
+                <span className="font-medium text-foreground">
+                  {getBreadcrumbLabel(crumb.labelKey)}
+                </span>
               )}
             </div>
           ))}
@@ -112,7 +147,7 @@ export function Header({ onMenuClick, sidebarCollapsed }: HeaderProps) {
           <div className="relative w-full">
             <Search className="absolute end-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={18} />
             <Input
-              placeholder="بحث..."
+              placeholder={t.common.search}
               className="pe-10 bg-muted/50 border-0 focus-visible:ring-1"
             />
           </div>
@@ -120,6 +155,16 @@ export function Header({ onMenuClick, sidebarCollapsed }: HeaderProps) {
 
         {/* Actions */}
         <div className="flex items-center gap-2">
+          {/* Language Switcher */}
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={toggleLanguage}
+            title={language === 'ar' ? 'Switch to English' : 'التبديل للعربية'}
+          >
+            <Globe size={20} />
+          </Button>
+
           <Button variant="ghost" size="icon" className="relative">
             <Bell size={20} />
             <span className="absolute top-2 end-2 w-2 h-2 bg-destructive rounded-full" />
@@ -130,9 +175,9 @@ export function Header({ onMenuClick, sidebarCollapsed }: HeaderProps) {
           </Button>
 
           <Button asChild className="hidden sm:flex gradient-primary shadow-lg shadow-blue-500/20">
-            <Link href="/dashboard/projects/new">
-              <Plus size={18} />
-              <span>مشروع جديد</span>
+            <Link href="/dashboard/data/periods">
+              <Calendar size={18} />
+              <span>{t.navItems.newPeriod}</span>
             </Link>
           </Button>
         </div>

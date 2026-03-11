@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import { api } from '@/lib/api';
+import { PageTransition, FadeIn, StaggerContainer, StaggerItem, ScaleHover } from '@/components/ui/motion';
+import { FileText, Clock, CheckCircle, XCircle, AlertCircle, Filter, Download, Trash2, Loader2, Building2, FileSpreadsheet, File } from 'lucide-react';
 
 interface DataFile {
   id: number;
@@ -18,23 +20,13 @@ interface DataFile {
   notes: string | null;
 }
 
-const statusConfig: Record<string, { label: string; color: string; icon: string }> = {
-  pending: { label: 'قيد الانتظار', color: 'bg-yellow-100 text-yellow-700', icon: '⏳' },
-  parsing: { label: 'جاري المعالجة', color: 'bg-blue-100 text-blue-700', icon: '⚙️' },
-  parsed: { label: 'تم التحليل', color: 'bg-green-100 text-green-700', icon: '✅' },
-  approved: { label: 'معتمد', color: 'bg-green-100 text-green-700', icon: '✓' },
-  rejected: { label: 'مرفوض', color: 'bg-red-100 text-red-700', icon: '❌' },
-  error: { label: 'خطأ', color: 'bg-red-100 text-red-700', icon: '⚠️' },
-};
-
-const fileTypeIcons: Record<string, string> = {
-  xlsx: '📊',
-  xls: '📊',
-  csv: '📄',
-  pdf: '📕',
-  doc: '📘',
-  docx: '📘',
-  default: '📎',
+const statusConfig: Record<string, { label: string; color: string; icon: typeof Clock }> = {
+  pending: { label: 'قيد الانتظار', color: 'bg-yellow-100 dark:bg-yellow-900/50 text-yellow-700 dark:text-yellow-400', icon: Clock },
+  parsing: { label: 'جاري المعالجة', color: 'bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-400', icon: Loader2 },
+  parsed: { label: 'تم التحليل', color: 'bg-green-100 dark:bg-green-900/50 text-green-700 dark:text-green-400', icon: CheckCircle },
+  approved: { label: 'معتمد', color: 'bg-green-100 dark:bg-green-900/50 text-green-700 dark:text-green-400', icon: CheckCircle },
+  rejected: { label: 'مرفوض', color: 'bg-red-100 dark:bg-red-900/50 text-red-700 dark:text-red-400', icon: XCircle },
+  error: { label: 'خطأ', color: 'bg-red-100 dark:bg-red-900/50 text-red-700 dark:text-red-400', icon: AlertCircle },
 };
 
 function formatFileSize(bytes: number): string {
@@ -45,14 +37,17 @@ function formatFileSize(bytes: number): string {
   return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
 }
 
+function getFileIcon(type: string) {
+  if (['xlsx', 'xls', 'csv'].includes(type)) return FileSpreadsheet;
+  return File;
+}
+
 export default function DataFilesPage() {
   const [files, setFiles] = useState<DataFile[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<string>('all');
 
-  useEffect(() => {
-    loadFiles();
-  }, []);
+  useEffect(() => { loadFiles(); }, []);
 
   async function loadFiles() {
     try {
@@ -65,146 +60,86 @@ export default function DataFilesPage() {
     }
   }
 
-  const filteredFiles =
-    filter === 'all' ? files : files.filter((f) => f.status === filter);
-
-  const stats = {
-    total: files.length,
-    pending: files.filter((f) => f.status === 'pending').length,
-    parsed: files.filter((f) => f.status === 'parsed').length,
-    approved: files.filter((f) => f.status === 'approved').length,
-    rejected: files.filter((f) => f.status === 'rejected').length,
-  };
+  const filteredFiles = filter === 'all' ? files : files.filter(f => f.status === filter);
 
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="animate-spin h-12 w-12 border-4 border-blue-600 border-t-transparent rounded-full"></div>
+        <Loader2 className="w-12 h-12 animate-spin text-blue-600" />
       </div>
     );
   }
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
-            <span>📎</span>
-            <span>الملفات المرفوعة</span>
-          </h1>
-          <p className="text-gray-500 mt-1">
-            إدارة ومراجعة الملفات المرفوعة من الجهات
-          </p>
-        </div>
-      </div>
+    <PageTransition>
+      <div className="space-y-6">
+        <FadeIn>
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
+              <FileText className="w-7 h-7 text-blue-600" />
+              <span>الملفات</span>
+              <span className="text-sm font-normal bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 px-2 py-1 rounded-lg">{files.length}</span>
+            </h1>
+            <p className="text-gray-500 dark:text-gray-400 mt-1">جميع الملفات المرفوعة من الجهات</p>
+          </div>
+        </FadeIn>
 
-      {/* Stats */}
-      <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-        {[
-          { key: 'all', label: 'الكل', count: stats.total, icon: '📎', color: 'blue' },
-          { key: 'pending', label: 'قيد الانتظار', count: stats.pending, icon: '⏳', color: 'yellow' },
-          { key: 'parsed', label: 'تم التحليل', count: stats.parsed, icon: '✅', color: 'green' },
-          { key: 'approved', label: 'معتمد', count: stats.approved, icon: '✓', color: 'green' },
-          { key: 'rejected', label: 'مرفوض', count: stats.rejected, icon: '❌', color: 'red' },
-        ].map((stat) => (
-          <button
-            key={stat.key}
-            onClick={() => setFilter(stat.key)}
-            className={`card text-center transition-all hover:shadow-md ${
-              filter === stat.key ? 'ring-2 ring-blue-500' : ''
-            }`}
-          >
-            <div className="text-2xl mb-1">{stat.icon}</div>
-            <div className="text-2xl font-bold text-gray-900">{stat.count}</div>
-            <div className="text-sm text-gray-500">{stat.label}</div>
-          </button>
-        ))}
-      </div>
+        <FadeIn delay={0.1}>
+          <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 p-4 flex flex-wrap items-center gap-3">
+            <Filter className="w-5 h-5 text-gray-400" />
+            {['all', 'pending', 'approved', 'rejected'].map((f) => (
+              <button key={f} onClick={() => setFilter(f)} className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${filter === f ? 'bg-blue-600 text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400'}`}>
+                {f === 'all' ? 'الكل' : f === 'pending' ? 'قيد الانتظار' : f === 'approved' ? 'معتمد' : 'مرفوض'}
+              </button>
+            ))}
+          </div>
+        </FadeIn>
 
-      {/* Files List */}
-      {filteredFiles.length === 0 ? (
-        <div className="card text-center py-12">
-          <div className="text-6xl mb-4">📎</div>
-          <h3 className="text-xl font-bold text-gray-900 mb-2">لا توجد ملفات</h3>
-          <p className="text-gray-500">
-            {filter !== 'all'
-              ? 'لا توجد ملفات في هذه الحالة'
-              : 'لم يتم رفع أي ملفات بعد'}
-          </p>
-        </div>
-      ) : (
-        <div className="card overflow-hidden">
-          <table className="w-full">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="text-right p-4 font-medium text-gray-600">الملف</th>
-                <th className="text-right p-4 font-medium text-gray-600">الجهة</th>
-                <th className="text-right p-4 font-medium text-gray-600">الحجم</th>
-                <th className="text-right p-4 font-medium text-gray-600">الحالة</th>
-                <th className="text-right p-4 font-medium text-gray-600">تاريخ الرفع</th>
-                <th className="text-right p-4 font-medium text-gray-600">الإجراءات</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-100">
-              {filteredFiles.map((file) => {
-                const status = statusConfig[file.status] || statusConfig.pending;
-                const fileExt = (file.original_name || file.file_name || '').split('.').pop()?.toLowerCase() || '';
-                const fileIcon = fileTypeIcons[fileExt] || fileTypeIcons.default;
-
-                return (
-                  <tr key={file.id} className="hover:bg-gray-50">
-                    <td className="p-4">
-                      <div className="flex items-center gap-3">
-                        <span className="text-2xl">{fileIcon}</span>
-                        <div>
-                          <div className="font-medium text-gray-900">
-                            {file.original_name || file.file_name || 'ملف'}
-                          </div>
-                          <div className="text-sm text-gray-500">
-                            {file.file_type}
+        {filteredFiles.length === 0 ? (
+          <FadeIn delay={0.2}>
+            <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 p-12 text-center">
+              <FileText className="w-16 h-16 text-gray-300 dark:text-gray-600 mx-auto mb-4" />
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">لا توجد ملفات</h3>
+              <p className="text-gray-500 dark:text-gray-400">{filter === 'all' ? 'لم يتم رفع أي ملفات بعد' : 'لا توجد ملفات بهذه الحالة'}</p>
+            </div>
+          </FadeIn>
+        ) : (
+          <FadeIn delay={0.2}>
+            <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 overflow-hidden">
+              <StaggerContainer className="divide-y divide-gray-100 dark:divide-gray-800">
+                {filteredFiles.map((file) => {
+                  const config = statusConfig[file.status] || statusConfig.pending;
+                  const StatusIcon = config.icon;
+                  const FileIcon = getFileIcon(file.file_type);
+                  return (
+                    <StaggerItem key={file.id}>
+                      <div className="p-4 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors flex items-center gap-4">
+                        <div className="w-10 h-10 rounded-lg bg-blue-50 dark:bg-blue-900/50 flex items-center justify-center flex-shrink-0">
+                          <FileIcon className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <h4 className="font-medium text-gray-900 dark:text-white truncate">{file.original_name || file.file_name}</h4>
+                          <div className="flex items-center gap-3 text-sm text-gray-500 dark:text-gray-400">
+                            <span className="flex items-center gap-1"><Building2 className="w-3 h-3" /> {file.entity_name}</span>
+                            <span>{formatFileSize(file.file_size)}</span>
+                            <span>{new Date(file.uploaded_at).toLocaleDateString('ar')}</span>
                           </div>
                         </div>
-                      </div>
-                    </td>
-                    <td className="p-4">
-                      <div className="font-medium text-gray-900">
-                        {file.entity_name}
-                      </div>
-                      <div className="text-sm text-gray-500">{file.entity_code}</div>
-                    </td>
-                    <td className="p-4 text-gray-600">
-                      {formatFileSize(file.file_size)}
-                    </td>
-                    <td className="p-4">
-                      <span
-                        className={`px-3 py-1 rounded-full text-sm font-medium ${status.color}`}
-                      >
-                        {status.icon} {status.label}
-                      </span>
-                    </td>
-                    <td className="p-4 text-sm text-gray-500">
-                      {new Date(file.uploaded_at).toLocaleDateString('ar')}
-                    </td>
-                    <td className="p-4">
-                      <div className="flex gap-2">
-                        <button className="px-3 py-1.5 bg-blue-100 text-blue-700 rounded-lg text-sm hover:bg-blue-200">
-                          عرض
+                        <span className={`flex items-center gap-1 px-2 py-1 rounded-full text-xs ${config.color}`}>
+                          <StatusIcon className="w-3 h-3" /> {config.label}
+                        </span>
+                        <button className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/50 rounded-lg">
+                          <Download className="w-4 h-4" />
                         </button>
-                        {file.status === 'pending' && (
-                          <button className="px-3 py-1.5 bg-green-100 text-green-700 rounded-lg text-sm hover:bg-green-200">
-                            تحليل
-                          </button>
-                        )}
                       </div>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
-      )}
-    </div>
+                    </StaggerItem>
+                  );
+                })}
+              </StaggerContainer>
+            </div>
+          </FadeIn>
+        )}
+      </div>
+    </PageTransition>
   );
 }
