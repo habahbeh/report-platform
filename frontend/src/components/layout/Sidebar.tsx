@@ -249,7 +249,7 @@ export function Sidebar({ user, collapsed, onCollapse, onLogout, isMobile = fals
                       <div className={cn('w-9 h-9 rounded-lg flex items-center justify-center', colors.icon)}>
                         <GroupIcon className="w-5 h-5" />
                       </div>
-                      <span className={cn('flex-1 font-semibold text-sm text-right', hasActiveItem ? colors.text : 'text-gray-700 dark:text-gray-300')}>
+                      <span className={cn('flex-1 font-semibold text-sm', dir === 'rtl' ? 'text-right' : 'text-left', hasActiveItem ? colors.text : 'text-gray-700 dark:text-gray-300')}>
                         {getNavTitle(group.titleKey)}
                       </span>
                       <ChevronDown className={cn(
@@ -274,7 +274,11 @@ export function Sidebar({ user, collapsed, onCollapse, onLogout, isMobile = fals
 
                   {/* Group Items */}
                   {!collapsed && isExpanded && (
-                    <div className="mt-1 mr-6 space-y-1 border-r-2 border-gray-100 dark:border-gray-800 pr-3">
+                    <div className={cn(
+                      'mt-1 space-y-1',
+                      dir === 'rtl' ? 'mr-6 border-r-2 pr-3' : 'ml-6 border-l-2 pl-3',
+                      'border-gray-100 dark:border-gray-800'
+                    )}>
                       {group.items.map((item) => {
                         const ItemIcon = item.icon;
                         const active = isActive(item.href);
