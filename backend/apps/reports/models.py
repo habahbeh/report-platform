@@ -382,6 +382,507 @@ class TableData(models.Model):
         return len(self.rows) if self.rows else 0
 
 
+# ============================================
+# Skeleton-First Workflow Models (New)
+# هيكل أولاً: بناء الهيكل → ملء الجداول → توليد النصوص
+# ============================================
+
+class ItemStructure(models.Model):
+    """
+    هيكل البند على مستوى المشروع
+
+    ItemComponent في templates_app = الهيكل الافتراضي (template-level)
+    ItemStructure هنا = الهيكل الفعلي لمشروع معين (قد يختلف عن القالب)
+
+    مثال: البند 1.9 في مشروع جامعة البترا 2024-2025:
+    [
+        {"id": "p1", "type": "paragraph", "title": "مقدمة", "order": 1},
+        {"id": "t1", "type": "table", "title": "أعداد أعضاء هيئة التدريس", "table_def_id": 5, "order": 2},
+        {"id": "p2", "type": "paragraph", "title": "تحليل الجدول", "references": ["t1"], "order": 3},
+        {"id": "c1", "type": "chart", "title": "توزيع أعضاء هيئة التدريس", "chart_def_id": 3, "order": 4},
+        {"id": "p3", "type": "paragraph", "title": "تحليل الشكل", "references": ["c1"], "order": 5},
+    ]
+    """
+
+    SOURCE_CHOICES = [
+        ('template', 'من القالب الافتراضي'),
+        ('previous_report', 'من تقرير سابق'),
+        ('manual', 'إدخال يدوي'),
+        ('ai_suggested', 'اقتراح AI'),
+    ]
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+
+    project = models.ForeignKey(
+        Project,
+        on_delete=models.CASCADE,
+        related_name='item_structures',
+        verbose_name='المشروع'
+    )
+    item = models.ForeignKey(
+        'templates_app.Item',
+        on_delete=models.CASCADE,
+        related_name='structures',
+        verbose_name='البند'
+    )
+
+    # قائمة المكونات بالترتيب
+    # [{id, type, title, description, order, table_def_id?, chart_def_id?, references?, config?}]
+    components = models.JSONField(
+        'المكونات',
+        default=list,
+        help_text='قائمة مكونات البند بالترتيب: فقرات، جداول، أشكال'
+    )
+
+    # مصدر الهيكل
+    source = models.CharField(
+        'المصدر',
+        max_length=20,
+        choices=SOURCE_CHOICES,
+        default='template'
+    )
+
+    # عينة أسلوب من التقرير السابق (للـ AI)
+    style_sample = models.TextField(
+        'عينة الأسلوب',
+        blank=True,
+        help_text='نص من التقرير السابق يُستخدم كمرجع أسلوب للـ AI'
+    )
+
+    # هل الهيكل معتمد من المستخدم؟
+    is_approved = models.BooleanField('معتمد', default=False)
+
+    # Timestamps
+    created_at = models.DateTimeField('تاريخ الإنشاء', auto_now_add=True)
+    updated_at = models.DateTimeField('تاريخ التعديل', auto_now=True)
+
+    class Meta:
+        verbose_name = 'هيكل بند'
+        verbose_name_plural = 'هياكل البنود'
+        unique_together = ['project', 'item']
+        ordering = ['item__axis__order', 'item__order']
+
+    def __str__(self):
+        return f"{self.item.code} - {self.project.name}"
+
+    @property
+    def components_count(self):
+        return len(self.components) if self.components else 0
+
+    @property
+    def paragraphs_count(self):
+        if not self.components:
+            return 0
+        return sum(1 for c in self.components if c.get('type') == 'paragraph')
+
+    @property
+    def tables_count(self):
+        if not self.components:
+            return 0
+        return sum(1 for c in self.components if c.get('type') == 'table')
+
+    @property
+    def charts_count(self):
+        if not self.components:
+            return 0
+        return sum(1 for c in self.components if c.get('type') == 'chart')
+
+    def get_component(self, component_id):
+        """الحصول على مكون بـ ID معين"""
+        if not self.components:
+            return None
+        for c in self.components:
+            if c.get('id') == component_id:
+                return c
+        return None
+
+    def get_paragraphs(self):
+        """الحصول على كل الفقرات"""
+        if not self.components:
+            return []
+        return [c for c in self.components if c.get('type') == 'paragraph']
+
+    def get_context_for_paragraph(self, paragraph_id):
+        """
+        الحصول على السياق المحيط بفقرة معينة
+        يُرجع: {before: [...], after: [...], references: [...]}
+        """
+        if not self.components:
+            return {'before': [], 'after': [], 'references': []}
+
+        idx = None
+        for i, c in enumerate(self.components):
+            if c.get('id') == paragraph_id:
+                idx = i
+                break
+
+        if idx is None:
+            return {'before': [], 'after': [], 'references': []}
+
+        paragraph = self.components[idx]
+
+        return {
+            'before': self.components[max(0, idx-2):idx],
+            'after': self.components[idx+1:min(len(self.components), idx+3)],
+            'references': paragraph.get('references', []),
+        }
+
+    @classmethod
+    def create_from_template(cls, project, item):
+        """
+        إنشاء هيكل بند من ItemComponents في القالب
+        """
+        from apps.templates_app.models import ItemComponent
+
+        components_qs = ItemComponent.objects.filter(
+            item=item
+        ).select_related('table_ref', 'chart_ref').order_by('order')
+
+        components = []
+        p_count, t_count, c_count = 0, 0, 0
+
+        for comp in components_qs:
+            if comp.component_type in ('text', 'text_ai'):
+                p_count += 1
+                components.append({
+                    'id': f'p{p_count}',
+                    'type': 'paragraph',
+                    'title': comp.title or f'فقرة {p_count}',
+                    'description': comp.notes,
+                    'order': comp.order,
+                    'source': 'ai' if comp.component_type == 'text_ai' else 'manual',
+                    'config': comp.config or {},
+                })
+            elif comp.component_type == 'table':
+                t_count += 1
+                comp_data = {
+                    'id': f't{t_count}',
+                    'type': 'table',
+                    'title': comp.title or (comp.table_ref.name if comp.table_ref else f'جدول {t_count}'),
+                    'order': comp.order,
+                    'config': comp.config or {},
+                }
+                if comp.table_ref_id:
+                    comp_data['table_def_id'] = comp.table_ref_id
+                components.append(comp_data)
+            elif comp.component_type == 'chart':
+                c_count += 1
+                comp_data = {
+                    'id': f'c{c_count}',
+                    'type': 'chart',
+                    'title': comp.title or (comp.chart_ref.name if comp.chart_ref else f'شكل {c_count}'),
+                    'order': comp.order,
+                    'config': comp.config or {},
+                }
+                if comp.chart_ref_id:
+                    comp_data['chart_def_id'] = comp.chart_ref_id
+                components.append(comp_data)
+
+        # إذا ما في components في القالب — نضيف فقرة واحدة كافتراضي
+        if not components:
+            components = [{
+                'id': 'p1',
+                'type': 'paragraph',
+                'title': 'التحليل',
+                'order': 1,
+                'source': 'ai',
+            }]
+
+        return cls.objects.create(
+            project=project,
+            item=item,
+            components=components,
+            source='template',
+        )
+
+
+class GeneratedContent(models.Model):
+    """
+    النص المولّد لكل فقرة في الهيكل
+
+    القاعدة الذهبية: الـ AI يكتب النصوص فقط.
+    كل فقرة (paragraph) في ItemStructure لها GeneratedContent مستقل.
+    يمكن إعادة توليد فقرة واحدة بدون المس بالباقي.
+
+    مثال:
+    - ItemStructure للبند 1.9 فيها p1, p2, p3
+    - كل p له GeneratedContent مستقل
+    - p2 يشير لـ t1 بـ {ref:t1} → يصبح "جدول (1-3)" عند التصدير
+    """
+
+    STATUS_CHOICES = [
+        ('not_started', 'لم يبدأ'),
+        ('generating', 'جاري التوليد'),
+        ('generated', 'تم التوليد'),
+        ('edited', 'معدّل يدوياً'),
+        ('approved', 'معتمد'),
+        ('failed', 'فشل التوليد'),
+    ]
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+
+    # الربط
+    item_structure = models.ForeignKey(
+        ItemStructure,
+        on_delete=models.CASCADE,
+        related_name='generated_contents',
+        verbose_name='هيكل البند'
+    )
+    project = models.ForeignKey(
+        Project,
+        on_delete=models.CASCADE,
+        related_name='generated_contents',
+        verbose_name='المشروع'
+    )
+
+    # معرّف المكون في الهيكل (مثل "p1", "p2", "p3")
+    component_id = models.CharField(
+        'معرّف المكون',
+        max_length=20,
+        help_text='مثل: p1, p2, p3'
+    )
+
+    # === المحتوى ===
+    content = models.TextField(
+        'المحتوى المولّد',
+        blank=True,
+        help_text='النص المولّد بالـ AI — قد يحتوي على {ref:t1} للمراجع'
+    )
+
+    # المحتوى المعدّل يدوياً (إذا عدّله المستخدم)
+    manual_edit = models.TextField(
+        'التعديل اليدوي',
+        blank=True,
+        help_text='إذا عدّل المستخدم النص — يُستخدم بدل content'
+    )
+
+    # === الحالة ===
+    status = models.CharField(
+        'الحالة',
+        max_length=20,
+        choices=STATUS_CHOICES,
+        default='not_started'
+    )
+
+    # === Versioning ===
+    version = models.PositiveIntegerField('رقم الإصدار', default=1)
+    previous_content = models.TextField('المحتوى السابق', blank=True)
+
+    # === AI Metadata ===
+    ai_model = models.CharField('نموذج AI', max_length=50, blank=True)
+    ai_tokens_input = models.PositiveIntegerField('Tokens الإدخال', default=0)
+    ai_tokens_output = models.PositiveIntegerField('Tokens الإخراج', default=0)
+    ai_cost = models.DecimalField('التكلفة', max_digits=10, decimal_places=6, default=0)
+    generation_time_ms = models.PositiveIntegerField('وقت التوليد (ms)', default=0)
+
+    # الـ Prompt المستخدم (للـ debug والتحسين)
+    prompt_used = models.TextField('الـ Prompt المستخدم', blank=True)
+
+    # === التواريخ ===
+    generated_at = models.DateTimeField('تاريخ التوليد', null=True, blank=True)
+    edited_at = models.DateTimeField('تاريخ التعديل', null=True, blank=True)
+    approved_at = models.DateTimeField('تاريخ الاعتماد', null=True, blank=True)
+
+    # === المسؤولين ===
+    generated_by = models.ForeignKey(
+        django_settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='generated_contents',
+        verbose_name='ولّده'
+    )
+
+    created_at = models.DateTimeField('تاريخ الإنشاء', auto_now_add=True)
+    updated_at = models.DateTimeField('تاريخ التعديل', auto_now=True)
+
+    class Meta:
+        verbose_name = 'محتوى مولّد'
+        verbose_name_plural = 'المحتويات المولّدة'
+        unique_together = ['item_structure', 'component_id']
+        ordering = ['item_structure__item__axis__order', 'item_structure__item__order']
+
+    def __str__(self):
+        return f"{self.item_structure.item.code} / {self.component_id} — {self.get_status_display()}"
+
+    @property
+    def final_content(self):
+        """المحتوى النهائي: التعديل اليدوي إن وجد، وإلا المولّد"""
+        if self.manual_edit:
+            return self.manual_edit
+        return self.content
+
+    def complete_generation(self, content, ai_metadata=None, user=None, prompt=''):
+        """إكمال توليد الفقرة"""
+        if self.content:
+            self.previous_content = self.content
+            self.version += 1
+
+        self.content = content
+        self.status = 'generated'
+        self.generated_at = timezone.now()
+        self.generated_by = user
+        self.prompt_used = prompt
+
+        if ai_metadata:
+            self.ai_model = ai_metadata.get('model', '')
+            self.ai_tokens_input = ai_metadata.get('input_tokens', 0)
+            self.ai_tokens_output = ai_metadata.get('output_tokens', 0)
+            self.ai_cost = ai_metadata.get('cost', 0)
+            self.generation_time_ms = ai_metadata.get('duration_ms', 0)
+
+        self.save()
+
+    def edit(self, new_content, user=None):
+        """تعديل يدوي للمحتوى"""
+        self.manual_edit = new_content
+        self.status = 'edited'
+        self.edited_at = timezone.now()
+        self.save()
+
+    def approve(self, user=None):
+        """اعتماد المحتوى"""
+        self.status = 'approved'
+        self.approved_at = timezone.now()
+        self.save()
+
+    def regenerate(self):
+        """تجهيز لإعادة التوليد"""
+        self.status = 'generating'
+        self.save(update_fields=['status', 'updated_at'])
+
+
+class DetailedResponse(models.Model):
+    """
+    بيانات تفصيلية إضافية من المساهمين
+
+    Response العادي يخزّن قيمة واحدة (مثل: 150 عضو هيئة تدريس)
+    DetailedResponse يخزّن التفاصيل (جدول: 150 عضو مقسمين حسب الكلية والرتبة)
+
+    مثال:
+    - Response: item=1.9, value={"value": 150}
+    - DetailedResponse: data_type=table, data={"headers": [...], "rows": [[...], ...]}
+
+    هذه البيانات تُستخدم لبناء الجداول في الهيكل (بدل AI)
+    """
+
+    DATA_TYPE_CHOICES = [
+        ('table', 'جدول تفصيلي'),
+        ('time_series', 'سلسلة زمنية'),
+        ('breakdown', 'تفصيل/توزيع'),
+        ('comparison', 'مقارنة'),
+        ('raw_data', 'بيانات خام'),
+    ]
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+
+    # الربط
+    response = models.ForeignKey(
+        Response,
+        on_delete=models.CASCADE,
+        related_name='detailed_data',
+        verbose_name='الاستجابة',
+        null=True,
+        blank=True,
+        help_text='ربط بـ Response الأصلي (اختياري)'
+    )
+    project = models.ForeignKey(
+        Project,
+        on_delete=models.CASCADE,
+        related_name='detailed_responses',
+        verbose_name='المشروع'
+    )
+    item = models.ForeignKey(
+        'templates_app.Item',
+        on_delete=models.CASCADE,
+        related_name='detailed_responses',
+        verbose_name='البند'
+    )
+
+    # ربط اختياري بتعريف جدول معين
+    table_definition = models.ForeignKey(
+        'templates_app.TableDefinition',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='detailed_responses',
+        verbose_name='تعريف الجدول'
+    )
+
+    # اسم مصدر البيانات (للتعريف)
+    data_source = models.CharField(
+        'مصدر البيانات',
+        max_length=100,
+        blank=True,
+        help_text='مثل: توزيع_حسب_الكلية, توزيع_حسب_الرتبة'
+    )
+
+    # نوع البيانات
+    data_type = models.CharField(
+        'نوع البيانات',
+        max_length=20,
+        choices=DATA_TYPE_CHOICES,
+        default='table'
+    )
+
+    # البيانات التفصيلية
+    # للجدول: {"headers": ["الكلية", "أستاذ", "مشارك", ...], "rows": [["الهندسة", 15, 22, ...], ...]}
+    # للسلسلة الزمنية: {"years": [2020, 2021, ...], "values": [100, 120, ...]}
+    # للتوزيع: {"labels": ["ذكور", "إناث"], "values": [60, 40]}
+    data = models.JSONField(
+        'البيانات',
+        default=dict,
+        help_text='البيانات التفصيلية بصيغة JSON'
+    )
+
+    # ملف مصدر (Excel مثلاً)
+    source_file = models.FileField(
+        'الملف المصدر',
+        upload_to='detailed_responses/',
+        null=True,
+        blank=True
+    )
+
+    # المساهم الذي أدخل البيانات
+    contributor = models.ForeignKey(
+        Contributor,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='detailed_responses',
+        verbose_name='المساهم'
+    )
+
+    # ملاحظات
+    notes = models.TextField('ملاحظات', blank=True)
+
+    # Timestamps
+    created_at = models.DateTimeField('تاريخ الإنشاء', auto_now_add=True)
+    updated_at = models.DateTimeField('تاريخ التعديل', auto_now=True)
+
+    class Meta:
+        verbose_name = 'بيانات تفصيلية'
+        verbose_name_plural = 'البيانات التفصيلية'
+        ordering = ['item__axis__order', 'item__order']
+
+    def __str__(self):
+        return f"{self.item.code} — {self.data_source or self.get_data_type_display()}"
+
+    @property
+    def rows_count(self):
+        """عدد الصفوف"""
+        if self.data and 'rows' in self.data:
+            return len(self.data['rows'])
+        return 0
+
+    @property
+    def headers(self):
+        """رؤوس الأعمدة"""
+        if self.data:
+            return self.data.get('headers', [])
+        return []
+
+
 class DraftStatusMixin:
     """Mixin للحالات المشتركة بين المسودات"""
     STATUS_CHOICES = [
@@ -409,7 +910,17 @@ class ItemDraft(models.Model):
         'data_collection.DataCollectionPeriod',
         on_delete=models.CASCADE,
         related_name='item_drafts',
-        verbose_name='فترة الجمع'
+        verbose_name='فترة الجمع',
+        null=True,
+        blank=True
+    )
+    project = models.ForeignKey(
+        'Project',
+        on_delete=models.CASCADE,
+        related_name='item_drafts',
+        verbose_name='المشروع',
+        null=True,
+        blank=True
     )
     item = models.ForeignKey(
         'templates_app.Item',
@@ -498,7 +1009,18 @@ class ItemDraft(models.Model):
     class Meta:
         verbose_name = 'مسودة بند'
         verbose_name_plural = 'مسودات البنود'
-        unique_together = ['period', 'item']
+        constraints = [
+            models.UniqueConstraint(
+                fields=['period', 'item'],
+                condition=models.Q(period__isnull=False),
+                name='unique_period_item_draft'
+            ),
+            models.UniqueConstraint(
+                fields=['project', 'item'],
+                condition=models.Q(project__isnull=False),
+                name='unique_project_item_draft'
+            ),
+        ]
         ordering = ['item__axis__order', 'item__order']
     
     def __str__(self):
@@ -551,7 +1073,17 @@ class AxisDraft(models.Model):
         'data_collection.DataCollectionPeriod',
         on_delete=models.CASCADE,
         related_name='axis_drafts',
-        verbose_name='فترة الجمع'
+        verbose_name='فترة الجمع',
+        null=True,
+        blank=True
+    )
+    project = models.ForeignKey(
+        'Project',
+        on_delete=models.CASCADE,
+        related_name='axis_drafts',
+        verbose_name='المشروع',
+        null=True,
+        blank=True
     )
     axis = models.ForeignKey(
         'templates_app.Axis',
@@ -628,11 +1160,26 @@ class AxisDraft(models.Model):
     class Meta:
         verbose_name = 'مسودة محور'
         verbose_name_plural = 'مسودات المحاور'
-        unique_together = ['period', 'axis']
+        constraints = [
+            models.UniqueConstraint(
+                fields=['period', 'axis'],
+                condition=models.Q(period__isnull=False),
+                name='unique_period_axis_draft'
+            ),
+            models.UniqueConstraint(
+                fields=['project', 'axis'],
+                condition=models.Q(project__isnull=False),
+                name='unique_project_axis_draft'
+            ),
+        ]
         ordering = ['axis__order']
     
     def __str__(self):
-        return f"{self.axis.name} - {self.period.academic_year}"
+        if self.project:
+            return f"{self.axis.name} - {self.project.name}"
+        elif self.period:
+            return f"{self.axis.name} - {self.period.academic_year}"
+        return f"{self.axis.name}"
     
     @property
     def can_generate(self):

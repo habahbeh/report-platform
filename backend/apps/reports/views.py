@@ -358,6 +358,43 @@ def contribute_form(request, token):
     items_data = ItemDetailSerializer(items, many=True).data
     responses_data = ResponseSerializer(responses, many=True).data
     
+    # Get structure-derived data requirements (if structures exist)
+    structure_hints = {}
+    try:
+        structures = ItemStructure.objects.filter(
+            project=contributor.project,
+            item__in=items
+        ).select_related('item')
+        for structure in structures:
+            hints = []
+            for comp in (structure.components or []):
+                comp_type = comp.get('type', '')
+                if comp_type == 'table':
+                    hints.append({
+                        'id': comp.get('id'),
+                        'type': 'table',
+                        'title': comp.get('title', ''),
+                        'columns': comp.get('columns', []),
+                        'suggested_input': 'table_dynamic',
+                    })
+                elif comp_type == 'chart':
+                    hints.append({
+                        'id': comp.get('id'),
+                        'type': 'chart_data',
+                        'title': comp.get('title', ''),
+                        'chart_type': comp.get('chart_type', 'pie'),
+                        'suggested_input': 'table_dynamic',
+                    })
+            if hints:
+                structure_hints[structure.item_id] = {
+                    'structure_id': str(structure.id),
+                    'data_fields': hints,
+                    'has_tables': any(h['type'] == 'table' for h in hints),
+                    'has_charts': any(h['type'] == 'chart_data' for h in hints),
+                }
+    except Exception:
+        pass
+
     return DRFResponse({
         'project': {
             'id': str(contributor.project.id),
@@ -382,6 +419,7 @@ def contribute_form(request, token):
         'progress': contributor.progress,
         'items_count': contributor.items_count,
         'completed_count': contributor.completed_items_count,
+        'structure_hints': structure_hints,
     })
 
 
@@ -462,27 +500,110 @@ def contribute_submit(request, token):
 @permission_classes([permissions.AllowAny])
 def contribute_upload(request, token):
     """
-    Upload a file attachment for a response.
+    Upload an Excel file and parse it into Response objects.
+    Supports .xlsx and .xls files.
+
+    POST /api/reports/contribute/<token>/upload/
+    FormData: file, item_id
     """
     contributor = get_object_or_404(Contributor, invite_token=token)
-    
+
+    if contributor.status in ('submitted', 'completed'):
+        return DRFResponse(
+            {'error': 'تم إرسال البيانات مسبقاً'},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+
     item_id = request.data.get('item_id')
     file = request.FILES.get('file')
-    
+
     if not file:
         return DRFResponse(
             {'error': 'لم يتم تحديد ملف'},
             status=status.HTTP_400_BAD_REQUEST
         )
-    
-    # TODO: Save file and return URL
-    # For now, just acknowledge
-    
-    return DRFResponse({
-        'status': 'uploaded',
-        'filename': file.name,
-        'size': file.size,
-    })
+
+    if not item_id:
+        return DRFResponse(
+            {'error': 'لم يتم تحديد البند'},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+
+    try:
+        item = Item.objects.get(id=item_id)
+    except Item.DoesNotExist:
+        return DRFResponse(
+            {'error': 'البند غير موجود'},
+            status=status.HTTP_404_NOT_FOUND
+        )
+
+    # Parse Excel file
+    if file.name.endswith(('.xlsx', '.xls')):
+        try:
+            import openpyxl
+            wb = openpyxl.load_workbook(file, read_only=True, data_only=True)
+            ws = wb.active
+
+            rows = []
+            headers = []
+            for row_idx, row in enumerate(ws.iter_rows(values_only=True)):
+                if row_idx == 0:
+                    headers = [str(cell) if cell else f'col_{i}' for i, cell in enumerate(row)]
+                    continue
+                if any(cell is not None for cell in row):
+                    row_data = {}
+                    for col_idx, cell in enumerate(row):
+                        key = headers[col_idx] if col_idx < len(headers) else f'col_{col_idx}'
+                        row_data[key] = cell
+                    rows.append(row_data)
+
+            wb.close()
+
+            # Save as Response
+            value_data = {'rows': rows, 'headers': headers, 'source': 'excel', 'filename': file.name}
+            response_obj, created = Response.objects.update_or_create(
+                project=contributor.project,
+                contributor=contributor,
+                item=item,
+                defaults={
+                    'value': value_data,
+                    'attachments': [{'filename': file.name, 'size': file.size, 'type': 'excel'}]
+                }
+            )
+
+            return DRFResponse({
+                'status': 'uploaded',
+                'filename': file.name,
+                'size': file.size,
+                'rows_count': len(rows),
+                'headers': headers,
+                'preview': rows[:5],
+                'response_id': str(response_obj.id),
+            })
+
+        except Exception as e:
+            return DRFResponse(
+                {'error': f'فشل في قراءة الملف: {str(e)}'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+    else:
+        # Non-Excel file: store as attachment reference
+        response_obj, created = Response.objects.update_or_create(
+            project=contributor.project,
+            contributor=contributor,
+            item=item,
+            defaults={
+                'value': {'value': file.name, 'source': 'file'},
+                'attachments': [{'filename': file.name, 'size': file.size}]
+            }
+        )
+
+        return DRFResponse({
+            'status': 'uploaded',
+            'filename': file.name,
+            'size': file.size,
+            'response_id': str(response_obj.id),
+        })
 
 
 # ============================================
@@ -577,14 +698,18 @@ from .models import AxisDraft, ItemDraft
 from .serializers import (
     AxisDraftSerializer, AxisDraftEditSerializer,
     GenerateRequestSerializer, GenerateResponseSerializer,
+    GenerateProjectRequestSerializer,
     ItemDraftSerializer, ItemDraftEditSerializer,
     GenerateItemsRequestSerializer
 )
 from .generation_service import (
     GenerationService,
+    ProjectGenerationService,
     get_or_create_all_drafts,
     get_period_generation_status,
     get_or_create_item_drafts,
+    get_or_create_project_drafts,
+    get_project_generation_status,
     DEFAULT_AI_MODEL
 )
 
@@ -786,10 +911,132 @@ def generate_report(request):
     return DRFResponse(result)
 
 
+@api_view(['POST'])
+@permission_classes([permissions.AllowAny])
+def generate_project_report(request):
+    """
+    توليد التقرير من مشروع (Project/Response system)
+
+    POST /api/reports/project-generate/
+    {
+        "project_id": "uuid",
+        "axes": [1, 2, 3],     // اختياري
+        "items": [1, 2],       // اختياري (عند level=items)
+        "axis_id": 1,          // اختياري (عند level=items)
+        "model": "cli",
+        "regenerate": false,
+        "level": "axes"        // axes أو items
+    }
+    """
+    serializer = GenerateProjectRequestSerializer(data=request.data)
+    if not serializer.is_valid():
+        return DRFResponse(
+            serializer.errors,
+            status=status.HTTP_400_BAD_REQUEST
+        )
+
+    data = serializer.validated_data
+
+    try:
+        project = Project.objects.get(id=data['project_id'])
+    except Project.DoesNotExist:
+        return DRFResponse(
+            {'error': 'المشروع غير موجود'},
+            status=status.HTTP_404_NOT_FOUND
+        )
+
+    service = ProjectGenerationService(project, model=data.get('model', 'cli'))
+    user = request.user if request.user.is_authenticated else None
+
+    level = data.get('level', 'axes')
+
+    if level == 'items':
+        result = service.generate_items(
+            item_ids=data.get('items'),
+            axis_id=data.get('axis_id'),
+            regenerate=data.get('regenerate', False),
+            user=user
+        )
+        result['drafts'] = ItemDraftSerializer(result['drafts'], many=True).data
+    else:
+        result = service.generate_axes(
+            axis_ids=data.get('axes'),
+            regenerate=data.get('regenerate', False),
+            user=user
+        )
+        result['drafts'] = AxisDraftSerializer(result['drafts'], many=True).data
+
+    return DRFResponse(result)
+
+
+@api_view(['GET'])
+@permission_classes([permissions.AllowAny])
+def project_drafts(request, project_id):
+    """مسودات المحاور لمشروع معين"""
+    try:
+        project = Project.objects.get(id=project_id)
+    except Project.DoesNotExist:
+        return DRFResponse(
+            {'error': 'المشروع غير موجود'},
+            status=status.HTTP_404_NOT_FOUND
+        )
+
+    drafts = get_or_create_project_drafts(project)
+    gen_status = get_project_generation_status(project)
+
+    return DRFResponse({
+        'project': {
+            'id': str(project.id),
+            'name': project.name,
+            'period': project.period,
+        },
+        'generation_status': gen_status,
+        'drafts': AxisDraftSerializer(drafts, many=True).data
+    })
+
+
+@api_view(['GET'])
+@permission_classes([permissions.AllowAny])
+def project_item_drafts(request, project_id):
+    """مسودات البنود لمشروع معين"""
+    try:
+        project = Project.objects.get(id=project_id)
+    except Project.DoesNotExist:
+        return DRFResponse(
+            {'error': 'المشروع غير موجود'},
+            status=status.HTTP_404_NOT_FOUND
+        )
+
+    axis_id = request.query_params.get('axis_id')
+    if axis_id:
+        items = Item.objects.filter(axis_id=axis_id, axis__template=project.template)
+    else:
+        items = Item.objects.filter(axis__template=project.template)
+
+    items = items.order_by('axis__order', 'order')
+
+    drafts = []
+    for item in items:
+        draft, _ = ItemDraft.objects.get_or_create(
+            project=project,
+            item=item,
+            defaults={'status': 'not_started'}
+        )
+        drafts.append(draft)
+
+    return DRFResponse({
+        'project': {
+            'id': str(project.id),
+            'name': project.name,
+        },
+        'drafts': ItemDraftSerializer(drafts, many=True).data
+    })
+
+
 class ItemDraftViewSet(viewsets.ModelViewSet):
     """
     API لمسودات البنود
-    
+
     GET /api/item-drafts/?period_id=X — قائمة مسودات فترة معينة
     GET /api/item-drafts/?period_id=X&axis_id=Y — مسودات محور معين
     GET /api/item-drafts/{id}/ — تفاصيل مسودة
@@ -1923,3 +2170,730 @@ def set_bulk_output_config(request):
         })
     
     return DRFResponse({'error': 'يجب تحديد output_template_id'}, status=400)
+
+
+# ============================================
+# Skeleton-First Workflow Views
+# ============================================
+
+from .models import ItemStructure, GeneratedContent, DetailedResponse
+from .serializers import (
+    ItemStructureSerializer, ItemStructureUpdateSerializer,
+    ItemStructureCreateFromTemplateSerializer,
+    GeneratedContentSerializer, GeneratedContentEditSerializer,
+    GeneratedContentRegenerateSerializer,
+    DetailedResponseSerializer, DetailedResponseCreateSerializer,
+    SkeletonBuildRequestSerializer, TextGenerateRequestSerializer,
+)
+
+
+class ItemStructureViewSet(viewsets.ModelViewSet):
+    """
+    API لهياكل البنود — Skeleton-First
+
+    GET    /api/reports/structures/                    → قائمة كل الهياكل
+    GET    /api/reports/structures/?project=UUID        → هياكل مشروع معين
+    GET    /api/reports/structures/{id}/               → تفاصيل هيكل بند
+    POST   /api/reports/structures/                    → إنشاء هيكل
+    PATCH  /api/reports/structures/{id}/               → تعديل الهيكل
+    POST   /api/reports/structures/init_from_template/ → إنشاء هياكل من القالب
+    POST   /api/reports/structures/{id}/approve/       → اعتماد الهيكل
+    """
+    permission_classes = [permissions.AllowAny]
+    serializer_class = ItemStructureSerializer
+
+    def get_queryset(self):
+        queryset = ItemStructure.objects.select_related(
+            'project', 'item', 'item__axis'
+        ).prefetch_related('generated_contents').all()
+
+        # Filter by project
+        project_id = self.request.query_params.get('project')
+        if project_id:
+            queryset = queryset.filter(project_id=project_id)
+
+        # Filter by axis
+        axis_id = self.request.query_params.get('axis')
+        if axis_id:
+            queryset = queryset.filter(item__axis_id=axis_id)
+
+        # Filter by item
+        item_id = self.request.query_params.get('item')
+        if item_id:
+            queryset = queryset.filter(item_id=item_id)
+
+        return queryset
+
+    def get_serializer_class(self):
+        if self.action in ('update', 'partial_update'):
+            return ItemStructureUpdateSerializer
+        return ItemStructureSerializer
+
+    @action(detail=False, methods=['post'])
+    def init_from_template(self, request):
+        """
+        إنشاء هياكل البنود من القالب لمشروع معين
+
+        POST /api/reports/structures/init_from_template/
+        {
+            "project_id": "uuid",
+            "item_ids": [1, 2, 3],   // اختياري — إذا فارغ = كل البنود
+            "overwrite": false
+        }
+        """
+        serializer = ItemStructureCreateFromTemplateSerializer(data=request.data)
+        if not serializer.is_valid():
+            return DRFResponse(serializer.errors, status=400)
+
+        data = serializer.validated_data
+        project = get_object_or_404(Project, id=data['project_id'])
+        item_ids = data.get('item_ids', [])
+        overwrite = data.get('overwrite', False)
+
+        # Get items from template
+        items_qs = Item.objects.filter(axis__template=project.template)
+        if item_ids:
+            items_qs = items_qs.filter(id__in=item_ids)
+
+        created_count = 0
+        skipped_count = 0
+        errors = []
+
+        for item in items_qs:
+            try:
+                # Check if already exists
+                existing = ItemStructure.objects.filter(
+                    project=project, item=item
+                ).first()
+
+                if existing and not overwrite:
+                    skipped_count += 1
+                    continue
+
+                if existing and overwrite:
+                    existing.delete()
+
+                ItemStructure.create_from_template(project, item)
+                created_count += 1
+
+            except Exception as e:
+                errors.append({
+                    'item': item.code,
+                    'error': str(e)
+                })
+
+        return DRFResponse({
+            'status': 'success',
+            'created': created_count,
+            'skipped': skipped_count,
+            'errors': errors,
+            'message': f'تم إنشاء {created_count} هيكل، تم تخطي {skipped_count}',
+        })
+
+    @action(detail=True, methods=['post'])
+    def approve(self, request, pk=None):
+        """اعتماد الهيكل"""
+        structure = self.get_object()
+        structure.is_approved = True
+        structure.save(update_fields=['is_approved', 'updated_at'])
+        return DRFResponse({
+            'status': 'success',
+            'message': f'تم اعتماد هيكل البند {structure.item.code}'
+        })
+
+    @action(detail=True, methods=['get'])
+    def context(self, request, pk=None):
+        """
+        الحصول على سياق فقرة معينة
+
+        GET /api/reports/structures/{id}/context/?paragraph=p2
+        """
+        structure = self.get_object()
+        paragraph_id = request.query_params.get('paragraph', 'p1')
+        ctx = structure.get_context_for_paragraph(paragraph_id)
+        return DRFResponse(ctx)
+
+    @action(detail=False, methods=['get'])
+    def data_requirements(self, request):
+        """
+        تحليل هياكل البنود واستخراج متطلبات البيانات المطلوبة من المساهم
+
+        GET /api/reports/structures/data_requirements/?project=UUID
+        يعيد قائمة بالبيانات المطلوبة لكل بند بناءً على الهيكل
+        """
+        project_id = request.query_params.get('project')
+        if not project_id:
+            return DRFResponse({'error': 'project parameter مطلوب'}, status=400)
+
+        structures = ItemStructure.objects.filter(
+            project_id=project_id
+        ).select_related('item', 'item__axis')
+
+        requirements = []
+        for structure in structures:
+            item_reqs = {
+                'item_id': structure.item_id,
+                'item_code': structure.item.code,
+                'item_name': structure.item.name,
+                'axis_code': structure.item.axis.code,
+                'fields': [],
+            }
+
+            has_tables = False
+            has_charts = False
+            has_paragraphs = False
+
+            for comp in (structure.components or []):
+                comp_type = comp.get('type', '')
+                if comp_type == 'table':
+                    has_tables = True
+                    item_reqs['fields'].append({
+                        'id': comp.get('id'),
+                        'type': 'table',
+                        'title': comp.get('title', 'جدول'),
+                        'columns': comp.get('columns', []),
+                        'data_source': comp.get('data_source', ''),
+                        'input_method': 'table_dynamic',
+                        'description': f'جدول: {comp.get("title", "")}',
+                    })
+                elif comp_type == 'chart':
+                    has_charts = True
+                    item_reqs['fields'].append({
+                        'id': comp.get('id'),
+                        'type': 'chart_data',
+                        'title': comp.get('title', 'شكل'),
+                        'chart_type': comp.get('chart_type', 'pie'),
+                        'data_source': comp.get('data_source', ''),
+                        'input_method': 'table_dynamic',
+                        'description': f'بيانات شكل: {comp.get("title", "")}',
+                    })
+                elif comp_type == 'paragraph':
+                    has_paragraphs = True
+
+            # Always add basic numeric field for items with paragraphs
+            if has_paragraphs:
+                item_reqs['fields'].insert(0, {
+                    'id': 'value',
+                    'type': 'number',
+                    'title': f'القيمة الحالية لـ {structure.item.name}',
+                    'input_method': 'number',
+                    'description': 'القيمة الرقمية الأساسية',
+                })
+                item_reqs['fields'].insert(1, {
+                    'id': 'previous_value',
+                    'type': 'number',
+                    'title': 'القيمة السابقة (اختياري)',
+                    'input_method': 'number',
+                    'required': False,
+                    'description': 'قيمة السنة السابقة للمقارنة',
+                })
+
+            item_reqs['summary'] = {
+                'tables': has_tables,
+                'charts': has_charts,
+                'paragraphs': has_paragraphs,
+                'total_fields': len(item_reqs['fields']),
+            }
+
+            if item_reqs['fields']:
+                requirements.append(item_reqs)
+
+        return DRFResponse({
+            'project_id': project_id,
+            'total_items': len(requirements),
+            'requirements': requirements,
+        })
+
+
+class GeneratedContentViewSet(viewsets.ModelViewSet):
+    """
+    API للمحتويات المولّدة — فقرة بفقرة
+
+    GET    /api/reports/generated-contents/                → قائمة المحتويات
+    GET    /api/reports/generated-contents/?project=UUID   → محتويات مشروع
+    GET    /api/reports/generated-contents/{id}/           → تفاصيل محتوى
+    POST   /api/reports/generated-contents/{id}/edit/      → تعديل يدوي
+    POST   /api/reports/generated-contents/{id}/approve/   → اعتماد
+    POST   /api/reports/generated-contents/{id}/regenerate/ → إعادة توليد
+    """
+    permission_classes = [permissions.AllowAny]
+    serializer_class = GeneratedContentSerializer
+
+    def get_queryset(self):
+        queryset = GeneratedContent.objects.select_related(
+            'item_structure', 'item_structure__item',
+            'item_structure__item__axis', 'project'
+        ).all()
+
+        # Filter by project
+        project_id = self.request.query_params.get('project')
+        if project_id:
+            queryset = queryset.filter(project_id=project_id)
+
+        # Filter by structure
+        structure_id = self.request.query_params.get('structure')
+        if structure_id:
+            queryset = queryset.filter(item_structure_id=structure_id)
+
+        # Filter by status
+        status_filter = self.request.query_params.get('status')
+        if status_filter:
+            queryset = queryset.filter(status=status_filter)
+
+        # Filter by item
+        item_id = self.request.query_params.get('item')
+        if item_id:
+            queryset = queryset.filter(item_structure__item_id=item_id)
+
+        return queryset
+
+    @action(detail=True, methods=['post'])
+    def edit(self, request, pk=None):
+        """
+        تعديل يدوي لمحتوى فقرة
+
+        POST /api/reports/generated-contents/{id}/edit/
+        {"content": "النص المعدّل"}
+        """
+        content_obj = self.get_object()
+        serializer = GeneratedContentEditSerializer(data=request.data)
+        if not serializer.is_valid():
+            return DRFResponse(serializer.errors, status=400)
+
+        content_obj.edit(
+            serializer.validated_data['content'],
+            user=request.user if request.user.is_authenticated else None
+        )
+
+        return DRFResponse(GeneratedContentSerializer(content_obj).data)
+
+    @action(detail=True, methods=['post'])
+    def approve(self, request, pk=None):
+        """اعتماد محتوى فقرة"""
+        content_obj = self.get_object()
+        content_obj.approve(
+            user=request.user if request.user.is_authenticated else None
+        )
+        return DRFResponse({
+            'status': 'success',
+            'message': f'تم اعتماد {content_obj.component_id}'
+        })
+
+    @action(detail=True, methods=['post'])
+    def regenerate(self, request, pk=None):
+        """
+        إعادة توليد فقرة واحدة
+
+        POST /api/reports/generated-contents/{id}/regenerate/
+        {"model": "cli", "extra_instructions": "اكتب بأسلوب أكاديمي"}
+        """
+        content_obj = self.get_object()
+        model = request.data.get('model', 'cli')
+        extra_instructions = request.data.get('extra_instructions', '')
+        user = request.user if request.user.is_authenticated else None
+
+        content_obj.regenerate()
+
+        from .text_generator import TextGenerator
+
+        generator = TextGenerator(content_obj.project, model=model)
+        result = generator.generate_paragraph(
+            content_obj,
+            extra_instructions=extra_instructions,
+            user=user,
+        )
+
+        if result.get('success'):
+            content_obj.refresh_from_db()
+            return DRFResponse(GeneratedContentSerializer(content_obj).data)
+        else:
+            return DRFResponse({
+                'status': 'failed',
+                'error': result.get('error', 'فشل التوليد'),
+                'content_id': str(content_obj.id),
+            }, status=500)
+
+
+class DetailedResponseViewSet(viewsets.ModelViewSet):
+    """
+    API للبيانات التفصيلية
+
+    GET    /api/reports/detailed-responses/              → قائمة البيانات
+    GET    /api/reports/detailed-responses/?project=UUID → بيانات مشروع
+    POST   /api/reports/detailed-responses/              → إضافة بيانات
+    PATCH  /api/reports/detailed-responses/{id}/         → تعديل
+    DELETE /api/reports/detailed-responses/{id}/         → حذف
+    """
+    permission_classes = [permissions.AllowAny]
+
+    def get_queryset(self):
+        queryset = DetailedResponse.objects.select_related(
+            'project', 'item', 'item__axis',
+            'response', 'contributor', 'table_definition'
+        ).all()
+
+        # Filter by project
+        project_id = self.request.query_params.get('project')
+        if project_id:
+            queryset = queryset.filter(project_id=project_id)
+
+        # Filter by item
+        item_id = self.request.query_params.get('item')
+        if item_id:
+            queryset = queryset.filter(item_id=item_id)
+
+        # Filter by data_type
+        data_type = self.request.query_params.get('data_type')
+        if data_type:
+            queryset = queryset.filter(data_type=data_type)
+
+        return queryset
+
+    def get_serializer_class(self):
+        if self.action == 'create':
+            return DetailedResponseCreateSerializer
+        return DetailedResponseSerializer
+
+    @action(detail=True, methods=['post'])
+    def update_data(self, request, pk=None):
+        """
+        تعديل بيانات جدول تفصيلي (تعديل خلايا / إضافة صفوف / حذف صفوف)
+
+        POST /api/reports/detailed-responses/{id}/update_data/
+        {"data": {"headers": [...], "rows": [...]}}
+        """
+        obj = self.get_object()
+        new_data = request.data.get('data')
+        if not new_data:
+            return DRFResponse({'error': 'حقل data مطلوب'}, status=400)
+        obj.data = new_data
+        obj.save(update_fields=['data', 'updated_at'])
+        return DRFResponse(DetailedResponseSerializer(obj).data)
+
+
+class TableDataViewSet(viewsets.ModelViewSet):
+    """
+    API لبيانات الجداول
+
+    GET    /api/reports/table-data/                → قائمة البيانات
+    GET    /api/reports/table-data/?project=UUID   → بيانات مشروع
+    PATCH  /api/reports/table-data/{id}/           → تعديل بيانات
+    POST   /api/reports/table-data/{id}/update_rows/ → تعديل صفوف
+    """
+    permission_classes = [permissions.AllowAny]
+    serializer_class = TableDataSerializer
+
+    def get_queryset(self):
+        queryset = TableData.objects.select_related(
+            'project', 'contributor', 'table_definition'
+        ).all()
+
+        project_id = self.request.query_params.get('project')
+        if project_id:
+            queryset = queryset.filter(project_id=project_id)
+
+        item_id = self.request.query_params.get('item')
+        if item_id:
+            queryset = queryset.filter(
+                table_definition__axis__items__id=item_id
+            ).distinct()
+
+        table_def_id = self.request.query_params.get('table_definition')
+        if table_def_id:
+            queryset = queryset.filter(table_definition_id=table_def_id)
+
+        return queryset
+
+    @action(detail=True, methods=['post'])
+    def update_rows(self, request, pk=None):
+        """
+        تعديل صفوف جدول (تعديل خلايا / إضافة / حذف)
+
+        POST /api/reports/table-data/{id}/update_rows/
+        {"rows": [...]}
+        """
+        obj = self.get_object()
+        rows = request.data.get('rows')
+        if rows is None:
+            return DRFResponse({'error': 'حقل rows مطلوب'}, status=400)
+        obj.rows = rows
+        obj.save(update_fields=['rows', 'updated_at'])
+        return DRFResponse(TableDataSerializer(obj).data)
+
+
+# ============================================
+# Skeleton & Text Generation API Endpoints
+# ============================================
+
+@api_view(['POST'])
+@permission_classes([permissions.AllowAny])
+def build_skeleton(request):
+    """
+    بناء الهيكل (Skeleton) لمشروع
+
+    POST /api/reports/build-skeleton/
+    {
+        "project_id": "uuid",
+        "item_ids": [1, 2, 3]  // اختياري
+    }
+
+    يقوم بـ:
+    1. إنشاء ItemStructure لكل بند (من القالب)
+    2. إنشاء GeneratedContent فارغ لكل فقرة
+    """
+    serializer = SkeletonBuildRequestSerializer(data=request.data)
+    if not serializer.is_valid():
+        return DRFResponse(serializer.errors, status=400)
+
+    data = serializer.validated_data
+    project = get_object_or_404(Project, id=data['project_id'])
+    item_ids = data.get('item_ids', [])
+
+    # Get items
+    items_qs = Item.objects.filter(axis__template=project.template).order_by('axis__order', 'order')
+    if item_ids:
+        items_qs = items_qs.filter(id__in=item_ids)
+
+    structures_created = 0
+    contents_created = 0
+    errors = []
+
+    for item in items_qs:
+        try:
+            # 1. Create or get ItemStructure
+            structure, created = ItemStructure.objects.get_or_create(
+                project=project,
+                item=item,
+                defaults={
+                    'components': [],
+                    'source': 'template',
+                }
+            )
+
+            if created:
+                # Populate from template
+                structure = ItemStructure.create_from_template(project, item)
+                structures_created += 1
+            elif not structure.components:
+                # Repopulate if empty
+                temp = ItemStructure.create_from_template(project, item)
+                structure.components = temp.components
+                structure.save()
+                # Delete the temp duplicate
+                ItemStructure.objects.filter(
+                    project=project, item=item
+                ).exclude(id=structure.id).delete()
+
+            # 2. Create GeneratedContent for each paragraph
+            for comp in structure.get_paragraphs():
+                gc, gc_created = GeneratedContent.objects.get_or_create(
+                    item_structure=structure,
+                    component_id=comp['id'],
+                    defaults={
+                        'project': project,
+                        'status': 'not_started',
+                    }
+                )
+                if gc_created:
+                    contents_created += 1
+
+        except Exception as e:
+            errors.append({
+                'item': item.code,
+                'error': str(e)
+            })
+
+    return DRFResponse({
+        'status': 'success',
+        'structures_created': structures_created,
+        'contents_created': contents_created,
+        'total_items': items_qs.count(),
+        'errors': errors,
+        'message': f'تم بناء الهيكل: {structures_created} هيكل، {contents_created} فقرة جاهزة للتوليد',
+    })
+
+
+@api_view(['POST'])
+@permission_classes([permissions.AllowAny])
+def generate_text(request):
+    """
+    توليد نصوص AI لفقرات الهيكل
+
+    POST /api/reports/generate-text/
+    {
+        "project_id": "uuid",
+        "item_id": 5,           // اختياري — بند معين
+        "component_id": "p1",   // اختياري — فقرة معينة
+        "structure_id": "uuid", // اختياري — هيكل معين
+        "model": "cli",
+        "extra_instructions": ""
+    }
+
+    """
+    serializer = TextGenerateRequestSerializer(data=request.data)
+    if not serializer.is_valid():
+        return DRFResponse(serializer.errors, status=400)
+
+    data = serializer.validated_data
+    project = get_object_or_404(Project, id=data['project_id'])
+    model = data.get('model', 'cli')
+    extra_instructions = data.get('extra_instructions', '')
+    user = request.user if request.user.is_authenticated else None
+
+    # Find target GeneratedContent records
+    queryset = GeneratedContent.objects.filter(project=project)
+
+    if data.get('structure_id'):
+        queryset = queryset.filter(item_structure_id=data['structure_id'])
+    elif data.get('item_id'):
+        queryset = queryset.filter(item_structure__item_id=data['item_id'])
+
+    if data.get('component_id'):
+        queryset = queryset.filter(component_id=data['component_id'])
+
+    # Filter eligible records
+    targets = queryset.filter(status__in=['not_started', 'failed'])
+    count = targets.count()
+
+    if count == 0:
+        return DRFResponse({
+            'status': 'info',
+            'message': 'لا توجد فقرات جاهزة للتوليد. تأكد من بناء الهيكل أولاً.',
+        })
+
+    # Mark all as generating
+    targets.update(status='generating')
+
+    # Call TextGenerator
+    from .text_generator import TextGenerator
+
+    generator = TextGenerator(project, model=model)
+    results = {
+        'generated': [],
+        'failed': [],
+        'total_cost': 0,
+        'total_duration_ms': 0,
+    }
+
+    for gc in targets.select_related(
+        'item_structure', 'item_structure__item', 'item_structure__item__axis'
+    ):
+        result = generator.generate_paragraph(
+            gc,
+            extra_instructions=extra_instructions,
+            user=user,
+        )
+        if result.get('success'):
+            results['generated'].append({
+                'id': str(gc.id),
+                'component_id': gc.component_id,
+                'item_code': gc.item_structure.item.code,
+                'status': 'generated',
+            })
+            results['total_cost'] += result.get('cost', 0)
+            results['total_duration_ms'] += result.get('duration_ms', 0)
+        else:
+            results['failed'].append({
+                'id': str(gc.id),
+                'component_id': gc.component_id,
+                'item_code': gc.item_structure.item.code,
+                'error': result.get('error', 'Unknown'),
+            })
+
+    gen_count = len(results['generated'])
+    fail_count = len(results['failed'])
+
+    return DRFResponse({
+        'status': 'completed' if not results['failed'] else 'partial',
+        'generated_count': gen_count,
+        'failed_count': fail_count,
+        'total_cost': results['total_cost'],
+        'total_duration_ms': results['total_duration_ms'],
+        'generated': results['generated'],
+        'failed': results['failed'],
+        'message': f'تم توليد {gen_count} فقرة من أصل {count}',
+    })
+
+
+@api_view(['GET'])
+@permission_classes([permissions.AllowAny])
+def project_skeleton_status(request, project_id):
+    """
+    حالة الهيكل لمشروع معين
+
+    GET /api/reports/projects/{project_id}/skeleton-status/
+    """
+    project = get_object_or_404(Project, id=project_id)
+
+    structures = ItemStructure.objects.filter(project=project)
+    contents = GeneratedContent.objects.filter(project=project)
+
+    total_items = Item.objects.filter(axis__template=project.template).count()
+
+    return DRFResponse({
+        'project_id': str(project.id),
+        'project_name': project.name,
+        'total_items': total_items,
+        'structures_count': structures.count(),
+        'structures_approved': structures.filter(is_approved=True).count(),
+        'contents_total': contents.count(),
+        'contents_by_status': {
+            'not_started': contents.filter(status='not_started').count(),
+            'generating': contents.filter(status='generating').count(),
+            'generated': contents.filter(status='generated').count(),
+            'edited': contents.filter(status='edited').count(),
+            'approved': contents.filter(status='approved').count(),
+            'failed': contents.filter(status='failed').count(),
+        },
+        'progress': {
+            'structure': int(structures.count() / total_items * 100) if total_items > 0 else 0,
+            'generation': int(contents.filter(
+                status__in=['generated', 'edited', 'approved']
+            ).count() / contents.count() * 100) if contents.count() > 0 else 0,
+            'approval': int(contents.filter(
+                status='approved'
+            ).count() / contents.count() * 100) if contents.count() > 0 else 0,
+        },
+    })
+
+
+@api_view(['POST'])
+@permission_classes([permissions.IsAuthenticated])
+def analyze_previous_report(request):
+    """
+    تحليل تقرير سابق (Word) واستخراج هيكله
+
+    POST /api/reports/analyze-report/
+    Body: multipart/form-data with 'file' field
+    """
+    from .report_analyzer import analyze_uploaded_report
+
+    if 'file' not in request.FILES:
+        return DRFResponse(
+            {'error': 'يرجى رفع ملف Word (.docx)'},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+
+    uploaded_file = request.FILES['file']
+    if not uploaded_file.name.endswith('.docx'):
+        return DRFResponse(
+            {'error': 'الملف يجب أن يكون بصيغة .docx'},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+
+    try:
+        file_bytes = uploaded_file.read()
+        result = analyze_uploaded_report(file_bytes)
+
+        if 'error' in result and result['error']:
+            return DRFResponse(
+                {'error': f'فشل في تحليل الملف: {result["error"]}'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        return DRFResponse(result)
+    except Exception as e:
+        return DRFResponse(
+            {'error': f'خطأ في تحليل الملف: {str(e)}'},
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )

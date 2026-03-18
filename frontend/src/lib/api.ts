@@ -457,6 +457,117 @@ export const api = {
     generateStatus: (projectId: string, reportId: string) =>
       fetchAPI(`/reports/projects/${projectId}/generate-status/${reportId}/`),
     reports: (id: string) => fetchAPI(`/reports/projects/${id}/reports/`),
+
+    // V2: Skeleton + Structure + Generation
+    analyzeReport: (file: File) => {
+      const formData = new FormData();
+      formData.append('file', file);
+      return uploadFile('/reports/analyze-report/', formData);
+    },
+    skeletonStatus: (id: string) => fetchAPI(`/reports/projects/${id}/skeleton-status/`),
+    buildSkeleton: (id: string) =>
+      fetchAPI(`/reports/build-skeleton/`, {
+        method: 'POST',
+        body: JSON.stringify({ project_id: id }),
+      }),
+    generateText: (id: string, options?: { model?: string; structure_id?: string }) =>
+      fetchAPI(`/reports/generate-text/`, {
+        method: 'POST',
+        body: JSON.stringify({ project_id: id, ...options }),
+      }),
+  },
+
+  // ==================
+  // Structures (ItemStructure)
+  // ==================
+  structures: {
+    list: (projectId?: string) => {
+      const query = projectId ? `?project=${projectId}` : '';
+      return fetchAPI(`/reports/structures/${query}`);
+    },
+    get: (id: string) => fetchAPI(`/reports/structures/${id}/`),
+    create: (data: any) =>
+      fetchAPI('/reports/structures/', {
+        method: 'POST',
+        body: JSON.stringify(data),
+      }),
+    update: (id: string, data: any) =>
+      fetchAPI(`/reports/structures/${id}/`, {
+        method: 'PATCH',
+        body: JSON.stringify(data),
+      }),
+    delete: (id: string) =>
+      fetchAPI(`/reports/structures/${id}/`, { method: 'DELETE' }),
+    initFromTemplate: (id: string) =>
+      fetchAPI(`/reports/structures/${id}/init_from_template/`, { method: 'POST' }),
+    approve: (id: string) =>
+      fetchAPI(`/reports/structures/${id}/approve/`, { method: 'POST' }),
+    context: (id: string, componentId: string) =>
+      fetchAPI(`/reports/structures/${id}/context/?component_id=${componentId}`),
+    dataRequirements: (projectId: string) =>
+      fetchAPI(`/reports/structures/data_requirements/?project=${projectId}`),
+  },
+
+  // ==================
+  // Generated Contents
+  // ==================
+  generatedContents: {
+    list: (params?: { project?: string; structure?: string; status?: string }) => {
+      const query = new URLSearchParams();
+      if (params?.project) query.append('project', params.project);
+      if (params?.structure) query.append('item_structure', params.structure);
+      if (params?.status) query.append('status', params.status);
+      return fetchAPI(`/reports/generated-contents/?${query.toString()}`);
+    },
+    get: (id: string) => fetchAPI(`/reports/generated-contents/${id}/`),
+    edit: (id: string, content: string) =>
+      fetchAPI(`/reports/generated-contents/${id}/edit/`, {
+        method: 'POST',
+        body: JSON.stringify({ content }),
+      }),
+    approve: (id: string) =>
+      fetchAPI(`/reports/generated-contents/${id}/approve/`, { method: 'POST' }),
+    regenerate: (id: string, options?: { model?: string; extra_instructions?: string }) =>
+      fetchAPI(`/reports/generated-contents/${id}/regenerate/`, {
+        method: 'POST',
+        body: JSON.stringify(options || {}),
+      }),
+  },
+
+  // ==================
+  // Table Data
+  // ==================
+  tableData: {
+    list: (params?: { project?: string; table_definition?: string }) => {
+      const query = new URLSearchParams();
+      if (params?.project) query.append('project', params.project);
+      if (params?.table_definition) query.append('table_definition', params.table_definition);
+      return fetchAPI(`/reports/table-data/?${query.toString()}`);
+    },
+    get: (id: string) => fetchAPI(`/reports/table-data/${id}/`),
+    updateRows: (id: string, rows: any[]) =>
+      fetchAPI(`/reports/table-data/${id}/update_rows/`, {
+        method: 'POST',
+        body: JSON.stringify({ rows }),
+      }),
+  },
+
+  // ==================
+  // Detailed Responses
+  // ==================
+  detailedResponses: {
+    list: (params?: { project?: string; item?: string }) => {
+      const query = new URLSearchParams();
+      if (params?.project) query.append('project', params.project);
+      if (params?.item) query.append('item', params.item);
+      return fetchAPI(`/reports/detailed-responses/?${query.toString()}`);
+    },
+    get: (id: string) => fetchAPI(`/reports/detailed-responses/${id}/`),
+    updateData: (id: string, data: any) =>
+      fetchAPI(`/reports/detailed-responses/${id}/update_data/`, {
+        method: 'POST',
+        body: JSON.stringify({ data }),
+      }),
   },
 
   // ==================
@@ -759,15 +870,38 @@ export const api = {
         method: 'POST',
         body: JSON.stringify({ model: 'cli', ...data }),  // default: cli
       }),
-    
+
+    // توليد من مشروع (Project/Response system)
+    generateProject: (data: {
+      project_id: string;
+      axes?: number[];
+      items?: number[];
+      axis_id?: number;
+      model?: 'gemini' | 'claude' | 'cli';
+      regenerate?: boolean;
+      level?: 'axes' | 'items';
+    }) =>
+      fetchAPI('/reports/project-generate/', {
+        method: 'POST',
+        body: JSON.stringify({ model: 'cli', level: 'axes', ...data }),
+      }),
+
+    // مسودات المحاور لمشروع
+    getProjectDrafts: (projectId: string) =>
+      fetchAPI(`/reports/projects/${projectId}/drafts/`),
+
+    // مسودات البنود لمشروع
+    getProjectItemDrafts: (projectId: string, axisId?: number) =>
+      fetchAPI(`/reports/projects/${projectId}/item-drafts/${axisId ? `?axis_id=${axisId}` : ''}`),
+
     // قائمة مسودات المحاور لفترة معينة
     getDrafts: (periodId: number) =>
       fetchAPI(`/reports/periods/${periodId}/drafts/`),
-    
+
     // قائمة مسودات البنود لفترة معينة
     getItemDrafts: (periodId: number, axisId?: number) =>
       fetchAPI(`/reports/periods/${periodId}/item-drafts/${axisId ? `?axis_id=${axisId}` : ''}`),
-    
+
     // حالة التوليد لفترة معينة
     getStatus: (periodId: number) =>
       fetchAPI(`/reports/periods/${periodId}/generation-status/`),

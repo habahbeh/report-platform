@@ -49,6 +49,19 @@ interface ContributeData {
   progress: number;
   items_count: number;
   completed_count: number;
+  structure_hints?: Record<number, {
+    structure_id: string;
+    data_fields: Array<{
+      id: string;
+      type: string;
+      title: string;
+      columns?: any[];
+      chart_type?: string;
+      suggested_input: string;
+    }>;
+    has_tables: boolean;
+    has_charts: boolean;
+  }>;
 }
 
 export default function ContributePage() {
@@ -62,6 +75,9 @@ export default function ContributePage() {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [submitted, setSubmitted] = useState(false);
+  const [uploading, setUploading] = useState<Record<number, boolean>>({});
+  const [uploadResults, setUploadResults] = useState<Record<number, any>>({});
+  const [validationErrors, setValidationErrors] = useState<Record<number, string[]>>({});
 
   useEffect(() => {
     loadForm();
@@ -101,14 +117,76 @@ export default function ContributePage() {
     [token]
   );
 
+  function validateField(item: Item, value: any): string[] {
+    const errors: string[] = [];
+    if (!value && value !== 0 && item.required) {
+      errors.push('هذا الحقل مطلوب');
+      return errors;
+    }
+    if (!value && !item.required) return errors;
+
+    if (item.field_type === 'number' || item.field_type === 'currency') {
+      const num = Number(value);
+      if (isNaN(num)) {
+        errors.push('يجب أن تكون القيمة رقماً صحيحاً');
+      } else if (num < 0) {
+        errors.push('لا يمكن أن تكون القيمة سلبية');
+      }
+    }
+    if (item.field_type === 'percentage') {
+      const num = Number(value);
+      if (isNaN(num)) {
+        errors.push('يجب أن تكون النسبة رقماً');
+      } else if (num < 0 || num > 100) {
+        errors.push('يجب أن تكون النسبة بين 0 و 100');
+      }
+    }
+    if ((item.field_type === 'table_dynamic' || item.field_type === 'table_static') && Array.isArray(value)) {
+      for (let i = 0; i < value.length; i++) {
+        const row = value[i];
+        if (typeof row === 'object') {
+          const vals = Object.values(row);
+          if (vals.every((v: any) => v === '' || v === null || v === undefined)) {
+            errors.push(`الصف ${i + 1}: جميع الخلايا فارغة`);
+          }
+        }
+      }
+    }
+    return errors;
+  }
+
   function handleChange(itemId: number, value: any) {
     setValues(prev => ({ ...prev, [itemId]: value }));
+    // Validate on change
+    if (data) {
+      const item = data.items.find(i => i.id === itemId);
+      if (item) {
+        const errors = validateField(item, value);
+        setValidationErrors(prev => ({ ...prev, [itemId]: errors }));
+      }
+    }
     autoSave(itemId, value);
   }
 
   async function handleSubmit() {
     if (!data) return;
-    
+
+    // Validate all fields before submit
+    const allErrors: Record<number, string[]> = {};
+    let hasErrors = false;
+    for (const item of data.items) {
+      const errors = validateField(item, values[item.id]);
+      if (errors.length > 0) {
+        allErrors[item.id] = errors;
+        hasErrors = true;
+      }
+    }
+    setValidationErrors(allErrors);
+    if (hasErrors) {
+      setError('يرجى تصحيح الأخطاء في النموذج قبل الإرسال');
+      return;
+    }
+
     setSaving(true);
     setError('');
     
@@ -242,39 +320,164 @@ export default function ContributePage() {
       case 'file':
       case 'excel_import':
       case 'image':
+        const isUploading = uploading[item.id];
+        const uploadResult = uploadResults[item.id];
         return (
           <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
             <input
               type="file"
-              onChange={(e) => {
+              onChange={async (e) => {
                 const file = e.target.files?.[0];
-                if (file) {
-                  // Handle file upload
+                if (!file) return;
+
+                setUploading(prev => ({ ...prev, [item.id]: true }));
+                try {
+                  const result = await api.contribute.upload(token, String(item.id), file);
+                  setUploadResults(prev => ({ ...prev, [item.id]: result }));
                   handleChange(item.id, file.name);
+                } catch (err: any) {
+                  setError(err.message || 'فشل في رفع الملف');
+                } finally {
+                  setUploading(prev => ({ ...prev, [item.id]: false }));
                 }
               }}
-              disabled={submitted}
+              disabled={submitted || isUploading}
               className="hidden"
               id={`file-${item.id}`}
               accept={item.field_type === 'image' ? 'image/*' : item.field_type === 'excel_import' ? '.xlsx,.xls' : '*'}
             />
             <label
               htmlFor={`file-${item.id}`}
-              className="cursor-pointer text-blue-600 hover:text-blue-700"
+              className={`cursor-pointer ${isUploading ? 'text-gray-400' : 'text-blue-600 hover:text-blue-700'}`}
             >
-              {value || 'اضغط لاختيار ملف'}
+              {isUploading ? (
+                <span className="flex items-center justify-center gap-2">
+                  <span className="animate-spin h-4 w-4 border-2 border-blue-600 border-t-transparent rounded-full"></span>
+                  جاري الرفع...
+                </span>
+              ) : value ? (
+                <span className="flex flex-col items-center gap-1">
+                  <span className="text-green-600">&#10003; {value}</span>
+                  <span className="text-sm text-gray-500">اضغط لتحديث الملف</span>
+                </span>
+              ) : (
+                'اضغط لاختيار ملف'
+              )}
             </label>
+            {uploadResult && uploadResult.rows_count !== undefined && (
+              <div className="mt-3 text-sm text-gray-600 bg-gray-50 rounded-lg p-3 text-right">
+                <p>تم قراءة <strong>{uploadResult.rows_count}</strong> سطر</p>
+                {uploadResult.headers && (
+                  <p className="text-xs text-gray-400 mt-1">الأعمدة: {uploadResult.headers.join('، ')}</p>
+                )}
+              </div>
+            )}
           </div>
         );
       
       case 'table_dynamic':
-      case 'table_static':
-        // TODO: Implement table input
+      case 'table_static': {
+        const columns: { name: string; key: string; type?: string }[] = item.config?.columns || [];
+        const fixedRows: string[] = item.config?.fixed_rows || [];
+        const tableValue: any[][] = Array.isArray(value) ? value : [];
+
+        // Init rows if empty
+        const initRows = () => {
+          if (item.field_type === 'table_static' && fixedRows.length > 0) {
+            return fixedRows.map((label) => [label, ...Array(Math.max(columns.length - 1, 0)).fill('')]);
+          }
+          return tableValue.length > 0 ? tableValue : [Array(columns.length || 3).fill('')];
+        };
+        const rows = initRows();
+
+        const updateCell = (rowIdx: number, colIdx: number, cellValue: string) => {
+          const newRows = rows.map((r, ri) =>
+            ri === rowIdx ? r.map((c: any, ci: number) => (ci === colIdx ? cellValue : c)) : [...r]
+          );
+          handleChange(item.id, newRows);
+        };
+
+        const addRow = () => {
+          const newRow = Array(columns.length || (rows[0]?.length || 3)).fill('');
+          handleChange(item.id, [...rows, newRow]);
+        };
+
+        const removeRow = (rowIdx: number) => {
+          if (rows.length <= 1) return;
+          handleChange(item.id, rows.filter((_: any, i: number) => i !== rowIdx));
+        };
+
         return (
-          <div className="border border-gray-200 rounded-lg p-4 text-center text-gray-500">
-            جدول البيانات (سيتم دعمه قريباً)
+          <div className="overflow-x-auto">
+            <table className="w-full border-collapse text-sm">
+              <thead>
+                <tr>
+                  {columns.length > 0
+                    ? columns.map((col, i) => (
+                        <th key={i} className="border border-gray-300 bg-gray-100 px-3 py-2 text-right font-medium text-gray-700">
+                          {col.name || col.key}
+                        </th>
+                      ))
+                    : rows[0]?.map((_: any, i: number) => (
+                        <th key={i} className="border border-gray-300 bg-gray-100 px-3 py-2 text-right font-medium text-gray-700">
+                          عمود {i + 1}
+                        </th>
+                      ))}
+                  {item.field_type === 'table_dynamic' && !submitted && (
+                    <th className="border border-gray-300 bg-gray-100 px-2 py-2 w-10"></th>
+                  )}
+                </tr>
+              </thead>
+              <tbody>
+                {rows.map((row: any[], rowIdx: number) => (
+                  <tr key={rowIdx}>
+                    {row.map((cell: any, colIdx: number) => {
+                      const isFixed = item.field_type === 'table_static' && colIdx === 0;
+                      return (
+                        <td key={colIdx} className="border border-gray-300 p-0">
+                          {isFixed ? (
+                            <div className="px-3 py-2 bg-gray-50 font-medium text-gray-700">{cell}</div>
+                          ) : (
+                            <input
+                              type="text"
+                              value={cell ?? ''}
+                              onChange={(e) => updateCell(rowIdx, colIdx, e.target.value)}
+                              disabled={submitted}
+                              className="w-full px-3 py-2 border-0 focus:ring-2 focus:ring-blue-500 focus:ring-inset"
+                              placeholder="—"
+                            />
+                          )}
+                        </td>
+                      );
+                    })}
+                    {item.field_type === 'table_dynamic' && !submitted && (
+                      <td className="border border-gray-300 px-2 py-1 text-center">
+                        <button
+                          type="button"
+                          onClick={() => removeRow(rowIdx)}
+                          className="text-red-400 hover:text-red-600 text-lg"
+                          title="حذف صف"
+                        >
+                          ×
+                        </button>
+                      </td>
+                    )}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            {item.field_type === 'table_dynamic' && !submitted && (
+              <button
+                type="button"
+                onClick={addRow}
+                className="mt-2 text-sm text-blue-600 hover:text-blue-700 font-medium flex items-center gap-1"
+              >
+                <span className="text-lg leading-none">+</span> إضافة صف
+              </button>
+            )}
           </div>
         );
+      }
       
       default:
         return (
@@ -317,7 +520,7 @@ export default function ContributePage() {
   return (
     <div className="min-h-screen bg-gray-50" dir="rtl">
       {/* Header */}
-      <div className="bg-white border-b sticky top-0 z-10">
+      <div className="bg-white border-b sticky top-0 z-10 shadow-sm">
         <div className="max-w-3xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div>
@@ -327,18 +530,36 @@ export default function ContributePage() {
               </p>
             </div>
             <div className="text-left">
-              <div className="text-sm text-gray-500">التقدم</div>
-              <div className="text-lg font-bold text-blue-600">{progress}%</div>
+              <div className="text-2xl font-bold text-blue-600">{progress}%</div>
+              <div className="text-xs text-gray-500">{completedCount}/{data.items_count}</div>
             </div>
           </div>
-          
+
           {/* Progress bar */}
-          <div className="mt-3 h-2 bg-gray-200 rounded-full overflow-hidden">
+          <div className="mt-3 h-2.5 bg-gray-200 rounded-full overflow-hidden">
             <div
-              className="h-full bg-blue-600 rounded-full transition-all duration-300"
+              className={`h-full rounded-full transition-all duration-500 ${
+                progress >= 100 ? 'bg-green-500' : progress >= 50 ? 'bg-blue-600' : 'bg-amber-500'
+              }`}
               style={{ width: `${progress}%` }}
             />
           </div>
+
+          {/* Deadline warning */}
+          {data.project.deadline && !submitted && (() => {
+            const days = Math.ceil((new Date(data.project.deadline).getTime() - Date.now()) / (1000 * 60 * 60 * 24));
+            if (days <= 0) return (
+              <div className="mt-2 text-xs text-red-600 font-medium bg-red-50 px-3 py-1.5 rounded-lg">
+                انتهى الموعد النهائي — يرجى الإرسال فوراً
+              </div>
+            );
+            if (days <= 3) return (
+              <div className="mt-2 text-xs text-amber-600 font-medium bg-amber-50 px-3 py-1.5 rounded-lg">
+                متبقي {days} يوم على الموعد النهائي ({data.project.deadline})
+              </div>
+            );
+            return null;
+          })()}
         </div>
       </div>
 
@@ -383,10 +604,32 @@ export default function ContributePage() {
                     {item.notes && (
                       <p className="text-sm text-blue-600 mt-1">💡 {item.notes}</p>
                     )}
+                    {data.structure_hints?.[item.id] && (
+                      <div className="mt-2 flex flex-wrap gap-1">
+                        {data.structure_hints[item.id].data_fields.map((field) => (
+                          <span key={field.id} className={`text-xs px-2 py-0.5 rounded-full ${
+                            field.type === 'table' ? 'bg-amber-100 text-amber-700' :
+                            field.type === 'chart_data' ? 'bg-purple-100 text-purple-700' :
+                            'bg-gray-100 text-gray-600'
+                          }`}>
+                            {field.type === 'table' ? '📊' : field.type === 'chart_data' ? '📈' : '📝'} {field.title}
+                          </span>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 </div>
-                
+
                 {renderField(item)}
+                {validationErrors[item.id]?.length > 0 && (
+                  <div className="mt-2 space-y-1">
+                    {validationErrors[item.id].map((err, errIdx) => (
+                      <p key={errIdx} className="text-xs text-red-600 flex items-center gap-1">
+                        <span>⚠️</span> {err}
+                      </p>
+                    ))}
+                  </div>
+                )}
               </div>
             ))}
 

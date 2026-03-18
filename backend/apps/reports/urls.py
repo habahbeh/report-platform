@@ -21,6 +21,12 @@ router.register('item-drafts', views.ItemDraftViewSet, basename='item-draft')
 router.register('attachments', views.DraftAttachmentViewSet, basename='attachment')
 router.register('output-templates', views.OutputTemplateViewSet, basename='output-template')
 
+# Skeleton-First Workflow
+router.register('structures', views.ItemStructureViewSet, basename='item-structure')
+router.register('generated-contents', views.GeneratedContentViewSet, basename='generated-content')
+router.register('detailed-responses', views.DetailedResponseViewSet, basename='detailed-response')
+router.register('table-data', views.TableDataViewSet, basename='table-data')
+
 # Legacy router
 legacy_router = DefaultRouter()
 legacy_router.register('legacy', views.ReportViewSet, basename='report')
@@ -64,6 +70,11 @@ urlpatterns = [
     
     # توليد بنود (واحد أو أكثر أو كل بنود محور)
     path('generate-items/', views.generate_items, name='generate-items'),
+
+    # توليد من مشروع (Project/Response system)
+    path('project-generate/', views.generate_project_report, name='project-generate'),
+    path('projects/<uuid:project_id>/drafts/', views.project_drafts, name='project-drafts'),
+    path('projects/<uuid:project_id>/item-drafts/', views.project_item_drafts, name='project-item-drafts'),
     
     # مسودات المحاور لفترة معينة
     path('periods/<int:period_id>/drafts/', views.period_drafts, name='period-drafts'),
@@ -106,6 +117,19 @@ urlpatterns = [
     # سحب من الفترة السابقة تلقائياً
     path('periods/<int:period_id>/previous-data/pull/', views.pull_previous_period_data, name='pull-previous-data'),
     
+    # === Skeleton-First Workflow ===
+    # بناء الهيكل
+    path('build-skeleton/', views.build_skeleton, name='build-skeleton'),
+
+    # توليد النصوص
+    path('generate-text/', views.generate_text, name='generate-text'),
+
+    # حالة الهيكل لمشروع
+    path('projects/<uuid:project_id>/skeleton-status/', views.project_skeleton_status, name='skeleton-status'),
+
+    # تحليل تقرير سابق
+    path('analyze-report/', views.analyze_previous_report, name='analyze-report'),
+
     # New system endpoints (router)
     path('', include(router.urls)),
     

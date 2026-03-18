@@ -7,7 +7,8 @@ from django.utils.html import format_html
 from .models import (
     Project, Contributor, Response, TableData, GeneratedReport,
     Report, ReportSection, ReportImage, ReportChart,
-    AxisDraft, ItemDraft
+    AxisDraft, ItemDraft,
+    ItemStructure, GeneratedContent, DetailedResponse,
 )
 
 
@@ -143,6 +144,208 @@ class GeneratedReportAdmin(admin.ModelAdmin):
     list_display = ['project', 'format', 'status', 'file_size', 'created_at']
     list_filter = ['format', 'status']
     readonly_fields = ['id', 'created_at', 'completed_at']
+
+
+# ============================================
+# Skeleton-First Workflow Models
+# ============================================
+
+class GeneratedContentInline(admin.TabularInline):
+    model = GeneratedContent
+    extra = 0
+    fields = ['component_id', 'status', 'version', 'ai_model', 'generated_at']
+    readonly_fields = ['component_id', 'version', 'ai_model', 'generated_at']
+
+
+@admin.register(ItemStructure)
+class ItemStructureAdmin(admin.ModelAdmin):
+    """إدارة هياكل البنود"""
+
+    list_display = [
+        'item_code', 'project_name', 'source', 'is_approved',
+        'components_count', 'paragraphs_count', 'tables_count', 'charts_count',
+        'updated_at'
+    ]
+    list_filter = ['source', 'is_approved', 'project']
+    search_fields = ['item__name', 'item__code', 'project__name']
+    readonly_fields = [
+        'id', 'components_count', 'paragraphs_count',
+        'tables_count', 'charts_count',
+        'created_at', 'updated_at'
+    ]
+    ordering = ['project', 'item__axis__order', 'item__order']
+
+    fieldsets = [
+        ('المعلومات الأساسية', {
+            'fields': ['id', 'project', 'item', 'source', 'is_approved']
+        }),
+        ('المكونات', {
+            'fields': ['components'],
+            'classes': ['wide']
+        }),
+        ('الإحصائيات', {
+            'fields': ['components_count', 'paragraphs_count', 'tables_count', 'charts_count']
+        }),
+        ('عينة الأسلوب', {
+            'fields': ['style_sample'],
+            'classes': ['collapse']
+        }),
+        ('التواريخ', {
+            'fields': ['created_at', 'updated_at'],
+            'classes': ['collapse']
+        }),
+    ]
+
+    inlines = [GeneratedContentInline]
+
+    @admin.display(description='البند')
+    def item_code(self, obj):
+        return f"{obj.item.code} - {obj.item.name[:40]}"
+
+    @admin.display(description='المشروع')
+    def project_name(self, obj):
+        return obj.project.name[:40]
+
+
+@admin.register(GeneratedContent)
+class GeneratedContentAdmin(admin.ModelAdmin):
+    """إدارة المحتويات المولّدة (فقرة بفقرة)"""
+
+    list_display = [
+        'item_code', 'component_id', 'status_badge',
+        'version', 'ai_model', 'content_preview', 'generated_at'
+    ]
+    list_filter = ['status', 'ai_model', 'project']
+    search_fields = ['content', 'item_structure__item__code', 'item_structure__item__name']
+    readonly_fields = [
+        'id', 'version', 'previous_content',
+        'ai_model', 'ai_tokens_input', 'ai_tokens_output',
+        'ai_cost', 'generation_time_ms', 'prompt_used',
+        'generated_at', 'edited_at', 'approved_at',
+        'created_at', 'updated_at',
+    ]
+
+    fieldsets = [
+        ('المعلومات الأساسية', {
+            'fields': ['id', 'project', 'item_structure', 'component_id', 'status', 'version']
+        }),
+        ('المحتوى المولّد', {
+            'fields': ['content'],
+            'classes': ['wide']
+        }),
+        ('التعديل اليدوي', {
+            'fields': ['manual_edit'],
+            'classes': ['wide', 'collapse']
+        }),
+        ('معلومات AI', {
+            'fields': [
+                'ai_model', 'ai_tokens_input', 'ai_tokens_output',
+                'ai_cost', 'generation_time_ms'
+            ]
+        }),
+        ('الـ Prompt', {
+            'fields': ['prompt_used'],
+            'classes': ['collapse']
+        }),
+        ('التواريخ والمسؤولين', {
+            'fields': [
+                'generated_at', 'generated_by',
+                'edited_at', 'approved_at',
+                'created_at', 'updated_at'
+            ],
+            'classes': ['collapse']
+        }),
+    ]
+
+    @admin.display(description='البند')
+    def item_code(self, obj):
+        return obj.item_structure.item.code
+
+    @admin.display(description='معاينة')
+    def content_preview(self, obj):
+        text = obj.final_content
+        if text and len(text) > 60:
+            return text[:60] + '...'
+        return text or '—'
+
+    @admin.display(description='الحالة')
+    def status_badge(self, obj):
+        colors = {
+            'not_started': '#999',
+            'generating': '#f39c12',
+            'generated': '#3498db',
+            'edited': '#9b59b6',
+            'approved': '#27ae60',
+            'failed': '#e74c3c',
+        }
+        icons = {
+            'not_started': '⏳',
+            'generating': '⚙️',
+            'generated': '✅',
+            'edited': '📝',
+            'approved': '✔️',
+            'failed': '❌',
+        }
+        color = colors.get(obj.status, '#999')
+        icon = icons.get(obj.status, '')
+        return format_html(
+            '<span style="color: {}; font-weight: bold;">{} {}</span>',
+            color, icon, obj.get_status_display()
+        )
+
+    actions = ['approve_selected', 'mark_for_regeneration']
+
+    @admin.action(description='اعتماد المحددة')
+    def approve_selected(self, request, queryset):
+        count = queryset.filter(status__in=['generated', 'edited']).update(status='approved')
+        self.message_user(request, f'تم اعتماد {count} محتوى')
+
+    @admin.action(description='إعادة توليد المحددة')
+    def mark_for_regeneration(self, request, queryset):
+        count = queryset.update(status='not_started')
+        self.message_user(request, f'تم تجهيز {count} محتوى لإعادة التوليد')
+
+
+@admin.register(DetailedResponse)
+class DetailedResponseAdmin(admin.ModelAdmin):
+    """إدارة البيانات التفصيلية"""
+
+    list_display = [
+        'item_code', 'data_source', 'data_type', 'rows_count',
+        'contributor_name', 'updated_at'
+    ]
+    list_filter = ['data_type', 'project']
+    search_fields = ['item__code', 'item__name', 'data_source']
+    readonly_fields = ['id', 'rows_count', 'headers', 'created_at', 'updated_at']
+
+    fieldsets = [
+        ('المعلومات الأساسية', {
+            'fields': ['id', 'project', 'item', 'response', 'table_definition']
+        }),
+        ('البيانات', {
+            'fields': ['data_source', 'data_type', 'data', 'source_file']
+        }),
+        ('الإحصائيات', {
+            'fields': ['rows_count', 'headers']
+        }),
+        ('المساهم', {
+            'fields': ['contributor', 'notes']
+        }),
+        ('التواريخ', {
+            'fields': ['created_at', 'updated_at'],
+            'classes': ['collapse']
+        }),
+    ]
+
+    @admin.display(description='البند')
+    def item_code(self, obj):
+        return f"{obj.item.code} - {obj.item.name[:40]}"
+
+    @admin.display(description='المساهم')
+    def contributor_name(self, obj):
+        if obj.contributor:
+            return obj.contributor.entity.name
+        return '—'
 
 
 # ============================================

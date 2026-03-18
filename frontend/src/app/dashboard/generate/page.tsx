@@ -84,6 +84,14 @@ interface Period {
   academic_year: string;
 }
 
+interface ProjectItem {
+  id: string;
+  name: string;
+  period: string;
+  status: string;
+  template_name: string;
+}
+
 const statusConfig = {
   not_started: { label: 'لم يبدأ', color: 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400', icon: Clock },
   generating: { label: 'جاري التوليد', color: 'bg-yellow-100 dark:bg-yellow-900/50 text-yellow-700 dark:text-yellow-400', icon: Settings2 },
@@ -96,8 +104,11 @@ export default function GeneratePage() {
   const searchParams = useSearchParams();
   const periodId = searchParams.get('period_id');
   
+  const [source, setSource] = useState<'period' | 'project'>('project');
   const [periods, setPeriods] = useState<Period[]>([]);
+  const [projects, setProjects] = useState<ProjectItem[]>([]);
   const [selectedPeriod, setSelectedPeriod] = useState<number | null>(periodId ? parseInt(periodId) : null);
+  const [selectedProject, setSelectedProject] = useState<string | null>(null);
   const [drafts, setDrafts] = useState<AxisDraft[]>([]);
   const [itemAxes, setItemAxes] = useState<AxisWithItems[]>([]);
   const [genStatus, setGenStatus] = useState<GenerationStatus | null>(null);
@@ -116,25 +127,92 @@ export default function GeneratePage() {
   const [configModalOpen, setConfigModalOpen] = useState(false);
   const [configItem, setConfigItem] = useState<{id: string; code: string; name: string} | null>(null);
 
-  useEffect(() => { loadPeriods(); }, []);
   useEffect(() => {
-    if (selectedPeriod) {
+    loadPeriods();
+    loadProjects();
+  }, []);
+
+  useEffect(() => {
+    if (source === 'period' && selectedPeriod) {
       if (viewMode === 'axes') loadDrafts(selectedPeriod);
       else loadItemDrafts(selectedPeriod);
+    } else if (source === 'project' && selectedProject) {
+      if (viewMode === 'axes') loadProjectDrafts(selectedProject);
+      else loadProjectItemDrafts(selectedProject);
     }
-  }, [selectedPeriod, viewMode]);
+  }, [selectedPeriod, selectedProject, source, viewMode]);
 
   const loadPeriods = async () => {
     try {
       const data = await api.data.periods.list();
       const periodsArray = Array.isArray(data) ? data : (data?.results || []);
       setPeriods(periodsArray);
-      if (!selectedPeriod && periodsArray.length > 0) {
+      if (source === 'period' && !selectedPeriod && periodsArray.length > 0) {
         const openPeriod = periodsArray.find((p: any) => p.status === 'open');
         setSelectedPeriod(openPeriod?.id || periodsArray[0].id);
       }
     } catch (err: any) {
+      // periods may not be available
+    }
+  };
+
+  const loadProjects = async () => {
+    try {
+      const data = await api.projects.list();
+      const projectsArray = Array.isArray(data) ? data : (data?.results || []);
+      setProjects(projectsArray);
+      if (!selectedProject && projectsArray.length > 0) {
+        setSelectedProject(projectsArray[0].id);
+      }
+    } catch (err: any) {
+      // projects may not be available
+    }
+  };
+
+  const loadProjectDrafts = async (projectId: string) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const data = await api.generation.getProjectDrafts(projectId);
+      setDrafts(data.drafts || []);
+      setGenStatus(data.generation_status);
+    } catch (err: any) {
       setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const loadProjectItemDrafts = async (projectId: string) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const data = await api.generation.getProjectItemDrafts(projectId);
+      // Format: { project: {...}, drafts: [...] }
+      // Group by axis
+      const draftsList: ItemDraft[] = data.drafts || [];
+      const axisMap = new Map<number, AxisWithItems>();
+      for (const d of draftsList) {
+        if (!axisMap.has(d.axis_id)) {
+          axisMap.set(d.axis_id, {
+            axis_id: d.axis_id,
+            axis_code: d.axis_code,
+            axis_name: d.axis_name,
+            total_items: 0,
+            generated_items: 0,
+            drafts: [],
+          });
+        }
+        const axis = axisMap.get(d.axis_id)!;
+        axis.drafts.push(d);
+        axis.total_items++;
+        if (['generated', 'edited', 'approved'].includes(d.status)) axis.generated_items++;
+      }
+      setItemAxes(Array.from(axisMap.values()));
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -177,15 +255,31 @@ export default function GeneratePage() {
     setSelectedAxes(newSelected);
   };
 
+  const reloadCurrentView = async () => {
+    if (source === 'project' && selectedProject) {
+      if (viewMode === 'axes') await loadProjectDrafts(selectedProject);
+      else await loadProjectItemDrafts(selectedProject);
+    } else if (source === 'period' && selectedPeriod) {
+      if (viewMode === 'axes') await loadDrafts(selectedPeriod);
+      else await loadItemDrafts(selectedPeriod);
+    }
+  };
+
   const handleGenerate = async (axisIds?: number[]) => {
-    if (!selectedPeriod) return;
     setGenerating(true);
     setError(null);
     try {
-      const result = await api.generation.generate({ period_id: selectedPeriod, axes: axisIds, model, regenerate: false });
-      await loadDrafts(selectedPeriod);
-      setSelectedAxes(new Set());
-      if (result.errors?.length > 0) setError(`تم توليد ${result.drafts?.length || 0} محاور. أخطاء: ${result.errors.map((e: any) => e.axis_name).join(', ')}`);
+      if (source === 'project' && selectedProject) {
+        const result = await api.generation.generateProject({ project_id: selectedProject, axes: axisIds, model, regenerate: false, level: 'axes' });
+        await loadProjectDrafts(selectedProject);
+        setSelectedAxes(new Set());
+        if (result.errors?.length > 0) setError(`تم توليد ${result.drafts?.length || 0} محاور. أخطاء: ${result.errors.map((e: any) => e.axis_name).join(', ')}`);
+      } else if (selectedPeriod) {
+        const result = await api.generation.generate({ period_id: selectedPeriod, axes: axisIds, model, regenerate: false });
+        await loadDrafts(selectedPeriod);
+        setSelectedAxes(new Set());
+        if (result.errors?.length > 0) setError(`تم توليد ${result.drafts?.length || 0} محاور. أخطاء: ${result.errors.map((e: any) => e.axis_name).join(', ')}`);
+      }
     } catch (err: any) {
       setError(err.message);
     } finally {
@@ -195,21 +289,36 @@ export default function GeneratePage() {
 
   const handleGenerateSelected = () => { const axisIds = drafts.filter(d => selectedAxes.has(d.id)).map(d => d.axis); handleGenerate(axisIds); };
   const handleGenerateAll = () => { handleGenerate(); };
-  const handleRegenerate = async (draft: AxisDraft) => { setGenerating(true); try { await api.generation.axisDrafts.regenerate(draft.id, model); await loadDrafts(selectedPeriod!); } catch (err: any) { setError(err.message); } finally { setGenerating(false); } };
-  const handleApprove = async (draft: AxisDraft) => { try { await api.generation.axisDrafts.approve(draft.id); await loadDrafts(selectedPeriod!); } catch (err: any) { setError(err.message); } };
-  const handleApproveAll = async () => { const toApprove = drafts.filter(d => d.status === 'generated' || d.status === 'edited'); for (const draft of toApprove) await api.generation.axisDrafts.approve(draft.id); await loadDrafts(selectedPeriod!); };
+  const handleRegenerate = async (draft: AxisDraft) => { setGenerating(true); try { await api.generation.axisDrafts.regenerate(draft.id, model); await reloadCurrentView(); } catch (err: any) { setError(err.message); } finally { setGenerating(false); } };
+  const handleApprove = async (draft: AxisDraft) => { try { await api.generation.axisDrafts.approve(draft.id); await reloadCurrentView(); } catch (err: any) { setError(err.message); } };
+  const handleApproveAll = async () => { const toApprove = drafts.filter(d => d.status === 'generated' || d.status === 'edited'); for (const draft of toApprove) await api.generation.axisDrafts.approve(draft.id); await reloadCurrentView(); };
   const handleExport = async () => { if (!selectedPeriod) return; setExporting(true); setShowExportOptions(false); try { await api.generation.export.download(selectedPeriod, { format: 'docx', ...exportOptions }); } catch (err: any) { setError(err.message || 'فشل في تصدير التقرير'); } finally { setExporting(false); } };
   const handleEdit = (draft: AxisDraft) => { setEditingDraft(draft); setEditContent(draft.content); };
-  const handleSaveEdit = async () => { if (!editingDraft) return; try { await api.generation.axisDrafts.update(editingDraft.id, { content: editContent }); await loadDrafts(selectedPeriod!); setEditingDraft(null); } catch (err: any) { setError(err.message); } };
-  const handleRevert = async (draft: AxisDraft) => { try { await api.generation.axisDrafts.revert(draft.id); await loadDrafts(selectedPeriod!); } catch (err: any) { setError(err.message); } };
+  const handleSaveEdit = async () => { if (!editingDraft) return; try { await api.generation.axisDrafts.update(editingDraft.id, { content: editContent }); await reloadCurrentView(); setEditingDraft(null); } catch (err: any) { setError(err.message); } };
+  const handleRevert = async (draft: AxisDraft) => { try { await api.generation.axisDrafts.revert(draft.id); await reloadCurrentView(); } catch (err: any) { setError(err.message); } };
 
   const handleSelectItem = (id: string) => { const newSelected = new Set(selectedItems); if (newSelected.has(id)) newSelected.delete(id); else newSelected.add(id); setSelectedItems(newSelected); };
   const handleSelectAllItems = (axisId: number) => { const axis = itemAxes.find(a => a.axis_id === axisId); if (!axis) return; const axisItemIds = axis.drafts.map(d => d.id); const allSelected = axisItemIds.every(id => selectedItems.has(id)); const newSelected = new Set(selectedItems); if (allSelected) axisItemIds.forEach(id => newSelected.delete(id)); else axisItemIds.forEach(id => newSelected.add(id)); setSelectedItems(newSelected); };
-  const handleGenerateItems = async (itemIds?: number[], axisId?: number) => { if (!selectedPeriod) return; setGenerating(true); setError(null); try { const result = await api.generation.generateItems({ period_id: selectedPeriod, items: itemIds, axis_id: axisId, model, regenerate: false }); await loadItemDrafts(selectedPeriod); setSelectedItems(new Set()); if (result.errors?.length > 0) setError(`تم توليد ${result.drafts?.length || 0} بند. أخطاء: ${result.errors.length}`); } catch (err: any) { setError(err.message); } finally { setGenerating(false); } };
+  const handleGenerateItems = async (itemIds?: number[], axisId?: number) => {
+    setGenerating(true); setError(null);
+    try {
+      if (source === 'project' && selectedProject) {
+        const result = await api.generation.generateProject({ project_id: selectedProject, items: itemIds, axis_id: axisId, model, regenerate: false, level: 'items' });
+        await loadProjectItemDrafts(selectedProject);
+        setSelectedItems(new Set());
+        if (result.errors?.length > 0) setError(`تم توليد ${result.drafts?.length || 0} بند. أخطاء: ${result.errors.length}`);
+      } else if (selectedPeriod) {
+        const result = await api.generation.generateItems({ period_id: selectedPeriod, items: itemIds, axis_id: axisId, model, regenerate: false });
+        await loadItemDrafts(selectedPeriod);
+        setSelectedItems(new Set());
+        if (result.errors?.length > 0) setError(`تم توليد ${result.drafts?.length || 0} بند. أخطاء: ${result.errors.length}`);
+      }
+    } catch (err: any) { setError(err.message); } finally { setGenerating(false); }
+  };
   const handleGenerateSelectedItems = () => { const itemIds: number[] = []; itemAxes.forEach(axis => { axis.drafts.forEach(draft => { if (selectedItems.has(draft.id)) itemIds.push(draft.item); }); }); handleGenerateItems(itemIds); };
   const handleGenerateAxisItems = (axisId: number) => { handleGenerateItems(undefined, axisId); };
-  const handleRegenerateItem = async (draft: ItemDraft) => { setGenerating(true); try { await api.generation.itemDrafts.regenerate(draft.id, model); await loadItemDrafts(selectedPeriod!); } catch (err: any) { setError(err.message); } finally { setGenerating(false); } };
-  const handleApproveItem = async (draft: ItemDraft) => { try { await api.generation.itemDrafts.approve(draft.id); await loadItemDrafts(selectedPeriod!); } catch (err: any) { setError(err.message); } };
+  const handleRegenerateItem = async (draft: ItemDraft) => { setGenerating(true); try { await api.generation.itemDrafts.regenerate(draft.id, model); await reloadCurrentView(); } catch (err: any) { setError(err.message); } finally { setGenerating(false); } };
+  const handleApproveItem = async (draft: ItemDraft) => { try { await api.generation.itemDrafts.approve(draft.id); await reloadCurrentView(); } catch (err: any) { setError(err.message); } };
   const openOutputConfig = (draft: ItemDraft) => { setConfigItem({ id: draft.id, code: draft.item_code, name: draft.item_name }); setConfigModalOpen(true); };
 
   const canGenerateSelected = selectedAxes.size > 0 && !generating;
@@ -233,16 +342,35 @@ export default function GeneratePage() {
           </div>
         </FadeIn>
 
-        {/* Period Selector */}
+        {/* Source & Period/Project Selector */}
         <FadeIn delay={0.1}>
           <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 p-5">
             <div className="flex flex-wrap items-end gap-4">
-              <div className="flex-1 min-w-[200px]">
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">فترة الجمع</label>
-                <select value={selectedPeriod || ''} onChange={(e) => setSelectedPeriod(parseInt(e.target.value))} className="w-full p-2.5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl">
-                  <option value="">اختر فترة...</option>
-                  {periods.map((p) => <option key={p.id} value={p.id}>{p.name} ({p.academic_year})</option>)}
+              <div className="min-w-[150px]">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">مصدر البيانات</label>
+                <select value={source} onChange={(e) => setSource(e.target.value as any)} className="w-full p-2.5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl">
+                  <option value="project">مشروع</option>
+                  <option value="period">فترة جمع</option>
                 </select>
+              </div>
+              <div className="flex-1 min-w-[200px]">
+                {source === 'project' ? (
+                  <>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">المشروع</label>
+                    <select value={selectedProject || ''} onChange={(e) => setSelectedProject(e.target.value)} className="w-full p-2.5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl">
+                      <option value="">اختر مشروع...</option>
+                      {projects.map((p) => <option key={p.id} value={p.id}>{p.name} ({p.period})</option>)}
+                    </select>
+                  </>
+                ) : (
+                  <>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">فترة الجمع</label>
+                    <select value={selectedPeriod || ''} onChange={(e) => setSelectedPeriod(parseInt(e.target.value))} className="w-full p-2.5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl">
+                      <option value="">اختر فترة...</option>
+                      {periods.map((p) => <option key={p.id} value={p.id}>{p.name} ({p.academic_year})</option>)}
+                    </select>
+                  </>
+                )}
               </div>
               <div className="min-w-[150px]">
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">نموذج AI</label>
@@ -309,7 +437,7 @@ export default function GeneratePage() {
         )}
 
         {/* Axes Mode */}
-        {!loading && selectedPeriod && viewMode === 'axes' && (
+        {!loading && ((source === 'period' && selectedPeriod) || (source === 'project' && selectedProject)) && viewMode === 'axes' && (
           <>
             {/* Actions Bar */}
             <FadeIn delay={0.3}>
@@ -419,7 +547,7 @@ export default function GeneratePage() {
         )}
 
         {/* Items Mode */}
-        {!loading && selectedPeriod && viewMode === 'items' && (
+        {!loading && ((source === 'period' && selectedPeriod) || (source === 'project' && selectedProject)) && viewMode === 'items' && (
           <>
             <FadeIn delay={0.3}>
               <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 p-4 flex flex-wrap items-center gap-3">
@@ -507,15 +635,15 @@ export default function GeneratePage() {
         )}
 
         {/* Output Config Modal */}
-        {configItem && <OutputConfigModal isOpen={configModalOpen} onClose={() => { setConfigModalOpen(false); setConfigItem(null); }} itemDraftId={configItem.id} itemCode={configItem.code} itemName={configItem.name} onSave={() => { if (selectedPeriod) loadItemDrafts(selectedPeriod); }} />}
+        {configItem && <OutputConfigModal isOpen={configModalOpen} onClose={() => { setConfigModalOpen(false); setConfigItem(null); }} itemDraftId={configItem.id} itemCode={configItem.code} itemName={configItem.name} onSave={() => { reloadCurrentView(); }} />}
 
         {/* Empty State */}
-        {!loading && !selectedPeriod && (
+        {!loading && !((source === 'period' && selectedPeriod) || (source === 'project' && selectedProject)) && (
           <FadeIn>
             <div className="text-center py-16 bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800">
               <FileText className="w-16 h-16 text-gray-300 dark:text-gray-600 mx-auto mb-4" />
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">اختر فترة جمع</h3>
-              <p className="text-gray-500 dark:text-gray-400">اختر فترة جمع للبدء بتوليد التقرير</p>
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">اختر مشروع أو فترة جمع</h3>
+              <p className="text-gray-500 dark:text-gray-400">اختر مصدر البيانات للبدء بتوليد التقرير</p>
             </div>
           </FadeIn>
         )}

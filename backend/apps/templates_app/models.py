@@ -609,6 +609,7 @@ class ItemComponent(models.Model):
     COMPONENT_TYPES = [
         ('text', 'نص'),
         ('text_ai', 'نص (توليد AI)'),
+        ('heading', 'عنوان فرعي'),
         ('table', 'جدول'),
         ('chart', 'رسم بياني'),
         ('image', 'صورة'),
@@ -628,7 +629,15 @@ class ItemComponent(models.Model):
         related_name='components',
         verbose_name='البند'
     )
-    
+
+    # معرّف فريد داخل البند (مثل p1, t1, c1) — يُستخدم في {ref:t1}
+    ref_id = models.CharField(
+        'معرّف المرجع',
+        max_length=20,
+        blank=True,
+        help_text='مثل: p1, t1, c1 — يُستخدم في نظام المراجع {ref:t1}'
+    )
+
     # نوع المكوّن
     component_type = models.CharField(
         'نوع المكوّن',
@@ -677,9 +686,18 @@ class ItemComponent(models.Model):
     # هل مطلوب؟
     required = models.BooleanField('مطلوب', default=True)
     
+    # المراجع — قائمة ref_ids للمكونات التي يُشير إليها هذا المكون
+    # مثال: فقرة p2 تشير لجدول t1 → references = ["t1"]
+    references = models.JSONField(
+        'المراجع',
+        default=list,
+        blank=True,
+        help_text='قائمة ref_ids المكونات المرتبطة، مثل: ["t1", "c1"]'
+    )
+
     # ملاحظات
     notes = models.TextField('ملاحظات', blank=True)
-    
+
     class Meta:
         verbose_name = 'مكوّن بند'
         verbose_name_plural = 'مكوّنات البنود'

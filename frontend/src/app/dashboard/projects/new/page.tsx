@@ -43,6 +43,9 @@ export default function NewProjectPage() {
     period_end: '',
     deadline: '',
   });
+  const [previousReport, setPreviousReport] = useState<File | null>(null);
+  const [analyzing, setAnalyzing] = useState(false);
+  const [analysisResult, setAnalysisResult] = useState<any>(null);
 
   useEffect(() => {
     loadData();
@@ -98,6 +101,13 @@ export default function NewProjectPage() {
         deadline: formData.deadline || undefined,
       });
 
+      // Auto-build skeleton (init structures from template)
+      try {
+        await api.projects.buildSkeleton(project.id);
+      } catch (e) {
+        console.warn('Skeleton build skipped:', e);
+      }
+
       router.push(`/dashboard/projects/${project.id}`);
     } catch (err: any) {
       setError(err.message || 'حدث خطأ أثناء إنشاء المشروع');
@@ -130,11 +140,12 @@ export default function NewProjectPage() {
         {[
           { num: 1, label: 'اختر القالب' },
           { num: 2, label: 'تفاصيل المشروع' },
-          { num: 3, label: 'مراجعة وإنشاء' },
+          { num: 3, label: 'تقرير سابق' },
+          { num: 4, label: 'مراجعة وإنشاء' },
         ].map((s, i) => (
           <div key={s.num} className="flex items-center">
             <div
-              className={`flex items-center justify-center w-10 h-10 rounded-full font-bold ${
+              className={`flex items-center justify-center w-9 h-9 rounded-full font-bold text-sm ${
                 step >= s.num
                   ? 'bg-blue-600 text-white'
                   : 'bg-gray-200 text-gray-500'
@@ -142,10 +153,10 @@ export default function NewProjectPage() {
             >
               {step > s.num ? '✓' : s.num}
             </div>
-            <span className={`mx-2 text-sm ${step >= s.num ? 'text-gray-900' : 'text-gray-400'}`}>
+            <span className={`mx-1.5 text-xs ${step >= s.num ? 'text-gray-900' : 'text-gray-400'}`}>
               {s.label}
             </span>
-            {i < 2 && <div className="w-12 h-0.5 bg-gray-200 mx-2" />}
+            {i < 3 && <div className="w-8 h-0.5 bg-gray-200 mx-1" />}
           </div>
         ))}
       </div>
@@ -309,8 +320,102 @@ export default function NewProjectPage() {
           </div>
         )}
 
-        {/* Step 3: Review & Create */}
+        {/* Step 3: Previous Report (Optional) */}
         {step === 3 && (
+          <div className="card">
+            <h2 className="text-xl font-bold text-gray-900 mb-2">تقرير سابق (اختياري)</h2>
+            <p className="text-gray-600 mb-6">
+              إذا لديك تقرير سنوي سابق بصيغة Word، ارفعه وسنستخرج الهيكل تلقائياً.
+              يمكنك تخطي هذه الخطوة.
+            </p>
+
+            <div className="border-2 border-dashed border-gray-300 rounded-xl p-8 text-center">
+              <input
+                type="file"
+                accept=".docx"
+                onChange={async (e) => {
+                  const file = e.target.files?.[0];
+                  if (!file) return;
+                  setPreviousReport(file);
+                  setAnalyzing(true);
+                  try {
+                    const result = await api.projects.analyzeReport(file);
+                    setAnalysisResult(result);
+                  } catch (err: any) {
+                    console.error('Analysis failed:', err);
+                    setAnalysisResult(null);
+                  } finally {
+                    setAnalyzing(false);
+                  }
+                }}
+                className="hidden"
+                id="previous-report"
+              />
+              <label htmlFor="previous-report" className="cursor-pointer">
+                {analyzing ? (
+                  <div className="flex flex-col items-center gap-3">
+                    <div className="animate-spin h-10 w-10 border-4 border-blue-600 border-t-transparent rounded-full" />
+                    <span className="text-blue-600 font-medium">جاري تحليل التقرير...</span>
+                  </div>
+                ) : previousReport ? (
+                  <div className="flex flex-col items-center gap-2">
+                    <span className="text-3xl">📄</span>
+                    <span className="text-green-600 font-medium">{previousReport.name}</span>
+                    <span className="text-sm text-gray-500">اضغط لتغيير الملف</span>
+                  </div>
+                ) : (
+                  <div className="flex flex-col items-center gap-2">
+                    <span className="text-4xl text-gray-300">📎</span>
+                    <span className="text-blue-600 font-medium">اضغط لرفع ملف Word (.docx)</span>
+                    <span className="text-sm text-gray-500">أو تخطَّ هذه الخطوة</span>
+                  </div>
+                )}
+              </label>
+            </div>
+
+            {/* Analysis Result */}
+            {analysisResult && analysisResult.stats && (
+              <div className="mt-4 p-4 bg-green-50 border border-green-200 rounded-xl">
+                <h3 className="font-semibold text-green-700 mb-2">تم تحليل التقرير بنجاح!</h3>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
+                  <div className="text-center p-2 bg-white rounded-lg">
+                    <div className="text-xl font-bold text-green-600">{analysisResult.stats.axes_count}</div>
+                    <div className="text-gray-500">محور</div>
+                  </div>
+                  <div className="text-center p-2 bg-white rounded-lg">
+                    <div className="text-xl font-bold text-green-600">{analysisResult.stats.items_count}</div>
+                    <div className="text-gray-500">بند</div>
+                  </div>
+                  <div className="text-center p-2 bg-white rounded-lg">
+                    <div className="text-xl font-bold text-green-600">{analysisResult.stats.tables_count}</div>
+                    <div className="text-gray-500">جدول</div>
+                  </div>
+                  <div className="text-center p-2 bg-white rounded-lg">
+                    <div className="text-xl font-bold text-green-600">{analysisResult.stats.paragraphs_count}</div>
+                    <div className="text-gray-500">فقرة</div>
+                  </div>
+                </div>
+                {analysisResult.style_sample && (
+                  <div className="mt-3 text-xs text-gray-500">
+                    <strong>عينة أسلوب:</strong> {analysisResult.style_sample.slice(0, 150)}...
+                  </div>
+                )}
+              </div>
+            )}
+
+            <div className="flex justify-between mt-6 pt-6 border-t">
+              <button type="button" onClick={() => setStep(2)} className="btn btn-secondary">
+                ← السابق
+              </button>
+              <button type="button" onClick={() => setStep(4)} className="btn btn-primary">
+                {previousReport ? 'التالي →' : 'تخطّي →'}
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Step 4: Review & Create */}
+        {step === 4 && (
           <div className="card">
             <h2 className="text-xl font-bold text-gray-900 mb-4">مراجعة وإنشاء</h2>
 
@@ -356,6 +461,8 @@ export default function NewProjectPage() {
                     <li>✓ {selectedTemplate.items_count} بند للإدخال</li>
                     <li>✓ {selectedTemplate.entities_count} جهة مسؤولة</li>
                     <li>✓ روابط إدخال لكل جهة</li>
+                    <li>✓ بناء هيكل التقرير تلقائياً</li>
+                    {analysisResult && <li>✓ استخدام هيكل التقرير السابق كمرجع</li>}
                   </ul>
                 </div>
               )}
@@ -364,7 +471,7 @@ export default function NewProjectPage() {
             <div className="flex justify-between pt-6 border-t">
               <button
                 type="button"
-                onClick={() => setStep(2)}
+                onClick={() => setStep(3)}
                 className="btn btn-secondary"
               >
                 ← السابق

@@ -239,6 +239,193 @@ class AggregatedDataSerializer(serializers.Serializer):
 
 
 # ============================================
+# Skeleton-First Workflow Serializers
+# ============================================
+
+from .models import ItemStructure, GeneratedContent, DetailedResponse
+
+
+class GeneratedContentSerializer(serializers.ModelSerializer):
+    """Serializer for GeneratedContent — محتوى مولّد لفقرة واحدة"""
+
+    item_code = serializers.CharField(source='item_structure.item.code', read_only=True)
+    item_name = serializers.CharField(source='item_structure.item.name', read_only=True)
+    final_content = serializers.ReadOnlyField()
+
+    class Meta:
+        model = GeneratedContent
+        fields = [
+            'id', 'item_structure', 'project', 'component_id',
+            'item_code', 'item_name',
+            'content', 'manual_edit', 'final_content',
+            'status', 'version',
+            'ai_model', 'ai_tokens_input', 'ai_tokens_output',
+            'ai_cost', 'generation_time_ms',
+            'prompt_used',
+            'generated_at', 'edited_at', 'approved_at',
+            'generated_by', 'created_at', 'updated_at',
+        ]
+        read_only_fields = [
+            'id', 'version', 'final_content',
+            'ai_model', 'ai_tokens_input', 'ai_tokens_output',
+            'ai_cost', 'generation_time_ms', 'prompt_used',
+            'generated_at', 'edited_at', 'approved_at',
+            'created_at', 'updated_at',
+        ]
+
+
+class GeneratedContentEditSerializer(serializers.Serializer):
+    """Serializer for editing generated content manually"""
+    content = serializers.CharField(help_text='النص المعدّل يدوياً')
+
+
+class GeneratedContentRegenerateSerializer(serializers.Serializer):
+    """Serializer for regenerating a single paragraph"""
+    model = serializers.ChoiceField(
+        choices=['gemini', 'claude', 'cli'],
+        default='cli',
+        help_text='نموذج AI للتوليد'
+    )
+    extra_instructions = serializers.CharField(
+        required=False,
+        allow_blank=True,
+        help_text='تعليمات إضافية للـ AI'
+    )
+
+
+class ItemStructureSerializer(serializers.ModelSerializer):
+    """Serializer for ItemStructure — هيكل البند"""
+
+    item_code = serializers.CharField(source='item.code', read_only=True)
+    item_name = serializers.CharField(source='item.name', read_only=True)
+    axis_code = serializers.CharField(source='item.axis.code', read_only=True)
+    axis_name = serializers.CharField(source='item.axis.name', read_only=True)
+    project_name = serializers.CharField(source='project.name', read_only=True)
+    components_count = serializers.ReadOnlyField()
+    paragraphs_count = serializers.ReadOnlyField()
+    tables_count = serializers.ReadOnlyField()
+    charts_count = serializers.ReadOnlyField()
+
+    # المحتويات المولّدة لكل فقرة
+    generated_contents = GeneratedContentSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = ItemStructure
+        fields = [
+            'id', 'project', 'item',
+            'item_code', 'item_name', 'axis_code', 'axis_name',
+            'project_name',
+            'components', 'source', 'style_sample', 'is_approved',
+            'components_count', 'paragraphs_count', 'tables_count', 'charts_count',
+            'generated_contents',
+            'created_at', 'updated_at',
+        ]
+        read_only_fields = [
+            'id', 'components_count', 'paragraphs_count',
+            'tables_count', 'charts_count',
+            'created_at', 'updated_at',
+        ]
+
+
+class ItemStructureUpdateSerializer(serializers.ModelSerializer):
+    """Serializer for updating item structure components"""
+
+    class Meta:
+        model = ItemStructure
+        fields = ['components', 'style_sample', 'is_approved']
+
+
+class ItemStructureCreateFromTemplateSerializer(serializers.Serializer):
+    """Serializer for creating structures from template for a project"""
+    project_id = serializers.UUIDField(help_text='ID المشروع')
+    item_ids = serializers.ListField(
+        child=serializers.IntegerField(),
+        required=False,
+        help_text='قائمة IDs البنود. إذا فارغة = كل بنود القالب'
+    )
+    overwrite = serializers.BooleanField(
+        default=False,
+        help_text='إعادة إنشاء حتى لو موجود'
+    )
+
+
+class DetailedResponseSerializer(serializers.ModelSerializer):
+    """Serializer for DetailedResponse — بيانات تفصيلية"""
+
+    item_code = serializers.CharField(source='item.code', read_only=True)
+    item_name = serializers.CharField(source='item.name', read_only=True)
+    rows_count = serializers.ReadOnlyField()
+    headers = serializers.ReadOnlyField()
+    contributor_name = serializers.SerializerMethodField()
+
+    class Meta:
+        model = DetailedResponse
+        fields = [
+            'id', 'project', 'item', 'response', 'table_definition',
+            'item_code', 'item_name',
+            'data_source', 'data_type', 'data',
+            'rows_count', 'headers',
+            'source_file', 'contributor', 'contributor_name',
+            'notes', 'created_at', 'updated_at',
+        ]
+        read_only_fields = ['id', 'rows_count', 'headers', 'created_at', 'updated_at']
+
+    def get_contributor_name(self, obj):
+        if obj.contributor:
+            return obj.contributor.entity.name
+        return None
+
+
+class DetailedResponseCreateSerializer(serializers.ModelSerializer):
+    """Serializer for creating detailed response"""
+
+    class Meta:
+        model = DetailedResponse
+        fields = [
+            'project', 'item', 'response', 'table_definition',
+            'data_source', 'data_type', 'data',
+            'source_file', 'contributor', 'notes',
+        ]
+
+
+class SkeletonBuildRequestSerializer(serializers.Serializer):
+    """Serializer for building skeleton for a project"""
+    project_id = serializers.UUIDField(help_text='ID المشروع')
+    item_ids = serializers.ListField(
+        child=serializers.IntegerField(),
+        required=False,
+        help_text='بنود محددة. إذا فارغة = كل البنود'
+    )
+
+
+class TextGenerateRequestSerializer(serializers.Serializer):
+    """Serializer for generating text for paragraphs"""
+    project_id = serializers.UUIDField(help_text='ID المشروع')
+    item_id = serializers.IntegerField(
+        required=False,
+        help_text='بند معين لتوليد كل فقراته'
+    )
+    component_id = serializers.CharField(
+        required=False,
+        help_text='فقرة معينة لإعادة توليدها (مثل p1)'
+    )
+    structure_id = serializers.UUIDField(
+        required=False,
+        help_text='ID هيكل البند'
+    )
+    model = serializers.ChoiceField(
+        choices=['gemini', 'claude', 'cli'],
+        default='cli',
+        help_text='نموذج AI'
+    )
+    extra_instructions = serializers.CharField(
+        required=False,
+        allow_blank=True,
+        help_text='تعليمات إضافية للـ AI'
+    )
+
+
+# ============================================
 # Legacy serializers
 # ============================================
 
@@ -307,23 +494,24 @@ from .models import AxisDraft, ItemDraft
 
 class ItemDraftSerializer(serializers.ModelSerializer):
     """Serializer for ItemDraft — مسودة البند"""
-    
+
     item_code = serializers.CharField(source='item.code', read_only=True)
     item_name = serializers.CharField(source='item.name', read_only=True)
     item_unit = serializers.CharField(source='item.unit', read_only=True)
     axis_id = serializers.IntegerField(source='item.axis_id', read_only=True)
     axis_code = serializers.CharField(source='item.axis.code', read_only=True)
     axis_name = serializers.CharField(source='item.axis.name', read_only=True)
-    period_name = serializers.CharField(source='period.name', read_only=True)
-    academic_year = serializers.CharField(source='period.academic_year', read_only=True)
-    
+    period_name = serializers.SerializerMethodField()
+    academic_year = serializers.SerializerMethodField()
+    project_name = serializers.SerializerMethodField()
+
     class Meta:
         model = ItemDraft
         fields = [
-            'id', 'period', 'item',
+            'id', 'period', 'project', 'item',
             'item_code', 'item_name', 'item_unit',
             'axis_id', 'axis_code', 'axis_name',
-            'period_name', 'academic_year',
+            'period_name', 'academic_year', 'project_name',
             'content',
             'current_value', 'previous_value', 'change_percentage',
             'status', 'version',
@@ -342,6 +530,15 @@ class ItemDraftSerializer(serializers.ModelSerializer):
             'generated_at', 'edited_at', 'approved_at',
             'created_at', 'updated_at',
         ]
+
+    def get_period_name(self, obj):
+        return obj.period.name if obj.period else None
+
+    def get_academic_year(self, obj):
+        return obj.period.academic_year if obj.period else None
+
+    def get_project_name(self, obj):
+        return obj.project.name if obj.project else None
 
 
 class ItemDraftEditSerializer(serializers.ModelSerializer):
@@ -378,27 +575,28 @@ class GenerateItemsRequestSerializer(serializers.Serializer):
 
 class AxisDraftSerializer(serializers.ModelSerializer):
     """Serializer for AxisDraft — مسودة المحور"""
-    
+
     axis_code = serializers.CharField(source='axis.code', read_only=True)
     axis_name = serializers.CharField(source='axis.name', read_only=True)
     axis_order = serializers.IntegerField(source='axis.order', read_only=True)
-    period_name = serializers.CharField(source='period.name', read_only=True)
-    academic_year = serializers.CharField(source='period.academic_year', read_only=True)
-    
+    period_name = serializers.SerializerMethodField()
+    academic_year = serializers.SerializerMethodField()
+    project_name = serializers.SerializerMethodField()
+
     # حالة البيانات
     can_generate = serializers.ReadOnlyField()
     is_data_changed = serializers.ReadOnlyField()
-    
+
     # إحصائيات
     items_count = serializers.SerializerMethodField()
     items_with_data = serializers.SerializerMethodField()
-    
+
     class Meta:
         model = AxisDraft
         fields = [
-            'id', 'period', 'axis',
+            'id', 'period', 'project', 'axis',
             'axis_code', 'axis_name', 'axis_order',
-            'period_name', 'academic_year',
+            'period_name', 'academic_year', 'project_name',
             'content', 'content_html',
             'tables_data', 'charts_data',
             'status', 'version',
@@ -418,14 +616,27 @@ class AxisDraftSerializer(serializers.ModelSerializer):
             'generated_at', 'edited_at', 'approved_at',
             'created_at', 'updated_at',
         ]
-    
+
+    def get_period_name(self, obj):
+        return obj.period.name if obj.period else None
+
+    def get_academic_year(self, obj):
+        return obj.period.academic_year if obj.period else None
+
+    def get_project_name(self, obj):
+        return obj.project.name if obj.project else None
+
     def get_items_count(self, obj):
         """عدد البنود في هذا المحور"""
         return obj.axis.items.count()
-    
+
     def get_items_with_data(self, obj):
         """عدد البنود التي لها بيانات"""
-        # TODO: حساب من DataFile أو Response
+        if obj.project:
+            return Response.objects.filter(
+                project=obj.project,
+                item__axis=obj.axis,
+            ).values('item').distinct().count()
         return 0
 
 
@@ -462,6 +673,47 @@ class GenerateRequestSerializer(serializers.Serializer):
             DataCollectionPeriod.objects.get(id=value)
         except DataCollectionPeriod.DoesNotExist:
             raise serializers.ValidationError("فترة الجمع غير موجودة")
+        return value
+
+
+class GenerateProjectRequestSerializer(serializers.Serializer):
+    """Serializer for project-based generation request"""
+
+    project_id = serializers.UUIDField(help_text="ID المشروع")
+    axes = serializers.ListField(
+        child=serializers.IntegerField(),
+        required=False,
+        help_text="قائمة IDs المحاور للتوليد. إذا فارغة = الكل"
+    )
+    items = serializers.ListField(
+        child=serializers.IntegerField(),
+        required=False,
+        help_text="قائمة IDs البنود للتوليد"
+    )
+    axis_id = serializers.IntegerField(
+        required=False,
+        help_text="ID المحور لتوليد كل بنوده"
+    )
+    model = serializers.ChoiceField(
+        choices=['gemini', 'claude', 'cli'],
+        default='cli',
+        help_text="نموذج AI للتوليد"
+    )
+    regenerate = serializers.BooleanField(
+        default=False,
+        help_text="إعادة توليد حتى لو موجود"
+    )
+    level = serializers.ChoiceField(
+        choices=['axes', 'items'],
+        default='axes',
+        help_text="مستوى التوليد: axes=محاور، items=بنود"
+    )
+
+    def validate_project_id(self, value):
+        try:
+            Project.objects.get(id=value)
+        except Project.DoesNotExist:
+            raise serializers.ValidationError("المشروع غير موجود")
         return value
 
 
