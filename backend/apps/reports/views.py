@@ -1311,8 +1311,8 @@ def _build_preview_html(project, structures):
         items_html += f'''
         <div style="margin-bottom:24px;background:#fff;border:1px solid #e5e7eb;border-radius:10px;overflow:hidden;">
           <div style="padding:14px 20px;background:#f9fafb;border-bottom:1px solid #e5e7eb;">
-            <div style="font-weight:700;color:#111827;font-size:14px;">{item.code}. {item.name_ar or item.name}</div>
-            <div style="font-size:12px;color:#6b7280;margin-top:2px;">{item.axis.name_ar or item.axis.name}</div>
+            <div style="font-weight:700;color:#111827;font-size:14px;">{item.code}. {item.name}</div>
+            <div style="font-size:12px;color:#6b7280;margin-top:2px;">{item.axis.name}</div>
           </div>
           <div style="padding:16px 20px;">{comps_html or '<p style="color:#9ca3af;font-size:13px;">لا توجد مكونات</p>'}</div>
         </div>'''
