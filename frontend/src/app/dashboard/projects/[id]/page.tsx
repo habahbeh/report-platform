@@ -259,6 +259,13 @@ export default function ProjectDetailPage() {
           </p>
         </div>
         <div className="flex items-center gap-2 shrink-0">
+          <Link
+            href={`/dashboard/projects/${projectId}/structure`}
+            className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors"
+          >
+            <Layers className="w-4 h-4" />
+            <span className="hidden sm:inline">هيكل التقرير</span>
+          </Link>
           <button
             onClick={() => { setRefreshing(true); loadProject(); }}
             disabled={refreshing}

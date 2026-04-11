@@ -85,6 +85,9 @@ function numericSort(a: string, b: string): number {
   return 0;
 }
 
+// Components are displayed in their JSON array order from the backend
+// This IS the correct report order (p1 → t1 → p2 → c1 → p3...)
+
 // ═══════════════════════════════════════
 // Main Component
 // ═══════════════════════════════════════
@@ -311,7 +314,7 @@ export default function ProjectStructurePage() {
                         {/* Components (leaf level) */}
                         {isItemExpanded && (
                           <div className="pr-20 pl-5 pb-3 space-y-1.5">
-                            {item.components.map(comp => {
+                            {item.components.map((comp, compIdx) => {
                               const config = compTypeConfig[comp.type] || compTypeConfig.paragraph;
                               const Icon = config.icon;
                               const gc = itemGC.find(g => g.component_id === comp.id);
@@ -320,9 +323,11 @@ export default function ProjectStructurePage() {
 
                               return (
                                 <div key={comp.id} className={`flex items-center gap-2.5 px-3 py-2 rounded-lg ${config.color} transition-colors`}>
+                                  <span className="text-xs font-mono text-gray-400 w-5 text-center shrink-0">{compIdx + 1}</span>
                                   <Icon className="w-4 h-4 shrink-0" />
                                   <div className="flex-1 min-w-0">
                                     <span className="text-xs font-medium">{config.label}</span>
+                                    <span className="text-xs text-gray-400 mr-1">({comp.id})</span>
                                     {comp.title && <span className="text-xs text-gray-500 mr-2">— {comp.title}</span>}
                                     {comp.type === 'table' && comp.columns && (
                                       <span className="text-xs text-gray-400 mr-2">({comp.columns.length} أعمدة)</span>
