@@ -86,16 +86,31 @@ class FullReportGenerator:
             self._add_title_page()
             if include_toc:
                 self._add_toc_placeholder()
-            
+
             for axis_content in self.content:
                 self._add_axis(axis_content['data'])
                 for item_data in axis_content['items']:
                     self._add_item_from_data(item_data)
-            
+
             docx_path = self.output_dir / f"التقرير_السنوي_{timestamp}.docx"
             self.doc.save(str(docx_path))
             results['docx'] = str(docx_path)
-        
+
+        # Generate PDF (from HTML via WeasyPrint)
+        if formats in ('pdf', 'all'):
+            # Ensure HTML exists first
+            html_path = self.output_dir / f"التقرير_السنوي_{timestamp}.html"
+            if not html_path.exists():
+                self._generate_html(html_path)
+            try:
+                import weasyprint
+                pdf_path = self.output_dir / f"التقرير_السنوي_{timestamp}.pdf"
+                weasyprint.HTML(filename=str(html_path)).write_pdf(str(pdf_path))
+                results['pdf'] = str(pdf_path)
+            except Exception as e:
+                import logging
+                logging.getLogger(__name__).error(f"PDF generation failed: {e}")
+
         return results
     
     def _generate_html(self, output_path: Path):
