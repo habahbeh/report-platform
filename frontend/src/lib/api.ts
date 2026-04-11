@@ -234,9 +234,22 @@ export const api = {
   // Structures (ItemStructure)
   // ==================
   structures: {
-    list: (projectId?: string) => {
-      const query = projectId ? `?project=${projectId}` : '';
-      return fetchAPI(`/reports/structures/${query}`);
+    list: async (projectId?: string) => {
+      const query = projectId ? `?project=${projectId}&page_size=200` : '?page_size=200';
+      const first = await fetchAPI(`/reports/structures/${query}`);
+      // Fetch all pages if paginated
+      if (first.results && first.next) {
+        let all = [...first.results];
+        let nextUrl = first.next;
+        while (nextUrl) {
+          const urlObj = new URL(nextUrl);
+          const page = await fetchAPI(`/reports/structures/${urlObj.search}`);
+          all = [...all, ...(page.results || [])];
+          nextUrl = page.next;
+        }
+        return { ...first, results: all, next: null };
+      }
+      return first;
     },
     update: (id: string, data: any) =>
       fetchAPI(`/reports/structures/${id}/`, {
