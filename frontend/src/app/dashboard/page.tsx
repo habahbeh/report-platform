@@ -177,19 +177,25 @@ function ProjectCard({ project }: { project: Project }) {
           </div>
 
           {/* Meta */}
-          <div className="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400">
-            {project.template_name && (
-              <span className="flex items-center gap-1.5">
-                <FileText className="w-4 h-4" />
-                {project.template_name}
-              </span>
-            )}
-            {project.contributors_count !== undefined && (
-              <span className="flex items-center gap-1.5">
-                <Users className="w-4 h-4" />
-                {project.contributors_count} مساهم
-              </span>
-            )}
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400">
+              {project.template_name && (
+                <span className="flex items-center gap-1.5">
+                  <FileText className="w-4 h-4" />
+                  {project.template_name}
+                </span>
+              )}
+              {project.contributors_count !== undefined && (
+                <span className="flex items-center gap-1.5">
+                  <Users className="w-4 h-4" />
+                  {project.contributors_count} مساهم
+                </span>
+              )}
+            </div>
+            <span className="inline-flex items-center gap-1 text-sm font-medium text-blue-600 group-hover:text-blue-700 opacity-0 group-hover:opacity-100 transition-all">
+              ادخل للمشروع
+              <ArrowLeft className="w-4 h-4" />
+            </span>
           </div>
         </div>
       </Link>
@@ -267,13 +273,13 @@ function ProjectsGrid({ projects }: { projects: Project[] }) {
 // ==========================================
 // Workflow Guide (for new users)
 // ==========================================
-function WorkflowGuide() {
+function WorkflowGuide({ firstProjectId }: { firstProjectId?: string }) {
   const steps = [
-    { number: 1, title: 'أنشئ مشروعاً',  description: 'اختر قالب وحدد المساهمين',      icon: FolderKanban, color: 'bg-blue-500' },
-    { number: 2, title: 'اجمع البيانات', description: 'أرسل روابط — المساهمون يدخلون الأرقام', icon: Database,    color: 'bg-amber-500' },
-    { number: 3, title: 'ابنِ الهيكل',   description: 'النظام يبني HTML تلقائياً',        icon: FileText,     color: 'bg-teal-500' },
-    { number: 4, title: 'ولّد النصوص',   description: 'AI يكتب التحليلات فقط',           icon: Sparkles,     color: 'bg-purple-500' },
-    { number: 5, title: 'صدّر وشارك',    description: 'Word أو PDF أو HTML',              icon: Download,     color: 'bg-emerald-500' },
+    { number: 1, title: 'أنشئ مشروعاً',  description: 'اختر قالب وحدد الفترة والمؤسسة', icon: FolderKanban, color: 'bg-blue-500',    href: '/dashboard/projects/new' },
+    { number: 2, title: 'اجمع البيانات', description: 'أرسل روابط — المساهمون يدخلون الأرقام', icon: Database,    color: 'bg-amber-500',   href: firstProjectId ? `/dashboard/projects/${firstProjectId}` : '/dashboard/projects/new' },
+    { number: 3, title: 'ابنِ الهيكل',   description: 'النظام يبني HTML تلقائياً من البيانات', icon: FileText,     color: 'bg-teal-500',    href: firstProjectId ? `/dashboard/projects/${firstProjectId}` : '/dashboard/projects/new' },
+    { number: 4, title: 'ولّد النصوص',   description: 'الذكاء الاصطناعي يكتب التحليلات', icon: Sparkles,     color: 'bg-purple-500',  href: firstProjectId ? `/dashboard/projects/${firstProjectId}` : '/dashboard/projects/new' },
+    { number: 5, title: 'صدّر التقرير',  description: 'حمّل Word أو PDF أو HTML',         icon: Download,     color: 'bg-emerald-500', href: firstProjectId ? `/dashboard/projects/${firstProjectId}` : '/dashboard/projects/new' },
   ];
 
   return (
@@ -284,7 +290,7 @@ function WorkflowGuide() {
         </div>
         <div>
           <h2 className="text-lg font-bold text-gray-900 dark:text-white">كيف يعمل؟</h2>
-          <p className="text-sm text-gray-500 dark:text-gray-400">5 خطوات فقط</p>
+          <p className="text-sm text-gray-500 dark:text-gray-400">اضغط على أي خطوة للبدء</p>
         </div>
       </div>
 
@@ -292,14 +298,18 @@ function WorkflowGuide() {
         {steps.map((step) => {
           const Icon = step.icon;
           return (
-            <div key={step.number} className="text-center">
-              <div className={`w-12 h-12 rounded-xl ${step.color} flex items-center justify-center mx-auto mb-3`}>
+            <Link
+              key={step.number}
+              href={step.href}
+              className="text-center group cursor-pointer rounded-xl p-3 hover:bg-gray-50 dark:hover:bg-gray-800 transition-all hover:shadow-md"
+            >
+              <div className={`w-12 h-12 rounded-xl ${step.color} flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform shadow-lg`}>
                 <Icon className="w-6 h-6 text-white" />
               </div>
               <div className="text-xs font-bold text-gray-400 mb-1">خطوة {step.number}</div>
-              <h3 className="font-semibold text-sm text-gray-900 dark:text-white mb-1">{step.title}</h3>
+              <h3 className="font-semibold text-sm text-gray-900 dark:text-white mb-1 group-hover:text-blue-600 transition-colors">{step.title}</h3>
               <p className="text-xs text-gray-500 dark:text-gray-400">{step.description}</p>
-            </div>
+            </Link>
           );
         })}
       </div>
@@ -390,7 +400,7 @@ export default function DashboardPage() {
 
         {/* Workflow Guide (always visible — helps new users) */}
         <FadeIn delay={0.2}>
-          <WorkflowGuide />
+          <WorkflowGuide firstProjectId={projects.length > 0 ? projects[0].id : undefined} />
         </FadeIn>
       </div>
     </PageTransition>
