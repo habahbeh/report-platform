@@ -42,8 +42,6 @@ INSTALLED_APPS = [
     'apps.organizations',
     'apps.templates_app',
     'apps.reports',
-    'apps.data_collection',
-    'apps.ai_engine',
     'apps.export',
 ]
 

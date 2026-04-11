@@ -79,6 +79,12 @@ export default function TemplatesPage() {
   const [newTemplateDescription, setNewTemplateDescription] = useState('');
   const [newTemplateCategory, setNewTemplateCategory] = useState('higher_education');
   const [creating, setCreating] = useState(false);
+  const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
+
+  function showToast(message: string, type: 'success' | 'error' = 'error') {
+    setToast({ message, type });
+    setTimeout(() => setToast(null), 4000);
+  }
 
   useEffect(() => {
     loadTemplates();
@@ -129,7 +135,7 @@ export default function TemplatesPage() {
       selectTemplate(newTemplate);
     } catch (error) {
       console.error('Failed to create template:', error);
-      alert('فشل في إنشاء القالب');
+      showToast('فشل في إنشاء القالب');
     } finally {
       setCreating(false);
     }
@@ -149,12 +155,11 @@ export default function TemplatesPage() {
       selectTemplate(duplicated);
     } catch (error) {
       console.error('Failed to duplicate template:', error);
-      alert('فشل في نسخ القالب');
+      showToast('فشل في نسخ القالب');
     }
   }
 
   async function handleDeleteTemplate(template: Template) {
-    if (!confirm(`هل أنت متأكد من حذف القالب "${template.name}"؟`)) return;
     try {
       await api.templates.delete(template.id);
       const newList = templates.filter(t => t.id !== template.id);
@@ -166,7 +171,7 @@ export default function TemplatesPage() {
       }
     } catch (error) {
       console.error('Failed to delete template:', error);
-      alert('فشل في حذف القالب');
+      showToast('فشل في حذف القالب');
     }
   }
 
@@ -181,10 +186,18 @@ export default function TemplatesPage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-64">
-        <div className="text-center">
-          <Loader2 className="h-12 w-12 animate-spin text-blue-600 mx-auto mb-4" />
-          <p className="text-gray-600 dark:text-gray-400">جاري تحميل القوالب...</p>
+      <div className="space-y-6 animate-pulse">
+        <div className="flex items-center justify-between">
+          <div className="space-y-2">
+            <div className="h-7 bg-gray-200 dark:bg-gray-700 rounded w-32" />
+            <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-64" />
+          </div>
+          <div className="h-9 bg-gray-200 dark:bg-gray-700 rounded w-32" />
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <div key={i} className="card h-48 bg-gray-100 dark:bg-gray-800" />
+          ))}
         </div>
       </div>
     );
@@ -523,6 +536,14 @@ export default function TemplatesPage() {
           </div>
         )}
       </div>
+
+      {toast && (
+        <div className={`fixed bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-2 px-5 py-3 rounded-xl shadow-xl text-sm font-medium z-50 ${
+          toast.type === 'success' ? 'bg-emerald-500 text-white' : 'bg-red-500 text-white'
+        }`}>
+          {toast.message}
+        </div>
+      )}
     </PageTransition>
   );
 }

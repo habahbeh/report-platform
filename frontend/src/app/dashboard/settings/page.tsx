@@ -30,13 +30,19 @@ export default function SettingsPage() {
   const [user, setUser] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [saveStatus, setSaveStatus] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
   const [activeTab, setActiveTab] = useState<'profile' | 'password' | 'appearance' | 'ai' | 'notifications'>('profile');
   const [theme, setThemeState] = useState<Theme>('light');
   const [profileForm, setProfileForm] = useState({ name_ar: '', email: '' });
   const [passwordForm, setPasswordForm] = useState({ old_password: '', new_password: '', confirm_password: '' });
   const [aiSettings, setAiSettings] = useState({ default_model: 'cli', word_count: 500, include_charts: true, include_tables: true });
+  const [notifSettings, setNotifSettings] = useState({ email_submissions: true, email_reviews: true, email_generation: true });
 
   useEffect(() => {
+    const savedAi = localStorage.getItem('aiSettings');
+    if (savedAi) setAiSettings(JSON.parse(savedAi));
+    const savedNotif = localStorage.getItem('notifSettings');
+    if (savedNotif) setNotifSettings(JSON.parse(savedNotif));
     const savedTheme = localStorage.getItem('theme') as Theme;
     if (savedTheme && ['light', 'dark', 'system'].includes(savedTheme)) {
       setThemeState(savedTheme);
@@ -72,14 +78,19 @@ export default function SettingsPage() {
     }
   }
 
+  function showStatus(message: string, type: 'success' | 'error') {
+    setSaveStatus({ message, type });
+    setTimeout(() => setSaveStatus(null), 4000);
+  }
+
   async function handleSaveProfile() {
     setSaving(true);
     try {
       await api.auth.updateProfile(profileForm);
-      alert('تم حفظ التغييرات بنجاح');
+      showStatus('تم حفظ التغييرات بنجاح', 'success');
       loadUser();
     } catch (error) {
-      alert('فشل في حفظ التغييرات');
+      showStatus('فشل في حفظ التغييرات', 'error');
     } finally {
       setSaving(false);
     }
@@ -87,16 +98,16 @@ export default function SettingsPage() {
 
   async function handleChangePassword() {
     if (passwordForm.new_password !== passwordForm.confirm_password) {
-      alert('كلمة المرور الجديدة غير متطابقة');
+      showStatus('كلمة المرور الجديدة غير متطابقة', 'error');
       return;
     }
     setSaving(true);
     try {
       await api.auth.changePassword({ old_password: passwordForm.old_password, new_password: passwordForm.new_password, new_password_confirm: passwordForm.confirm_password });
-      alert('تم تغيير كلمة المرور بنجاح');
+      showStatus('تم تغيير كلمة المرور بنجاح', 'success');
       setPasswordForm({ old_password: '', new_password: '', confirm_password: '' });
     } catch (error) {
-      alert('فشل في تغيير كلمة المرور');
+      showStatus('فشل في تغيير كلمة المرور', 'error');
     } finally {
       setSaving(false);
     }
@@ -182,6 +193,12 @@ export default function SettingsPage() {
                       <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{language === 'ar' ? 'البريد الإلكتروني' : 'Email'}</label>
                       <input type="email" value={profileForm.email} onChange={(e) => setProfileForm({ ...profileForm, email: e.target.value })} className="w-full px-4 py-2.5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl" />
                     </div>
+                    {saveStatus && activeTab === 'profile' && (
+                      <div className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium ${saveStatus.type === 'success' ? 'bg-emerald-50 text-emerald-700' : 'bg-red-50 text-red-700'}`}>
+                        {saveStatus.type === 'success' ? <Check className="w-4 h-4" /> : null}
+                        {saveStatus.message}
+                      </div>
+                    )}
                     <button onClick={handleSaveProfile} disabled={saving} className="flex items-center gap-2 px-4 py-2.5 bg-blue-600 text-white rounded-xl hover:bg-blue-700 disabled:opacity-50">
                       {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
                       {saving ? (language === 'ar' ? 'جاري الحفظ...' : 'Saving...') : (language === 'ar' ? 'حفظ التغييرات' : 'Save Changes')}
@@ -209,6 +226,12 @@ export default function SettingsPage() {
                       <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{language === 'ar' ? 'تأكيد كلمة المرور' : 'Confirm Password'}</label>
                       <input type="password" value={passwordForm.confirm_password} onChange={(e) => setPasswordForm({ ...passwordForm, confirm_password: e.target.value })} className="w-full px-4 py-2.5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl" />
                     </div>
+                    {saveStatus && activeTab === 'password' && (
+                      <div className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium ${saveStatus.type === 'success' ? 'bg-emerald-50 text-emerald-700' : 'bg-red-50 text-red-700'}`}>
+                        {saveStatus.type === 'success' ? <Check className="w-4 h-4" /> : null}
+                        {saveStatus.message}
+                      </div>
+                    )}
                     <button onClick={handleChangePassword} disabled={saving} className="flex items-center gap-2 px-4 py-2.5 bg-blue-600 text-white rounded-xl hover:bg-blue-700 disabled:opacity-50">
                       {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Lock className="w-4 h-4" />}
                       {language === 'ar' ? 'تغيير كلمة المرور' : 'Change Password'}
@@ -278,7 +301,13 @@ export default function SettingsPage() {
                         ))}
                       </div>
                     </div>
-                    <button className="flex items-center gap-2 px-4 py-2.5 bg-blue-600 text-white rounded-xl hover:bg-blue-700">
+                    {saveStatus && activeTab === 'ai' && (
+                      <div className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium ${saveStatus.type === 'success' ? 'bg-emerald-50 text-emerald-700' : 'bg-red-50 text-red-700'}`}>
+                        {saveStatus.type === 'success' ? <Check className="w-4 h-4" /> : null}
+                        {saveStatus.message}
+                      </div>
+                    )}
+                    <button onClick={() => { localStorage.setItem('aiSettings', JSON.stringify(aiSettings)); showStatus('تم حفظ إعدادات AI', 'success'); }} className="flex items-center gap-2 px-4 py-2.5 bg-blue-600 text-white rounded-xl hover:bg-blue-700">
                       <Save className="w-4 h-4" />
                       {language === 'ar' ? 'حفظ الإعدادات' : 'Save Settings'}
                     </button>
@@ -303,10 +332,21 @@ export default function SettingsPage() {
                           <div className="font-medium text-gray-900 dark:text-white">{item.label}</div>
                           <div className="text-sm text-gray-500 dark:text-gray-400">{item.desc}</div>
                         </div>
-                        <input type="checkbox" defaultChecked className="w-5 h-5 rounded accent-blue-600" />
+                        <input
+                          type="checkbox"
+                          checked={notifSettings[item.id as keyof typeof notifSettings]}
+                          onChange={(e) => setNotifSettings({ ...notifSettings, [item.id]: e.target.checked })}
+                          className="w-5 h-5 rounded accent-blue-600"
+                        />
                       </label>
                     ))}
-                    <button className="flex items-center gap-2 px-4 py-2.5 bg-blue-600 text-white rounded-xl hover:bg-blue-700">
+                    {saveStatus && activeTab === 'notifications' && (
+                      <div className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium ${saveStatus.type === 'success' ? 'bg-emerald-50 text-emerald-700' : 'bg-red-50 text-red-700'}`}>
+                        {saveStatus.type === 'success' ? <Check className="w-4 h-4" /> : null}
+                        {saveStatus.message}
+                      </div>
+                    )}
+                    <button onClick={() => { localStorage.setItem('notifSettings', JSON.stringify(notifSettings)); showStatus('تم حفظ إعدادات الإشعارات', 'success'); }} className="flex items-center gap-2 px-4 py-2.5 bg-blue-600 text-white rounded-xl hover:bg-blue-700">
                       <Save className="w-4 h-4" />
                       {language === 'ar' ? 'حفظ الإعدادات' : 'Save Settings'}
                     </button>

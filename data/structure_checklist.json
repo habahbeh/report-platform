@@ -1,0 +1,554 @@
+[
+  {
+    "axis": "1",
+    "name": "الاعتمادية وضمان الجودة",
+    "items": [
+      {
+        "code": "1.1",
+        "word": {
+          "texts": 1,
+          "tables": 2,
+          "figures": 0
+        },
+        "db": 3,
+        "match": true
+      },
+      {
+        "code": "1.2",
+        "word": {
+          "texts": 14,
+          "tables": 0,
+          "figures": 0
+        },
+        "db": 14,
+        "match": true
+      },
+      {
+        "code": "1.3",
+        "word": {
+          "texts": 14,
+          "tables": 1,
+          "figures": 1
+        },
+        "db": 16,
+        "match": true
+      },
+      {
+        "code": "1.4",
+        "word": {
+          "texts": 14,
+          "tables": 0,
+          "figures": 0
+        },
+        "db": 14,
+        "match": true
+      },
+      {
+        "code": "1.5",
+        "word": {
+          "texts": 2,
+          "tables": 0,
+          "figures": 0
+        },
+        "db": 2,
+        "match": true
+      },
+      {
+        "code": "1.6",
+        "word": {
+          "texts": 1,
+          "tables": 0,
+          "figures": 0
+        },
+        "db": 1,
+        "match": true
+      },
+      {
+        "code": "1.7",
+        "word": {
+          "texts": 1,
+          "tables": 2,
+          "figures": 0
+        },
+        "db": 3,
+        "match": true
+      },
+      {
+        "code": "1.8",
+        "word": {
+          "texts": 0,
+          "tables": 0,
+          "figures": 0
+        },
+        "db": 0,
+        "match": true
+      },
+      {
+        "code": "1.9",
+        "word": {
+          "texts": 8,
+          "tables": 8,
+          "figures": 4
+        },
+        "db": 20,
+        "match": true
+      },
+      {
+        "code": "1.10",
+        "word": {
+          "texts": 29,
+          "tables": 5,
+          "figures": 3
+        },
+        "db": 37,
+        "match": true
+      }
+    ],
+    "totals": {
+      "texts": 84,
+      "tables": 18,
+      "figures": 8,
+      "in_db": 110
+    }
+  },
+  {
+    "axis": "2",
+    "name": "التدريس",
+    "items": [
+      {
+        "code": "2.1",
+        "word": {
+          "texts": 0,
+          "tables": 0,
+          "figures": 0
+        },
+        "db": 0,
+        "match": true
+      },
+      {
+        "code": "2.2",
+        "word": {
+          "texts": 2,
+          "tables": 2,
+          "figures": 2
+        },
+        "db": 6,
+        "match": true
+      },
+      {
+        "code": "2.3",
+        "word": {
+          "texts": 0,
+          "tables": 0,
+          "figures": 0
+        },
+        "db": 0,
+        "match": true
+      },
+      {
+        "code": "2.4",
+        "word": {
+          "texts": 23,
+          "tables": 0,
+          "figures": 0
+        },
+        "db": 23,
+        "match": true
+      },
+      {
+        "code": "2.5",
+        "word": {
+          "texts": 8,
+          "tables": 8,
+          "figures": 0
+        },
+        "db": 16,
+        "match": true
+      },
+      {
+        "code": "2.6",
+        "word": {
+          "texts": 0,
+          "tables": 0,
+          "figures": 0
+        },
+        "db": 0,
+        "match": true
+      },
+      {
+        "code": "2.7",
+        "word": {
+          "texts": 20,
+          "tables": 6,
+          "figures": 0
+        },
+        "db": 26,
+        "match": true
+      }
+    ],
+    "totals": {
+      "texts": 53,
+      "tables": 16,
+      "figures": 2,
+      "in_db": 71
+    }
+  },
+  {
+    "axis": "3",
+    "name": "البحث العلمي",
+    "items": [
+      {
+        "code": "3.1",
+        "word": {
+          "texts": 5,
+          "tables": 6,
+          "figures": 2
+        },
+        "db": 13,
+        "match": true
+      },
+      {
+        "code": "3.2",
+        "word": {
+          "texts": 4,
+          "tables": 0,
+          "figures": 4
+        },
+        "db": 8,
+        "match": true
+      },
+      {
+        "code": "3.3",
+        "word": {
+          "texts": 4,
+          "tables": 8,
+          "figures": 0
+        },
+        "db": 12,
+        "match": true
+      },
+      {
+        "code": "3.4",
+        "word": {
+          "texts": 1,
+          "tables": 0,
+          "figures": 1
+        },
+        "db": 2,
+        "match": true
+      },
+      {
+        "code": "3.5",
+        "word": {
+          "texts": 1,
+          "tables": 0,
+          "figures": 0
+        },
+        "db": 1,
+        "match": true
+      },
+      {
+        "code": "3.6",
+        "word": {
+          "texts": 1,
+          "tables": 0,
+          "figures": 0
+        },
+        "db": 1,
+        "match": true
+      },
+      {
+        "code": "3.7",
+        "word": {
+          "texts": 62,
+          "tables": 10,
+          "figures": 0
+        },
+        "db": 72,
+        "match": true
+      },
+      {
+        "code": "3.8",
+        "word": {
+          "texts": 54,
+          "tables": 4,
+          "figures": 0
+        },
+        "db": 58,
+        "match": true
+      }
+    ],
+    "totals": {
+      "texts": 132,
+      "tables": 28,
+      "figures": 7,
+      "in_db": 167
+    }
+  },
+  {
+    "axis": "4",
+    "name": "إدارة الموارد البشرية",
+    "items": [
+      {
+        "code": "4.1",
+        "word": {
+          "texts": 4,
+          "tables": 0,
+          "figures": 0
+        },
+        "db": 4,
+        "match": true
+      },
+      {
+        "code": "4.2",
+        "word": {
+          "texts": 6,
+          "tables": 4,
+          "figures": 0
+        },
+        "db": 10,
+        "match": true
+      },
+      {
+        "code": "4.3",
+        "word": {
+          "texts": 1,
+          "tables": 2,
+          "figures": 0
+        },
+        "db": 3,
+        "match": true
+      },
+      {
+        "code": "4.4",
+        "word": {
+          "texts": 1,
+          "tables": 0,
+          "figures": 0
+        },
+        "db": 1,
+        "match": true
+      },
+      {
+        "code": "4.5",
+        "word": {
+          "texts": 1,
+          "tables": 0,
+          "figures": 0
+        },
+        "db": 1,
+        "match": true
+      },
+      {
+        "code": "4.6",
+        "word": {
+          "texts": 2,
+          "tables": 0,
+          "figures": 0
+        },
+        "db": 2,
+        "match": true
+      },
+      {
+        "code": "4.7",
+        "word": {
+          "texts": 1,
+          "tables": 2,
+          "figures": 0
+        },
+        "db": 3,
+        "match": true
+      },
+      {
+        "code": "4.8",
+        "word": {
+          "texts": 1,
+          "tables": 0,
+          "figures": 0
+        },
+        "db": 1,
+        "match": true
+      },
+      {
+        "code": "4.9",
+        "word": {
+          "texts": 1,
+          "tables": 0,
+          "figures": 0
+        },
+        "db": 1,
+        "match": true
+      },
+      {
+        "code": "4.10",
+        "word": {
+          "texts": 1,
+          "tables": 0,
+          "figures": 0
+        },
+        "db": 1,
+        "match": true
+      },
+      {
+        "code": "4.11",
+        "word": {
+          "texts": 1,
+          "tables": 0,
+          "figures": 0
+        },
+        "db": 1,
+        "match": true
+      },
+      {
+        "code": "4.12",
+        "word": {
+          "texts": 2,
+          "tables": 0,
+          "figures": 0
+        },
+        "db": 2,
+        "match": true
+      },
+      {
+        "code": "4.13",
+        "word": {
+          "texts": 1,
+          "tables": 0,
+          "figures": 0
+        },
+        "db": 1,
+        "match": true
+      }
+    ],
+    "totals": {
+      "texts": 23,
+      "tables": 8,
+      "figures": 0,
+      "in_db": 31
+    }
+  },
+  {
+    "axis": "5",
+    "name": "البنية التحتية",
+    "items": [
+      {
+        "code": "5.1",
+        "word": {
+          "texts": 5,
+          "tables": 0,
+          "figures": 0
+        },
+        "db": 5,
+        "match": true
+      },
+      {
+        "code": "5.2",
+        "word": {
+          "texts": 5,
+          "tables": 0,
+          "figures": 0
+        },
+        "db": 5,
+        "match": true
+      },
+      {
+        "code": "5.3",
+        "word": {
+          "texts": 73,
+          "tables": 16,
+          "figures": 0
+        },
+        "db": 89,
+        "match": true
+      },
+      {
+        "code": "5.4",
+        "word": {
+          "texts": 9,
+          "tables": 20,
+          "figures": 0
+        },
+        "db": 29,
+        "match": true
+      },
+      {
+        "code": "5.5",
+        "word": {
+          "texts": 5,
+          "tables": 4,
+          "figures": 0
+        },
+        "db": 9,
+        "match": true
+      }
+    ],
+    "totals": {
+      "texts": 97,
+      "tables": 40,
+      "figures": 0,
+      "in_db": 137
+    }
+  },
+  {
+    "axis": "6",
+    "name": "خدمة المجتمع",
+    "items": [
+      {
+        "code": "6.1",
+        "word": {
+          "texts": 2,
+          "tables": 2,
+          "figures": 0
+        },
+        "db": 4,
+        "match": true
+      },
+      {
+        "code": "6.2",
+        "word": {
+          "texts": 1,
+          "tables": 0,
+          "figures": 0
+        },
+        "db": 1,
+        "match": true
+      },
+      {
+        "code": "6.3",
+        "word": {
+          "texts": 1,
+          "tables": 0,
+          "figures": 0
+        },
+        "db": 1,
+        "match": true
+      },
+      {
+        "code": "6.4",
+        "word": {
+          "texts": 3,
+          "tables": 2,
+          "figures": 0
+        },
+        "db": 5,
+        "match": true
+      },
+      {
+        "code": "6.5",
+        "word": {
+          "texts": 13,
+          "tables": 0,
+          "figures": 0
+        },
+        "db": 13,
+        "match": true
+      }
+    ],
+    "totals": {
+      "texts": 20,
+      "tables": 4,
+      "figures": 0,
+      "in_db": 24
+    }
+  }
+]

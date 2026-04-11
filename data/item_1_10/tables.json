@@ -1,0 +1,892 @@
+[
+  {
+    "id": "1-6",
+    "title": "جدول (1-6): وثائق التعاون للفترة 2023-2024.",
+    "headers": [
+      "",
+      "Institution",
+      "Country",
+      "Type of Cooperation",
+      "Date",
+      "Duration"
+    ],
+    "rows": [
+      {
+        "": "",
+        "Institution": "Correlation One",
+        "Country": "USA",
+        "Type of Cooperation": "Capacity building and employability",
+        "Date": "2024",
+        "Duration": "1 year"
+      },
+      {
+        "": "",
+        "Institution": "Utah State University",
+        "Country": "USA",
+        "Type of Cooperation": "Scientific Research & Academic Cooperation",
+        "Date": "2024",
+        "Duration": "5 years"
+      },
+      {
+        "": "",
+        "Institution": "The Jordanian American Commission           for Educational Exchange",
+        "Country": "USA",
+        "Type of Cooperation": "Capacity building & Academic Cooperation",
+        "Date": "2024",
+        "Duration": "3 years"
+      },
+      {
+        "": "",
+        "Institution": "University College of London",
+        "Country": "United Kingdom",
+        "Type of Cooperation": "Student Exchange",
+        "Date": "2024",
+        "Duration": "5 years"
+      },
+      {
+        "": "",
+        "Institution": "International Association of Universities",
+        "Country": "France",
+        "Type of Cooperation": "Membership",
+        "Date": "2024",
+        "Duration": "1 year"
+      },
+      {
+        "": "",
+        "Institution": "Friedrich-Schiller-Universität Jena",
+        "Country": "Germany",
+        "Type of Cooperation": "Scientific Research",
+        "Date": "2024",
+        "Duration": "1 year"
+      },
+      {
+        "": "",
+        "Institution": "University College of Dublin",
+        "Country": "Ireland",
+        "Type of Cooperation": "Academic Cooperation & Student Exchange",
+        "Date": "2024",
+        "Duration": "3 years"
+      },
+      {
+        "": "",
+        "Institution": "Istanbul Medipol University",
+        "Country": "Turkey",
+        "Type of Cooperation": "Academic Cooperation and Capacity building",
+        "Date": "2024",
+        "Duration": "5 years"
+      },
+      {
+        "": "",
+        "Institution": "Communication University of China",
+        "Country": "China",
+        "Type of Cooperation": "Scientific Research & Academic Cooperation",
+        "Date": "2024",
+        "Duration": "5 years"
+      },
+      {
+        "": "",
+        "Institution": "Huawei Technologies",
+        "Country": "China",
+        "Type of Cooperation": "Academic Cooperation and Capacity building",
+        "Date": "2024",
+        "Duration": "1 year"
+      },
+      {
+        "": "",
+        "Institution": "Skyline University College",
+        "Country": "Emirates",
+        "Type of Cooperation": "Scientific Research & Academic Cooperation",
+        "Date": "2024",
+        "Duration": "5 years"
+      },
+      {
+        "": "",
+        "Institution": "Palestine Polytechnic University",
+        "Country": "Palestine",
+        "Type of Cooperation": "Scientific Research & Academic Cooperation",
+        "Date": "2024",
+        "Duration": "3 years"
+      },
+      {
+        "": "",
+        "Institution": "Al-Quds Open University",
+        "Country": "Palestine",
+        "Type of Cooperation": "Scientific Research & Academic Cooperation",
+        "Date": "2024",
+        "Duration": "3 years"
+      },
+      {
+        "": "",
+        "Institution": "Al-Rawdah University College",
+        "Country": "Palestine",
+        "Type of Cooperation": "Scientific Research & Academic Cooperation",
+        "Date": "2024",
+        "Duration": "5 years"
+      },
+      {
+        "": "",
+        "Institution": "Universiti Sains Islam Malaysia (USIM)",
+        "Country": "Malaysia",
+        "Type of Cooperation": "Scientific Research (LOI)",
+        "Date": "2024",
+        "Duration": "-"
+      },
+      {
+        "": "",
+        "Institution": "Asia Pacific University (APU)",
+        "Country": "Malaysia",
+        "Type of Cooperation": "Scientific Research & Academic Cooperation",
+        "Date": "2024",
+        "Duration": "5 years"
+      },
+      {
+        "": "",
+        "Institution": "Management and Science University (msu)",
+        "Country": "Malaysia",
+        "Type of Cooperation": "Scientific Research & Academic Cooperation",
+        "Date": "2024",
+        "Duration": "5 years"
+      },
+      {
+        "": "",
+        "Institution": "Australian University",
+        "Country": "Kuwait",
+        "Type of Cooperation": "Scientific Research & Academic Cooperation",
+        "Date": "2024",
+        "Duration": "5 years"
+      },
+      {
+        "": "",
+        "Institution": "Ministry of Digital Economy and Entrepreneurship",
+        "Country": "Jordan",
+        "Type of Cooperation": "Capacity building",
+        "Date": "2024",
+        "Duration": "3 years"
+      },
+      {
+        "": "",
+        "Institution": "Academia Industry Platform (JAIP)",
+        "Country": "Jordan",
+        "Type of Cooperation": "Scientific Research",
+        "Date": "2024",
+        "Duration": "2 years"
+      },
+      {
+        "": "",
+        "Institution": "Electronic Health Solutions",
+        "Country": "Jordan",
+        "Type of Cooperation": "Capacity building and resources",
+        "Date": "2024",
+        "Duration": "1 year"
+      },
+      {
+        "": "",
+        "Institution": "Arab Group for the Protection of Nature",
+        "Country": "Jordan",
+        "Type of Cooperation": "Sustainability",
+        "Date": "2024",
+        "Duration": "1 year"
+      },
+      {
+        "": "",
+        "Institution": "Al-Moasron Group",
+        "Country": "Jordan",
+        "Type of Cooperation": "Capacity building and Scientific Research",
+        "Date": "2024",
+        "Duration": "3 years"
+      },
+      {
+        "": "",
+        "Institution": "Dar Al Dawa",
+        "Country": "Jordan",
+        "Type of Cooperation": "Capacity building and employability",
+        "Date": "2024",
+        "Duration": "1 year"
+      },
+      {
+        "": "",
+        "Institution": "Al-Rai Center for Studies and Media Training",
+        "Country": "Jordan",
+        "Type of Cooperation": "Capacity building and employability",
+        "Date": "2024",
+        "Duration": "1 year"
+      },
+      {
+        "": "",
+        "Institution": "Ayla Media",
+        "Country": "Jordan",
+        "Type of Cooperation": "Capacity building and employability",
+        "Date": "2024",
+        "Duration": "1 year"
+      },
+      {
+        "": "",
+        "Institution": "Jordan Volleyball Federation",
+        "Country": "Jordan",
+        "Type of Cooperation": "Capacity building and employability",
+        "Date": "2024",
+        "Duration": "1 year"
+      },
+      {
+        "": "",
+        "Institution": "Jordanian Weight Lifting Federation",
+        "Country": "Jordan",
+        "Type of Cooperation": "Capacity building and employability",
+        "Date": "2024",
+        "Duration": "1 year"
+      },
+      {
+        "": "",
+        "Institution": "Arab Group for the Protection of Nature",
+        "Country": "Jordan",
+        "Type of Cooperation": "Sustainability",
+        "Date": "2024",
+        "Duration": "1 year"
+      },
+      {
+        "": "",
+        "Institution": "Jordan Radio and Television Corporation",
+        "Country": "Jordan",
+        "Type of Cooperation": "Practical training for students of the Faculty of Mass Communication",
+        "Date": "2024",
+        "Duration": "1 year"
+      },
+      {
+        "": "",
+        "Institution": "Naif Al Haj Foundation",
+        "Country": "Jordan",
+        "Type of Cooperation": "Basketball Training",
+        "Date": "2024",
+        "Duration": "1 year"
+      },
+      {
+        "": "",
+        "Institution": "Sports Culture Association",
+        "Country": "Jordan",
+        "Type of Cooperation": "Research, Training, Development",
+        "Date": "2024",
+        "Duration": "1 year"
+      },
+      {
+        "": "",
+        "Institution": "Tomouh Foundation for Capacity Development",
+        "Country": "Jordan",
+        "Type of Cooperation": "Cooperation and exchange in academic fields",
+        "Date": "2024",
+        "Duration": "5 year"
+      },
+      {
+        "": "",
+        "Institution": "Jordan Library and Information Association",
+        "Country": "Jordan",
+        "Type of Cooperation": "Cooperation and exchange in academic fields",
+        "Date": "2024",
+        "Duration": "3 year"
+      },
+      {
+        "": "",
+        "Institution": "Sovana Foundation for Consulting and Economic Projects Development",
+        "Country": "Jordan",
+        "Type of Cooperation": "Free hands-on field training",
+        "Date": "2024",
+        "Duration": "1 year"
+      },
+      {
+        "": "",
+        "Institution": "Society of Retired Military Engineers",
+        "Country": "Jordan",
+        "Type of Cooperation": "Rehabilitation and training of students",
+        "Date": "2024",
+        "Duration": "5 year"
+      },
+      {
+        "": "",
+        "Institution": "Department of Statistics",
+        "Country": "Jordan",
+        "Type of Cooperation": "Scientific Research and Employability",
+        "Date": "2024",
+        "Duration": "1 year"
+      },
+      {
+        "": "",
+        "Institution": "Al-Taif Co. (Nomoo Hub)",
+        "Country": "Jordan",
+        "Type of Cooperation": "Employability",
+        "Date": "2024",
+        "Duration": "2 years"
+      },
+      {
+        "": "",
+        "Institution": "Balkan Industrial Co.",
+        "Country": "Jordan",
+        "Type of Cooperation": "Capacity building and employability",
+        "Date": "2024",
+        "Duration": "1 year"
+      },
+      {
+        "": "",
+        "Institution": "INGOT Brokers",
+        "Country": "Jordan",
+        "Type of Cooperation": "Capacity building",
+        "Date": "2024",
+        "Duration": "1 year"
+      },
+      {
+        "": "",
+        "Institution": "Jordan Ahli Bank",
+        "Country": "Jordan",
+        "Type of Cooperation": "Capacity building and employability",
+        "Date": "2024",
+        "Duration": "1 year"
+      },
+      {
+        "": "",
+        "Institution": "Mada",
+        "Country": "Jordan",
+        "Type of Cooperation": "Capacity building and employability",
+        "Date": "2024",
+        "Duration": "1 year"
+      },
+      {
+        "": "",
+        "Institution": "Jordanian Pharmaceutical Manufacturing Co. (JPM)",
+        "Country": "Jordan",
+        "Type of Cooperation": "Capacity building, employability and Scientific Research",
+        "Date": "2024",
+        "Duration": "5 years"
+      },
+      {
+        "": "",
+        "Institution": "Arab Thought Forum",
+        "Country": "Jordan",
+        "Type of Cooperation": "Capacity building, Scientific Research",
+        "Date": "2024",
+        "Duration": "5 years"
+      },
+      {
+        "": "Iraqi Universities",
+        "Institution": "Iraqi Universities",
+        "Country": "Iraqi Universities",
+        "Type of Cooperation": "Iraqi Universities",
+        "Date": "Iraqi Universities",
+        "Duration": "Iraqi Universities",
+        "c6": "Iraqi Universities"
+      },
+      {
+        "": "",
+        "Institution": "University of Samarra",
+        "Country": "Iraq",
+        "Type of Cooperation": "Scientific Research & Academic Cooperation",
+        "Date": "2024",
+        "Duration": "5 years"
+      },
+      {
+        "": "",
+        "Institution": "Nahrain University",
+        "Country": "Iraq",
+        "Type of Cooperation": "Scientific Research & Academic Cooperation",
+        "Date": "2024",
+        "Duration": "5 years"
+      },
+      {
+        "": "",
+        "Institution": "Al-Iraqia University",
+        "Country": "Iraq",
+        "Type of Cooperation": "Scientific Research & Academic Cooperation",
+        "Date": "2024",
+        "Duration": "5 years"
+      },
+      {
+        "": "",
+        "Institution": "University of Anbar",
+        "Country": "Iraq",
+        "Type of Cooperation": "Scientific Research & Academic Cooperation",
+        "Date": "2024",
+        "Duration": "5 years"
+      },
+      {
+        "": "",
+        "Institution": "Al-Muthanna University",
+        "Country": "Iraq",
+        "Type of Cooperation": "Scientific Research & Academic Cooperation",
+        "Date": "2024",
+        "Duration": "5 years"
+      },
+      {
+        "": "",
+        "Institution": "Wasit University",
+        "Country": "Iraq",
+        "Type of Cooperation": "Scientific Research & Academic Cooperation",
+        "Date": "2024",
+        "Duration": "5 years"
+      },
+      {
+        "": "",
+        "Institution": "National University of Science and Technology",
+        "Country": "Iraq",
+        "Type of Cooperation": "Scientific Research & Academic Cooperation",
+        "Date": "2024",
+        "Duration": "5 years"
+      },
+      {
+        "": "",
+        "Institution": "Al-Shaab University",
+        "Country": "Iraq",
+        "Type of Cooperation": "Scientific Research & Academic Cooperation",
+        "Date": "2024",
+        "Duration": "5 years"
+      },
+      {
+        "": "",
+        "Institution": "University of Kufa",
+        "Country": "Iraq",
+        "Type of Cooperation": "Scientific Research & Academic Cooperation",
+        "Date": "2024",
+        "Duration": "5 years"
+      },
+      {
+        "": "",
+        "Institution": "University of Information Technology and Communications",
+        "Country": "Iraq",
+        "Type of Cooperation": "Scientific Research & Academic Cooperation",
+        "Date": "2024",
+        "Duration": "5 years"
+      },
+      {
+        "": "",
+        "Institution": "Al-Qalam University College",
+        "Country": "Iraq",
+        "Type of Cooperation": "Scientific Research & Academic Cooperation",
+        "Date": "2024",
+        "Duration": "5 years"
+      },
+      {
+        "": "",
+        "Institution": "University of Sulaimani",
+        "Country": "Iraq-Kurdistan",
+        "Type of Cooperation": "Scientific Research & Academic Cooperation",
+        "Date": "2024",
+        "Duration": "5 years"
+      },
+      {
+        "": "",
+        "Institution": "Komar University of Science and Technology",
+        "Country": "Iraq-Kurdistan",
+        "Type of Cooperation": "Scientific Research & Academic Cooperation",
+        "Date": "2024",
+        "Duration": "5 years"
+      },
+      {
+        "": "",
+        "Institution": "Sulaimani Polytechnic University",
+        "Country": "Iraq-Kurdistan",
+        "Type of Cooperation": "Scientific Research & Academic Cooperation",
+        "Date": "2024",
+        "Duration": "5 years"
+      },
+      {
+        "": "",
+        "Institution": "Qaiwan International University",
+        "Country": "Iraq-Kurdistan",
+        "Type of Cooperation": "Scientific Research & Academic Cooperation",
+        "Date": "2024",
+        "Duration": "5 years"
+      },
+      {
+        "": "",
+        "Institution": "University of Garmian",
+        "Country": "Iraq-Kurdistan",
+        "Type of Cooperation": "Scientific Research & Academic Cooperation",
+        "Date": "2024",
+        "Duration": "5 years"
+      },
+      {
+        "": "",
+        "Institution": "University of Human Development",
+        "Country": "Iraq-Kurdistan",
+        "Type of Cooperation": "Scientific Research & Academic Cooperation",
+        "Date": "2024",
+        "Duration": "5 years"
+      },
+      {
+        "": "",
+        "Institution": "University of Raparin",
+        "Country": "Iraq-Kurdistan",
+        "Type of Cooperation": "Scientific Research & Academic Cooperation",
+        "Date": "2024",
+        "Duration": "5 years"
+      },
+      {
+        "": "",
+        "Institution": "Cihan University of Sulaymaniyah",
+        "Country": "Iraq-Kurdistan",
+        "Type of Cooperation": "Scientific Research & Academic Cooperation",
+        "Date": "2024",
+        "Duration": "5 years"
+      },
+      {
+        "": "",
+        "Institution": "University of Halabja",
+        "Country": "Iraq-Kurdistan",
+        "Type of Cooperation": "Scientific Research & Academic Cooperation",
+        "Date": "2024",
+        "Duration": "5 years"
+      },
+      {
+        "": "",
+        "Institution": "Tishk International University Sulaimani",
+        "Country": "Iraq-Kurdistan",
+        "Type of Cooperation": "Scientific Research & Academic Cooperation",
+        "Date": "2024",
+        "Duration": "5 years"
+      },
+      {
+        "": "",
+        "Institution": "Charmo University",
+        "Country": "Iraq-Kurdistan",
+        "Type of Cooperation": "Scientific Research & Academic Cooperation",
+        "Date": "2024",
+        "Duration": "5 years"
+      },
+      {
+        "": "",
+        "Institution": "American University of Iraq-Sulaimani",
+        "Country": "Iraq-Kurdistan",
+        "Type of Cooperation": "Scientific Research & Academic Cooperation",
+        "Date": "2024",
+        "Duration": "5 years"
+      },
+      {
+        "": "",
+        "Institution": "University of Garmian",
+        "Country": "Iraq-Kurdistan",
+        "Type of Cooperation": "Scientific Research & Academic Cooperation",
+        "Date": "2024",
+        "Duration": "5 years"
+      },
+      {
+        "": "",
+        "Institution": "University of Duhok",
+        "Country": "Iraq-Kurdistan",
+        "Type of Cooperation": "Scientific Research & Academic Cooperation",
+        "Date": "2024",
+        "Duration": "5 years"
+      },
+      {
+        "": "",
+        "Institution": "Nawroz University",
+        "Country": "Iraq-Kurdistan",
+        "Type of Cooperation": "Scientific Research & Academic Cooperation",
+        "Date": "2024",
+        "Duration": "5 years"
+      },
+      {
+        "": "",
+        "Institution": "Duhok Polytechnic University",
+        "Country": "Iraq-Kurdistan",
+        "Type of Cooperation": "Scientific Research & Academic Cooperation",
+        "Date": "2024",
+        "Duration": "5 years"
+      },
+      {
+        "": "",
+        "Institution": "Cihan University - Duhok",
+        "Country": "Iraq-Kurdistan",
+        "Type of Cooperation": "Scientific Research & Academic Cooperation",
+        "Date": "2024",
+        "Duration": "5 years"
+      },
+      {
+        "": "",
+        "Institution": "University of Zakho",
+        "Country": "Iraq-Kurdistan",
+        "Type of Cooperation": "Scientific Research & Academic Cooperation",
+        "Date": "2024",
+        "Duration": "5 years"
+      },
+      {
+        "": "",
+        "Institution": "Akre University",
+        "Country": "Iraq-Kurdistan",
+        "Type of Cooperation": "Scientific Research & Academic Cooperation",
+        "Date": "2024",
+        "Duration": "5 years"
+      },
+      {
+        "": "",
+        "Institution": "The American University of Kurdistan",
+        "Country": "Iraq-Kurdistan",
+        "Type of Cooperation": "Scientific Research & Academic Cooperation",
+        "Date": "2024",
+        "Duration": "5 years"
+      },
+      {
+        "": "",
+        "Institution": "Al-Kitab University",
+        "Country": "Iraq-Kurdistan",
+        "Type of Cooperation": "Scientific Research & Academic Cooperation",
+        "Date": "2024",
+        "Duration": "5 years"
+      },
+      {
+        "": "",
+        "Institution": "Knowledge University",
+        "Country": "Iraq-Kurdistan",
+        "Type of Cooperation": "Scientific Research & Academic Cooperation",
+        "Date": "2024",
+        "Duration": "5 years"
+      },
+      {
+        "": "",
+        "Institution": "Al-Forqan University",
+        "Country": "Iraq-Kurdistan",
+        "Type of Cooperation": "Scientific Research & Academic Cooperation",
+        "Date": "2024",
+        "Duration": "5 years"
+      },
+      {
+        "": "",
+        "Institution": "Al-Nukhba University College",
+        "Country": "Iraq-Kurdistan",
+        "Type of Cooperation": "Scientific Research & Academic Cooperation",
+        "Date": "2024",
+        "Duration": "5 years"
+      }
+    ],
+    "count": 80
+  },
+  {
+    "id": "auto_1",
+    "title": "جدول",
+    "headers": [
+      "",
+      "Institution",
+      "Country",
+      "Type of Cooperation",
+      "Date",
+      "Duration"
+    ],
+    "rows": [
+      {
+        "": "",
+        "Institution": "Odoo Middle East Limited",
+        "Country": "Dubai",
+        "Type of Cooperation": "Academic Cooperation",
+        "Date": "2023",
+        "Duration": "2 years"
+      },
+      {
+        "": "",
+        "Institution": "Istanbul University",
+        "Country": "Turkey",
+        "Type of Cooperation": "Academic Cooperation",
+        "Date": "2023",
+        "Duration": "1 year"
+      },
+      {
+        "": "",
+        "Institution": "University Sains Malaysia",
+        "Country": "Malaysia",
+        "Type of Cooperation": "Scientific Research & Academic Cooperation",
+        "Date": "2023",
+        "Duration": "18 months"
+      },
+      {
+        "": "",
+        "Institution": "Suzhou University for Science and Technology",
+        "Country": "China",
+        "Type of Cooperation": "Scientific Research & Academic Cooperation",
+        "Date": "2023",
+        "Duration": "2 years"
+      },
+      {
+        "": "",
+        "Institution": "The Royal Academy of Engineering (Jordan) & University of Bradford",
+        "Country": "UK",
+        "Type of Cooperation": "Scientific Research Cooperation",
+        "Date": "2023",
+        "Duration": "1 year"
+      },
+      {
+        "": "",
+        "Institution": "New World for Water Technology (Jordan) & University of Bradford",
+        "Country": "UK",
+        "Type of Cooperation": "Scientific Research Cooperation",
+        "Date": "2023",
+        "Duration": "1 year"
+      },
+      {
+        "": "",
+        "Institution": "International Association of Universities",
+        "Country": "France",
+        "Type of Cooperation": "Membership",
+        "Date": "2023",
+        "Duration": "1"
+      },
+      {
+        "": "",
+        "Institution": "IPCA Polytechnic Institute of Cávado and Ave",
+        "Country": "Portugal",
+        "Type of Cooperation": "Mobility of staff and students",
+        "Date": "2023",
+        "Duration": "4 years"
+      },
+      {
+        "": "",
+        "Institution": "University of Minho",
+        "Country": "Portugal",
+        "Type of Cooperation": "Scientific Research & Academic Cooperation",
+        "Date": "2023",
+        "Duration": "3 years"
+      },
+      {
+        "": "",
+        "Institution": "Abonnez-vous à l’infolettre de l’AUF International",
+        "Country": "Canada",
+        "Type of Cooperation": "Scientific Research & Academic Cooperation",
+        "Date": "2023",
+        "Duration": "By the end of activities"
+      },
+      {
+        "": "",
+        "Institution": "Amideast\\Jordan",
+        "Country": "USA",
+        "Type of Cooperation": "Academic Cooperation",
+        "Date": "2023",
+        "Duration": "2 years"
+      },
+      {
+        "": "",
+        "Institution": "The Hope",
+        "Country": "Jordan",
+        "Type of Cooperation": "Academic Cooperation",
+        "Date": "2023",
+        "Duration": "1 year"
+      },
+      {
+        "": "",
+        "Institution": "Jordanian Royal Medical Services",
+        "Country": "Jordan",
+        "Type of Cooperation": "Academic Cooperation",
+        "Date": "2023",
+        "Duration": "2 years"
+      },
+      {
+        "": "",
+        "Institution": "National Cyber Security Center",
+        "Country": "Jordan",
+        "Type of Cooperation": "Scientific Research & Academic Cooperation",
+        "Date": "2023",
+        "Duration": "1 year"
+      },
+      {
+        "": "",
+        "Institution": "National Center for Research & Development",
+        "Country": "Jordan",
+        "Type of Cooperation": "Scientific Research Cooperation",
+        "Date": "2023",
+        "Duration": "1 year"
+      },
+      {
+        "": "",
+        "Institution": "Specialty Hospital",
+        "Country": "Jordan",
+        "Type of Cooperation": "Academic Cooperation",
+        "Date": "2023",
+        "Duration": "4 years"
+      },
+      {
+        "": "",
+        "Institution": "Social Security Corporation",
+        "Country": "Jordan",
+        "Type of Cooperation": "Academic Cooperation",
+        "Date": "2023",
+        "Duration": "2 years"
+      },
+      {
+        "": "",
+        "Institution": "Synchrotron-Light for Experimental Science and Applications in the Middle East",
+        "Country": "Jordan",
+        "Type of Cooperation": "Scientific Research & Academic Cooperation",
+        "Date": "2023",
+        "Duration": "5 years"
+      },
+      {
+        "": "",
+        "Institution": "Jordanian Lawyers Association",
+        "Country": "Jordan",
+        "Type of Cooperation": "Academic Cooperation",
+        "Date": "2023",
+        "Duration": "1 year"
+      },
+      {
+        "": "",
+        "Institution": "Central Bank of Jordan",
+        "Country": "Jordan",
+        "Type of Cooperation": "Academic Cooperation",
+        "Date": "2023",
+        "Duration": "1 year"
+      },
+      {
+        "": "",
+        "Institution": "National Agricultural Research Center",
+        "Country": "Jordan",
+        "Type of Cooperation": "Scientific Research & Academic Cooperation",
+        "Date": "2023",
+        "Duration": "10 years"
+      },
+      {
+        "": "21",
+        "Institution": "Swiss Health Care LLC",
+        "Country": "Jordan",
+        "Type of Cooperation": "Scientific Research Cooperation",
+        "Date": "2023",
+        "Duration": "5 years"
+      }
+    ],
+    "count": 22
+  },
+  {
+    "id": "1-7",
+    "title": "جدول (1-7): نتائج إدارة مذكرات التفاهم التي تفيد التدريب لغايات التوظيف.",
+    "headers": [
+      "مدى فاعلية وثيقة التعاون الخاصة بالتوظيف ومخرجاتها للعام 2023-2024",
+      "جهة التعاون"
+    ],
+    "rows": [
+      {
+        "مدى فاعلية وثيقة التعاون الخاصة بالتوظيف ومخرجاتها للعام 2023-2024": "تم تدريب 100 طالبٍ وطالبة ضمن برنامج Tech. for Jobs الممول بالكامل من ضمنهم 55 خريجًا و45 طالبًا وطالبة.\n\nتم تأهيل ضباط ارتباط مذكرة التفاهم من الطلبة، وعددهم 8 طلبة موزعين على كليات وأقسام مختلفة (صحافة وإعلام رقمي، ذكاء أعمال وتحليل بيانات، ترجمة، التحريك والوسائط المتعددة، تكنولوجيا مالية، محاسبة، أعمال وتجارة إلكترونية، كيمياء)، ومما يجدر ذكره حصولهم على مكافأة مالية مقابل عدد ساعات العمل.",
+        "جهة التعاون": "Correlation One"
+      },
+      {
+        "مدى فاعلية وثيقة التعاون الخاصة بالتوظيف ومخرجاتها للعام 2023-2024": "تم عقد ورشة عمل للطلبة وأعضاء الهيئة التدريسية.\nيتم بشكل فصلي تدريب الطلبة في كلية العلوم الإدارية والمالية-قسم الأعمال الإلكترونية على تطبيقات  Odoo ضمن خطط بعض المواد الدراسية.",
+        "جهة التعاون": "Odoo Middle East Limited"
+      },
+      {
+        "مدى فاعلية وثيقة التعاون الخاصة بالتوظيف ومخرجاتها للعام 2023-2024": "تم تقديم ثلاث طالبات للمنح المقدمة (واحدة من كلية الإعلام وطالبتان من كلية الصيدلة والعلوم الطبية).\nتم الحصول على منحة تبادل طلابي من USAID ولكن أُوقفت نتيجة القرارات الحالية.",
+        "جهة التعاون": "The Jordanian American Commission for Educational Exchange"
+      },
+      {
+        "مدى فاعلية وثيقة التعاون الخاصة بالتوظيف ومخرجاتها للعام 2023-2024": "تم إعطاء ورشة عمل للطلبة في كلية تكنولوجيا المعلومات.\nتم مشاركة فريقين من كلية تكنولوجيا المعلومات في مسابقة هواوي العالمية.\nتم اعتماد الجامعة كأكاديمية معترف بها لهواوي وتم إنشاء حساب للجامعة، ليصار إلى إنشاء حسابات لأعضاء الهيئة التدريسية والطلبة.",
+        "جهة التعاون": "Huawei Technologies"
+      },
+      {
+        "مدى فاعلية وثيقة التعاون الخاصة بالتوظيف ومخرجاتها للعام 2023-2024": "تم تدريب مجموعات متعددة من طلبة الجامعة (أكثر من 60 طالبًا) من خلال دورات متنوعة ومتعددة، من مثل: بايثون، الأمن السيبراني، إدارة الموارد، التسويق الرقمي، التطبيقات المحاسبية، الذكاء الاصطناعي...إلخ.\n\nعلى الرغم من الفائدة المتحققة من مذكرة التفاهم، إلا أنه تم اتخاذ القرار بعدم التجديد بسبب الاعتقاد بوجود تضارب في المصالح في بعض الدورات المقدمة مع مركز التعليم المستمر.",
+        "جهة التعاون": "The Hope"
+      },
+      {
+        "مدى فاعلية وثيقة التعاون الخاصة بالتوظيف ومخرجاتها للعام 2023-2024": "تم تدريب وتوظيف 4 طلابٍ من قسم الكيمياء، وقسم المحاسبة.\nتم التعاون لإجراء العديد من التجارب التي تفيد تطوير منتجات جديدة.",
+        "جهة التعاون": "Al-Moasron Group"
+      },
+      {
+        "مدى فاعلية وثيقة التعاون الخاصة بالتوظيف ومخرجاتها للعام 2023-2024": "حصلت الجامعة على الموافقة لتكون أكاديمية معتمدة لكل من: AWS Academy، وRed Hat Academy، وHuawei Academy، وMicrosoft.\nتم تسجيل 26 طالبًا ضمن أكاديمية AWS وMicrosoft وحصولهم على تمويل من مشروع البنك الدولي للتقدم للشهادات المهنية.\nاستفاد أعضاء الهيئة التدريسية المسجلون كمدرسين في أكاديمية AWS من المواد التعليمية المجانية وربطها مع المواد التي يقومون بتدريسها، وحصولهم على شهادات مهنية ممولة من مشروع البنك الدولي.",
+        "جهة التعاون": "Ministry of Digital Economics and Entrepreneurship (MODEE)"
+      },
+      {
+        "مدى فاعلية وثيقة التعاون الخاصة بالتوظيف ومخرجاتها للعام 2023-2024": "تم تصوير 5 فيديوهات للبرامج الأكاديمية في جامعة البترا ضمن برنامج \"اعرف تخصصك\" التابع لمنصة نمو والممول من الشركة.\nالربط مع المنصة للاستفادة من التحاليل الإحصائية المهمة للمهارات المطلوبة لسوق العمل.",
+        "جهة التعاون": "Al-Taif Co.- Nomoo Platform"
+      }
+    ],
+    "count": 8
+  }
+]

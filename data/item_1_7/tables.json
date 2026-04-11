@@ -1,0 +1,52 @@
+[
+  {
+    "id": "1-2",
+    "title": "جدول (1-2) : التصنيفات العالمية.",
+    "headers": [
+      "Rankings",
+      "Ranking’s website",
+      "University Ranking 2023",
+      "University Ranking 2023",
+      "University Ranking 2024"
+    ],
+    "rows": [
+      {
+        "Rankings": "",
+        "Ranking’s website": "https://www.uop.edu.jo/ar/universitypresident/news/pages/25-271.aspx",
+        "University Ranking 2023": "",
+        "University Ranking 2024": "QS world ranking 2026 1201-1400"
+      },
+      {
+        "Rankings": "",
+        "Ranking’s website": "https://www.uop.edu.jo/ar/news/pages/24-459.aspx",
+        "University Ranking 2023": "",
+        "University Ranking 2024": "حصلت جامعة البترا على تصنيف خمسة نجوم في تصنيف \"QS Stars\" العالمي"
+      },
+      {
+        "Rankings": "QS Arab Region Ranking",
+        "Ranking’s website": "https://www.topuniversities.com/university-rankings/arab-region-university-rankings/2024",
+        "University Ranking 2023": "Locally\n\n\n\n14th",
+        "University Ranking 2024": "Arab Region\n121-130"
+      },
+      {
+        "Rankings": "Times Higher Education Impact Rankings",
+        "Ranking’s website": "https://www.timeshighereducation.com/impactrankings#!/page/0/length/25/locations/JO/sort_by/rank/sort_order/asc/cols/undefined",
+        "University Ranking 2023": "11",
+        "University Ranking 2024": "601-800"
+      },
+      {
+        "Rankings": "Green Metrics Ranking",
+        "Ranking’s website": "http://greenmetric.ui.ac.id/country-list2020/?country=Jordan",
+        "University Ranking 2023": "",
+        "University Ranking 2024": "259\n5th locally"
+      },
+      {
+        "Rankings": "Webometrics",
+        "Ranking’s website": "http://www.webometrics.info/en/aw/Jordan",
+        "University Ranking 2023": "16th",
+        "University Ranking 2024": "13th locally"
+      }
+    ],
+    "count": 6
+  }
+]

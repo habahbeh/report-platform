@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { api } from '@/lib/api';
+import { PageTransition, FadeIn } from '@/components/ui/motion';
 
 interface Item {
   id: number;
@@ -119,8 +120,23 @@ export default function TemplateDetailPage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-64">
-        <div className="animate-spin h-8 w-8 border-4 border-blue-600 border-t-transparent rounded-full"></div>
+      <div className="space-y-6 animate-pulse">
+        <div className="flex items-start justify-between">
+          <div className="space-y-2">
+            <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-48" />
+            <div className="h-7 bg-gray-200 dark:bg-gray-700 rounded w-64" />
+            <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-40" />
+          </div>
+          <div className="h-9 bg-gray-200 dark:bg-gray-700 rounded w-32" />
+        </div>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <div key={i} className="card h-20 bg-gray-100 dark:bg-gray-800" />
+          ))}
+        </div>
+        {Array.from({ length: 3 }).map((_, i) => (
+          <div key={i} className="card h-16 bg-gray-100 dark:bg-gray-800" />
+        ))}
       </div>
     );
   }
@@ -137,8 +153,10 @@ export default function TemplateDetailPage() {
   }
 
   return (
+    <PageTransition>
     <div className="space-y-6">
       {/* Header */}
+      <FadeIn>
       <div className="flex items-start justify-between">
         <div>
           <div className="flex items-center gap-2 text-sm text-gray-500 mb-2">
@@ -161,6 +179,7 @@ export default function TemplateDetailPage() {
           + إنشاء مشروع
         </Link>
       </div>
+      </FadeIn>
 
       {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -335,5 +354,6 @@ export default function TemplateDetailPage() {
         </div>
       )}
     </div>
+    </PageTransition>
   );
 }

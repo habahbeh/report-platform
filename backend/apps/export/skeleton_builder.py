@@ -17,8 +17,16 @@ from typing import Optional, List, Dict, Any
 from apps.templates_app.models import Axis, Item, TableDefinition, ChartDefinition
 from apps.reports.models import (
     Project, Response, TableData, ItemStructure,
-    GeneratedContent, DetailedResponse,
+    GeneratedContent,
 )
+
+# DetailedResponse is optional - may not exist yet
+try:
+    from apps.reports.models import DetailedResponse
+    HAS_DETAILED_RESPONSE = True
+except ImportError:
+    DetailedResponse = None
+    HAS_DETAILED_RESPONSE = False
 
 
 class SkeletonBuilder:
@@ -51,13 +59,14 @@ class SkeletonBuilder:
         for td in TableData.objects.filter(project=self.project).select_related('table_definition'):
             self._table_data_cache[td.table_definition_id] = td
 
-        # Detailed responses
-        for dr in DetailedResponse.objects.filter(project=self.project).select_related('item'):
-            key = (dr.item_id, dr.data_source)
-            self._detailed_cache[key] = dr
-            # Also store by table_definition_id if linked
-            if dr.table_definition_id:
-                self._detailed_cache[('table_def', dr.table_definition_id)] = dr
+        # Detailed responses (optional - may not exist)
+        if HAS_DETAILED_RESPONSE and DetailedResponse is not None:
+            for dr in DetailedResponse.objects.filter(project=self.project).select_related('item'):
+                key = (dr.item_id, dr.data_source)
+                self._detailed_cache[key] = dr
+                # Also store by table_definition_id if linked
+                if dr.table_definition_id:
+                    self._detailed_cache[('table_def', dr.table_definition_id)] = dr
 
         # Generated contents
         for gc in GeneratedContent.objects.filter(project=self.project).select_related('item_structure'):
@@ -152,7 +161,52 @@ class SkeletonBuilder:
                 # Fallback: basic item with no structure
                 html += self._render_item_basic(item)
 
+        # Add tables from this axis that have data
+        html += self._render_axis_tables(axis)
+
         html += '    </section>\n'
+        return html
+
+    def _render_axis_tables(self, axis: Axis) -> str:
+        """عرض الجداول المتوفرة لهذا المحور"""
+        html = ''
+        tables_rendered = []
+
+        # Get all table definitions for this axis
+        table_defs = TableDefinition.objects.filter(axis=axis).order_by('order')
+
+        for tdef in table_defs:
+            # Check if we have data for this table
+            td = self._table_data_cache.get(tdef.id)
+            if td and td.rows:
+                tables_rendered.append(tdef.id)
+                headers = []
+                rows = []
+
+                if isinstance(td.rows[0], dict):
+                    headers = list(td.rows[0].keys())
+                    rows = [[r.get(h, '') for h in headers] for r in td.rows]
+                elif isinstance(td.rows[0], list):
+                    headers = td.rows[0] if td.rows else []
+                    rows = td.rows[1:] if len(td.rows) > 1 else []
+
+                if headers and rows:
+                    html += f'''
+        <div class="table-container axis-table" data-table-def="{tdef.id}">
+            <p class="table-title">{tdef.name}</p>
+            <table class="data-table">
+                <thead>
+                    <tr>{''.join(f'<th>{h}</th>' for h in headers)}</tr>
+                </thead>
+                <tbody>
+'''
+                    for row in rows:
+                        cells = ''.join(f'<td>{cell}</td>' for cell in row)
+                        html += f'                    <tr>{cells}</tr>\n'
+                    html += '''                </tbody>
+            </table>
+        </div>
+'''
         return html
 
     # ==========================================
@@ -281,6 +335,15 @@ class SkeletonBuilder:
             except TableDefinition.DoesNotExist:
                 pass
 
+        # Source 5: Search TableData by title match (smart fallback)
+        if not rows and title:
+            for td_id, td in self._table_data_cache.items():
+                if td.table_definition and title in td.table_definition.name:
+                    if td.rows and isinstance(td.rows[0], dict):
+                        headers = list(td.rows[0].keys())
+                        rows = [[r.get(h, '') for h in headers] for r in td.rows]
+                        break
+
         if headers and rows:
             # Build real table
             table_html = f'''            <div class="table-container" data-component="{comp_id}">
@@ -326,6 +389,23 @@ class SkeletonBuilder:
         if dr and dr.data:
             labels = dr.data.get('labels', dr.data.get('headers', []))
             values = dr.data.get('values', [])
+
+        # From TableData via table_def_id (for charts linked to tables)
+        table_def_id = comp.get('table_def_id')
+        if not values and table_def_id:
+            td = self._table_data_cache.get(table_def_id)
+            if td and td.rows:
+                # Extract first column as labels, second as values
+                for row in td.rows:
+                    if isinstance(row, dict):
+                        keys = list(row.keys())
+                        vals = list(row.values())
+                        if len(keys) >= 2:
+                            labels.append(str(vals[0]))
+                            try:
+                                values.append(float(vals[1]))
+                            except (ValueError, TypeError):
+                                values.append(0)
 
         # From ChartDefinition data_source
         if not values and chart_def_id:

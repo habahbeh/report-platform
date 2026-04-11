@@ -18,8 +18,6 @@ urlpatterns = [
         path('organizations/', include('apps.organizations.urls')),
         path('templates/', include('apps.templates_app.urls')),
         path('reports/', include('apps.reports.urls')),
-        path('data/', include('apps.data_collection.urls')),
-        path('ai/', include('apps.ai_engine.urls')),
         path('export/', include('apps.export.urls')),
     ])),
 ]

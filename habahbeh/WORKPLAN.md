@@ -356,6 +356,20 @@
 - ✅ TypeScript + Python بدون أخطاء
 - 🎯 **المطابقة مع Workflow ارتفعت من ~87% إلى ~97%**
 
+### Session 6 — 2026-03-18 (الفجوة الأخيرة: قالب Excel)
+- ✅ Backend: `contribute_excel_template` endpoint — يولّد Excel فاضي بالأعمدة من Structure/TableDefinition
+  - يكتشف الأعمدة من ItemStructure.components → TableDefinition.columns
+  - يضيف الصفوف الثابتة (fixed_rows) للجداول الثابتة
+  - تنسيق احترافي (header ملوّن + عنوان + تعليمات + RTL)
+  - 10 صفوف فارغة للجداول المتغيرة
+- ✅ URL: `GET /api/reports/contribute/<token>/excel-template/<item_id>/`
+- ✅ Frontend API: `api.contribute.excelTemplateUrl(token, itemId)`
+- ✅ Frontend UI: زر "📥 تحميل قالب Excel" في:
+  - حقل رفع الملف (excel_import) — مع شرح "حمّل، عبّئ، ارفع"
+  - الجداول التفاعلية (table_dynamic/table_static) — بديل للإدخال في المتصفح
+- ✅ TypeScript + Python بدون أخطاء
+- 🎯 **المطابقة مع Workflow: 100%** ✅
+
 ---
 
 ## ═══════════════════════════════════════════

@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { api } from '@/lib/api';
+import { PageTransition, FadeIn } from '@/components/ui/motion';
 
 interface Template {
   id: number;
@@ -49,13 +50,24 @@ export default function AxesListPage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-64">
-        <div className="animate-spin h-12 w-12 border-4 border-blue-600 border-t-transparent rounded-full"></div>
+      <div className="space-y-6 animate-pulse">
+        <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-48" />
+        <div className="flex items-center justify-between">
+          <div className="space-y-2">
+            <div className="h-7 bg-gray-200 dark:bg-gray-700 rounded w-40" />
+            <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-32" />
+          </div>
+          <div className="h-9 bg-gray-200 dark:bg-gray-700 rounded w-28" />
+        </div>
+        {Array.from({ length: 4 }).map((_, i) => (
+          <div key={i} className="card h-20 bg-gray-100 dark:bg-gray-800" />
+        ))}
       </div>
     );
   }
 
   return (
+    <PageTransition>
     <div className="space-y-6">
       {/* Breadcrumb */}
       <div className="flex items-center gap-2 text-sm text-gray-500">
@@ -69,12 +81,10 @@ export default function AxesListPage() {
       </div>
 
       {/* Header */}
+      <FadeIn>
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
-            <span>📊</span>
-            <span>محاور القالب</span>
-          </h1>
+          <h1 className="text-2xl font-bold text-gray-900">محاور القالب</h1>
           <p className="text-gray-500 mt-1">
             {template?.name} • {axes.length} محور
           </p>
@@ -83,21 +93,21 @@ export default function AxesListPage() {
           href={`/dashboard/templates/${templateId}/axes/new`}
           className="btn btn-primary"
         >
-          ➕ إضافة محور
+          + إضافة محور
         </Link>
       </div>
+      </FadeIn>
 
       {/* Axes Grid */}
       {axes.length === 0 ? (
         <div className="card text-center py-12">
-          <div className="text-6xl mb-4">📊</div>
           <h3 className="text-xl font-bold text-gray-900 mb-2">لا توجد محاور</h3>
           <p className="text-gray-500 mb-4">ابدأ بإضافة محور جديد للقالب</p>
           <Link
             href={`/dashboard/templates/${templateId}/axes/new`}
             className="btn btn-primary"
           >
-            ➕ إضافة محور
+            + إضافة محور
           </Link>
         </div>
       ) : (
@@ -132,5 +142,6 @@ export default function AxesListPage() {
         </div>
       )}
     </div>
+    </PageTransition>
   );
 }

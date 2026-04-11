@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { useParams } from 'next/navigation';
+import { CheckCircle2, AlertTriangle, Info, Download, BarChart2, TrendingUp, FileText, X, ChevronDown, ChevronUp } from 'lucide-react';
 import { api } from '@/lib/api';
 import { debounce } from '@/lib/utils';
 
@@ -16,6 +17,8 @@ interface Item {
   required: boolean;
   unit: string;
   notes: string;
+  axis?: string;
+  section?: string;
 }
 
 interface Response {
@@ -78,6 +81,8 @@ export default function ContributePage() {
   const [uploading, setUploading] = useState<Record<number, boolean>>({});
   const [uploadResults, setUploadResults] = useState<Record<number, any>>({});
   const [validationErrors, setValidationErrors] = useState<Record<number, string[]>>({});
+  const [lastSaved, setLastSaved] = useState<Date | null>(null);
+  const [collapsedSections, setCollapsedSections] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
     loadForm();
@@ -110,6 +115,7 @@ export default function ContributePage() {
     debounce(async (itemId: number, value: any) => {
       try {
         await api.contribute.save(token, [{ item_id: itemId, value }]);
+        setLastSaved(new Date());
       } catch (err) {
         console.error('Auto-save failed:', err);
       }
@@ -372,6 +378,19 @@ export default function ContributePage() {
                 )}
               </div>
             )}
+            {item.field_type === 'excel_import' && !submitted && (
+              <div className="mt-3 pt-3 border-t border-gray-200">
+                <a
+                  href={api.contribute.excelTemplateUrl(token, item.id)}
+                  download
+                  className="inline-flex items-center gap-2 text-sm text-emerald-600 hover:text-emerald-700 font-medium"
+                >
+                  <Download className="w-4 h-4" />
+                  تحميل قالب Excel فاضي بالأعمدة المطلوبة
+                </a>
+                <p className="text-xs text-gray-400 mt-1">حمّل القالب، عبّئ البيانات، ثم ارفعه</p>
+              </div>
+            )}
           </div>
         );
       
@@ -455,10 +474,10 @@ export default function ContributePage() {
                         <button
                           type="button"
                           onClick={() => removeRow(rowIdx)}
-                          className="text-red-400 hover:text-red-600 text-lg"
+                          className="text-red-400 hover:text-red-600 p-0.5 rounded transition-colors"
                           title="حذف صف"
                         >
-                          ×
+                          <X className="w-4 h-4" />
                         </button>
                       </td>
                     )}
@@ -466,14 +485,25 @@ export default function ContributePage() {
                 ))}
               </tbody>
             </table>
-            {item.field_type === 'table_dynamic' && !submitted && (
-              <button
-                type="button"
-                onClick={addRow}
-                className="mt-2 text-sm text-blue-600 hover:text-blue-700 font-medium flex items-center gap-1"
-              >
-                <span className="text-lg leading-none">+</span> إضافة صف
-              </button>
+            {!submitted && (
+              <div className="mt-3 flex items-center gap-4 flex-wrap">
+                {item.field_type === 'table_dynamic' && (
+                  <button
+                    type="button"
+                    onClick={addRow}
+                    className="text-sm text-blue-600 hover:text-blue-700 font-medium flex items-center gap-1"
+                  >
+                    <span className="text-lg leading-none">+</span> إضافة صف
+                  </button>
+                )}
+                <a
+                  href={api.contribute.excelTemplateUrl(token, item.id)}
+                  download
+                  className="inline-flex items-center gap-1.5 text-sm text-emerald-600 hover:text-emerald-700 font-medium"
+                >
+                  <Download className="w-3.5 h-3.5" /> تحميل قالب Excel
+                </a>
+              </div>
             )}
           </div>
         );
@@ -493,6 +523,62 @@ export default function ContributePage() {
     }
   }
 
+  function renderItemCard(item: Item, index: number) {
+    return (
+      <div key={item.id} className="card">
+        <div className="flex items-start gap-3 mb-4">
+          <div className="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold text-sm flex-shrink-0">
+            {index + 1}
+          </div>
+          <div className="flex-1">
+            <h3 className="font-semibold text-gray-900">
+              {item.name}
+              {item.required && <span className="text-red-500 mr-1">*</span>}
+            </h3>
+            {item.description && (
+              <p className="text-sm text-gray-500 mt-1">{item.description}</p>
+            )}
+            {item.notes && (
+              <p className="text-sm text-blue-600 mt-1 flex items-center gap-1">
+                <Info className="w-3.5 h-3.5 flex-shrink-0" />
+                {item.notes}
+              </p>
+            )}
+            {data?.structure_hints?.[item.id] && (
+              <div className="mt-2 flex flex-wrap gap-1">
+                {data.structure_hints[item.id].data_fields.map((field) => (
+                  <span key={field.id} className={`inline-flex items-center gap-1 text-xs px-2 py-0.5 rounded-full ${
+                    field.type === 'table' ? 'bg-amber-100 text-amber-700' :
+                    field.type === 'chart_data' ? 'bg-blue-100 text-blue-700' :
+                    'bg-gray-100 text-gray-600'
+                  }`}>
+                    {field.type === 'table'
+                      ? <BarChart2 className="w-3 h-3" />
+                      : field.type === 'chart_data'
+                        ? <TrendingUp className="w-3 h-3" />
+                        : <FileText className="w-3 h-3" />
+                    }
+                    {field.title}
+                  </span>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+        {renderField(item)}
+        {validationErrors[item.id]?.length > 0 && (
+          <div className="mt-2 space-y-1">
+            {validationErrors[item.id].map((err, errIdx) => (
+              <p key={errIdx} className="text-xs text-red-600 flex items-center gap-1">
+                <AlertTriangle className="w-3.5 h-3.5 flex-shrink-0" /> {err}
+              </p>
+            ))}
+          </div>
+        )}
+      </div>
+    );
+  }
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -505,7 +591,9 @@ export default function ContributePage() {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <div className="text-4xl mb-4">⚠️</div>
+          <div className="w-16 h-16 rounded-2xl bg-red-50 flex items-center justify-center mx-auto mb-4">
+            <AlertTriangle className="w-8 h-8 text-red-500" />
+          </div>
           <p className="text-red-600">{error}</p>
         </div>
       </div>
@@ -532,6 +620,12 @@ export default function ContributePage() {
             <div className="text-left">
               <div className="text-2xl font-bold text-blue-600">{progress}%</div>
               <div className="text-xs text-gray-500">{completedCount}/{data.items_count}</div>
+              {lastSaved && (
+                <div className="text-xs text-emerald-600 flex items-center gap-1 mt-0.5">
+                  <CheckCircle2 className="w-3 h-3" />
+                  محفوظ {lastSaved.toLocaleTimeString('ar', { hour: '2-digit', minute: '2-digit' })}
+                </div>
+              )}
             </div>
           </div>
 
@@ -579,7 +673,9 @@ export default function ContributePage() {
 
         {submitted ? (
           <div className="card text-center py-12">
-            <div className="text-6xl mb-4">✅</div>
+            <div className="w-20 h-20 rounded-full bg-emerald-50 flex items-center justify-center mx-auto mb-4">
+              <CheckCircle2 className="w-10 h-10 text-emerald-500" />
+            </div>
             <h2 className="text-2xl font-bold text-gray-900 mb-2">تم إرسال البيانات!</h2>
             <p className="text-gray-600">
               شكراً لمساهمتك في {data.project.name}
@@ -587,51 +683,41 @@ export default function ContributePage() {
           </div>
         ) : (
           <div className="space-y-6">
-            {data.items.map((item, index) => (
-              <div key={item.id} className="card">
-                <div className="flex items-start gap-3 mb-4">
-                  <div className="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold text-sm flex-shrink-0">
-                    {index + 1}
-                  </div>
-                  <div className="flex-1">
-                    <h3 className="font-semibold text-gray-900">
-                      {item.name}
-                      {item.required && <span className="text-red-500 mr-1">*</span>}
-                    </h3>
-                    {item.description && (
-                      <p className="text-sm text-gray-500 mt-1">{item.description}</p>
-                    )}
-                    {item.notes && (
-                      <p className="text-sm text-blue-600 mt-1">💡 {item.notes}</p>
-                    )}
-                    {data.structure_hints?.[item.id] && (
-                      <div className="mt-2 flex flex-wrap gap-1">
-                        {data.structure_hints[item.id].data_fields.map((field) => (
-                          <span key={field.id} className={`text-xs px-2 py-0.5 rounded-full ${
-                            field.type === 'table' ? 'bg-amber-100 text-amber-700' :
-                            field.type === 'chart_data' ? 'bg-purple-100 text-purple-700' :
-                            'bg-gray-100 text-gray-600'
-                          }`}>
-                            {field.type === 'table' ? '📊' : field.type === 'chart_data' ? '📈' : '📝'} {field.title}
-                          </span>
-                        ))}
+            {/* Group items by axis/section */}
+            {(() => {
+              const hasGroups = data.items.some(i => i.axis || i.section);
+              if (!hasGroups) {
+                return data.items.map((item, index) => renderItemCard(item, index));
+              }
+              const groups: Record<string, Item[]> = {};
+              data.items.forEach(item => {
+                const key = item.section || item.axis || 'عام';
+                if (!groups[key]) groups[key] = [];
+                groups[key].push(item);
+              });
+              return Object.entries(groups).map(([groupName, groupItems]) => {
+                const isCollapsed = collapsedSections[groupName];
+                const groupFilled = groupItems.filter(i => values[i.id] !== '' && values[i.id] !== undefined).length;
+                return (
+                  <div key={groupName} className="space-y-4">
+                    <button
+                      onClick={() => setCollapsedSections(prev => ({ ...prev, [groupName]: !prev[groupName] }))}
+                      className="w-full flex items-center justify-between px-4 py-3 bg-gray-100 hover:bg-gray-200 rounded-xl transition-colors"
+                    >
+                      <div className="flex items-center gap-3">
+                        <span className="font-semibold text-gray-800">{groupName}</span>
+                        <span className="text-xs text-gray-500">{groupFilled}/{groupItems.length} مكتمل</span>
+                        {groupFilled === groupItems.length && (
+                          <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+                        )}
                       </div>
-                    )}
+                      {isCollapsed ? <ChevronDown className="w-4 h-4 text-gray-500" /> : <ChevronUp className="w-4 h-4 text-gray-500" />}
+                    </button>
+                    {!isCollapsed && groupItems.map((item, idx) => renderItemCard(item, data.items.indexOf(item)))}
                   </div>
-                </div>
-
-                {renderField(item)}
-                {validationErrors[item.id]?.length > 0 && (
-                  <div className="mt-2 space-y-1">
-                    {validationErrors[item.id].map((err, errIdx) => (
-                      <p key={errIdx} className="text-xs text-red-600 flex items-center gap-1">
-                        <span>⚠️</span> {err}
-                      </p>
-                    ))}
-                  </div>
-                )}
-              </div>
-            ))}
+                );
+              });
+            })()}
 
             {/* Submit */}
             <div className="card bg-blue-50 border-blue-200">

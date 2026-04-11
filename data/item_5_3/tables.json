@@ -1,0 +1,448 @@
+[
+  {
+    "id": "1-5",
+    "title": "جدول (1-5): توزيع مقتنيات المكتبة.",
+    "headers": [
+      "نوع المادة",
+      "عدد المقتنيات"
+    ],
+    "rows": [
+      {
+        "نوع المادة": "كتب ورقية",
+        "عدد المقتنيات": "(85051) عنواناً لـــــــ\n(120883) نسخة"
+      },
+      {
+        "نوع المادة": "دوريات ورقية",
+        "عدد المقتنيات": "916"
+      },
+      {
+        "نوع المادة": "CD",
+        "عدد المقتنيات": "2985عنوانًا"
+      },
+      {
+        "نوع المادة": "مقالات مجلة البصائر",
+        "عدد المقتنيات": "208"
+      },
+      {
+        "نوع المادة": "المجموع الكلي للمقتنيات",
+        "عدد المقتنيات": "89160"
+      }
+    ],
+    "count": 5
+  },
+  {
+    "id": "2-5",
+    "title": "جدول (2-5): قائمة بأسماء القواعد الفرعية من قاعدة EBSCO.",
+    "headers": [
+      "Database name",
+      "Database subscription"
+    ],
+    "rows": [
+      {
+        "Database name": "Academic Search Complete",
+        "Database subscription": "Subscription"
+      },
+      {
+        "Database name": "Art & Architecture Complete",
+        "Database subscription": "Subscription"
+      },
+      {
+        "Database name": "Business Source Complete",
+        "Database subscription": "Subscription"
+      },
+      {
+        "Database name": "Communication & Mass Media Complete",
+        "Database subscription": "Subscription"
+      },
+      {
+        "Database name": "Computers & Applied Sciences Complete",
+        "Database subscription": "Subscription"
+      },
+      {
+        "Database name": "Education Research Complete",
+        "Database subscription": "Subscription"
+      },
+      {
+        "Database name": "Environment Complete",
+        "Database subscription": "Subscription"
+      },
+      {
+        "Database name": "ERIC",
+        "Database subscription": "Subscription"
+      },
+      {
+        "Database name": "Legal Source",
+        "Database subscription": "Subscription"
+      },
+      {
+        "Database name": "Engineering source",
+        "Database subscription": "Subscription"
+      },
+      {
+        "Database name": "Library, Information Science & Technology Abstracts",
+        "Database subscription": "Subscription"
+      },
+      {
+        "Database name": "Literary Reference Center",
+        "Database subscription": "Subscription"
+      },
+      {
+        "Database name": "MEDLINE with Full Text",
+        "Database subscription": "Subscription"
+      },
+      {
+        "Database name": "Arab world Research source",
+        "Database subscription": "Subscription"
+      },
+      {
+        "Database name": "Psychology and Behavioral Sciences Collection",
+        "Database subscription": "Subscription"
+      },
+      {
+        "Database name": "Hospility $ tourism",
+        "Database subscription": "Subscription"
+      },
+      {
+        "Database name": "Small Business source",
+        "Database subscription": "Subscription"
+      },
+      {
+        "Database name": "Open dissertations",
+        "Database subscription": "Subscription"
+      },
+      {
+        "Database name": "E-book Academic collection",
+        "Database subscription": "Subscription"
+      },
+      {
+        "Database name": "eBook  Business collection",
+        "Database subscription": "Subscription"
+      },
+      {
+        "Database name": "Applied science & technology source",
+        "Database subscription": "Subscription"
+      },
+      {
+        "Database name": "E-book university press collection",
+        "Database subscription": "Subscription"
+      },
+      {
+        "Database name": "Education research complete",
+        "Database subscription": "Subscription"
+      },
+      {
+        "Database name": "Green file",
+        "Database subscription": "Subscription"
+      },
+      {
+        "Database name": "Points of view reference center",
+        "Database subscription": "Subscription"
+      },
+      {
+        "Database name": "Dentistry & oral sciences source",
+        "Database subscription": "Subscription"
+      },
+      {
+        "Database name": "Regional business news",
+        "Database subscription": "Subscription"
+      },
+      {
+        "Database name": "Newswires",
+        "Database subscription": "Subscription"
+      },
+      {
+        "Database name": "Teacher reference center",
+        "Database subscription": "Subscription"
+      },
+      {
+        "Database name": "E-book open access OA Collection",
+        "Database subscription": "Subscription"
+      },
+      {
+        "Database name": "Small Business Source E-book",
+        "Database subscription": "Subscription"
+      },
+      {
+        "Database name": "eBook Arabic collection",
+        "Database subscription": "Subscription"
+      },
+      {
+        "Database name": "Literary Reference Source E-book",
+        "Database subscription": "Subscription"
+      },
+      {
+        "Database name": "CINHAL Plus",
+        "Database subscription": "Subscription"
+      },
+      {
+        "Database name": "Energy and Power Source",
+        "Database subscription": "Subscription"
+      }
+    ],
+    "count": 35
+  },
+  {
+    "id": "3-5",
+    "title": "جدول (3-5): إحصاءات استخدام قواعد البيانات الإلكترونية التي تشترك بها المكتبة، وعدد عمليات البحث في كل قاعدة خلال العام الجامعي (2023/2024).",
+    "headers": [
+      "اسم قاعدة البيانات",
+      "EBSCO",
+      "SCOPUS",
+      "ProQuest",
+      "ULRICH",
+      "Access Pharmacy",
+      "ACM",
+      "دار المنظومة",
+      "المنهل",
+      "قسطاس"
+    ],
+    "rows": [
+      {
+        "اسم قاعدة البيانات": "عمليات البحث",
+        "EBSCO": "55314",
+        "SCOPUS": "9690",
+        "ProQuest": "1727",
+        "ULRICH": "207",
+        "Access Pharmacy": "380",
+        "ACM": "146",
+        "دار المنظومة": "10138",
+        "المنهل": "2922",
+        "قسطاس": "12785"
+      }
+    ],
+    "count": 1
+  },
+  {
+    "id": "4-5",
+    "title": "جدول (4-5): إحصائية المحاضرات التعريفية بالمكتبة خلال العام الجامعي (2023/2024).",
+    "headers": [
+      "الكليات",
+      "عدد المحاضرات",
+      "عدد الطلاب"
+    ],
+    "rows": [
+      {
+        "الكليات": "الآداب",
+        "عدد المحاضرات": "3",
+        "عدد الطلاب": "24"
+      },
+      {
+        "الكليات": "الإدارية",
+        "عدد المحاضرات": "1",
+        "عدد الطلاب": "8"
+      },
+      {
+        "الكليات": "الإعلام",
+        "عدد المحاضرات": "2",
+        "عدد الطلاب": "13"
+      },
+      {
+        "الكليات": "الحقوق",
+        "عدد المحاضرات": "7",
+        "عدد الطلاب": "127"
+      },
+      {
+        "الكليات": "الصيدلة",
+        "عدد المحاضرات": "3",
+        "عدد الطلاب": "70"
+      },
+      {
+        "الكليات": "الهندسة",
+        "عدد المحاضرات": "1",
+        "عدد الطلاب": "60"
+      },
+      {
+        "الكليات": "الهيئة التدريسية والإدارية",
+        "عدد المحاضرات": "1",
+        "عدد الطلاب": "14"
+      },
+      {
+        "الكليات": "قسطاس",
+        "عدد المحاضرات": "1",
+        "عدد الطلاب": "30"
+      },
+      {
+        "الكليات": "Grand Total",
+        "عدد المحاضرات": "19",
+        "عدد الطلاب": "346"
+      }
+    ],
+    "count": 9
+  },
+  {
+    "id": "5-5",
+    "title": "جدول (5-5): حركات الإعارة والتجديد والإرجاع خلال العام الجامعي (2023/2024).",
+    "headers": [
+      "الهيئة التدريسية",
+      "الموظفين",
+      "الطلبة",
+      "طلبة الماجستير",
+      "مجتمع محلي",
+      "براءة ذمة"
+    ],
+    "rows": [
+      {
+        "الهيئة التدريسية": "2621",
+        "الموظفين": "662",
+        "الطلبة": "6096",
+        "طلبة الماجستير": "782",
+        "مجتمع محلي": "0",
+        "براءة ذمة": "414"
+      }
+    ],
+    "count": 1
+  },
+  {
+    "id": "6-5",
+    "title": "جدول (6-5): إحصاءات الإعارة حسب الكليات خلال العام الجامعي (2023/2024).",
+    "headers": [
+      "عدد حركات التجديد",
+      "عدد حركات الارجاع",
+      "عدد حركات الاستعارة",
+      "الكلية"
+    ],
+    "rows": [
+      {
+        "عدد حركات التجديد": "425",
+        "عدد حركات الارجاع": "992",
+        "عدد حركات الاستعارة": "1030",
+        "الكلية": "كلية الآداب والعلوم"
+      },
+      {
+        "عدد حركات التجديد": "267",
+        "عدد حركات الارجاع": "639",
+        "عدد حركات الاستعارة": "651",
+        "الكلية": "كلية العمارة والتصميم"
+      },
+      {
+        "عدد حركات التجديد": "262",
+        "عدد حركات الارجاع": "497",
+        "عدد حركات الاستعارة": "536",
+        "الكلية": "كلية العلوم الادارية"
+      },
+      {
+        "عدد حركات التجديد": "119",
+        "عدد حركات الارجاع": "160",
+        "عدد حركات الاستعارة": "179",
+        "الكلية": "كلية الصيدلة"
+      },
+      {
+        "عدد حركات التجديد": "169",
+        "عدد حركات الارجاع": "259",
+        "عدد حركات الاستعارة": "268",
+        "الكلية": "كلية تكنولوجيا المعلومات"
+      },
+      {
+        "عدد حركات التجديد": "123",
+        "عدد حركات الارجاع": "345",
+        "عدد حركات الاستعارة": "359",
+        "الكلية": "كلية الحقوق"
+      },
+      {
+        "عدد حركات التجديد": "99",
+        "عدد حركات الارجاع": "189",
+        "عدد حركات الاستعارة": "217",
+        "الكلية": "كلية الإعلام"
+      },
+      {
+        "عدد حركات التجديد": "17",
+        "عدد حركات الارجاع": "64",
+        "عدد حركات الاستعارة": "64",
+        "الكلية": "كلية الهندسة"
+      },
+      {
+        "عدد حركات التجديد": "0",
+        "عدد حركات الارجاع": "15",
+        "عدد حركات الاستعارة": "55",
+        "الكلية": "كلية طب الأسنان"
+      }
+    ],
+    "count": 9
+  },
+  {
+    "id": "7-5",
+    "title": "جدول (7-5): نتائج استبانة فاعلية وجودة أداء المكتبة حسب الفئات خلال العام الجامعي (2023/2024).",
+    "headers": [
+      "نسبة الرضا العام",
+      "عدد الاستبانات للهيئة التدريسية ذكور",
+      "عدد الاستبانات للهيئة التدريسية اناث",
+      "عدد الاستبانات الكلي للهيئة التدريسية",
+      "عدد الاستبانات للطلبة الإناث",
+      "عدد الاستبانات للطلبة الذكور",
+      "عدد الاستبانات الكلي للطلبة",
+      "نسبة الرضا العام للهيئة التدريسية",
+      "نسبة الرضا العام للطلبة"
+    ],
+    "rows": [
+      {
+        "نسبة الرضا العام": "86.21%",
+        "عدد الاستبانات للهيئة التدريسية ذكور": "81",
+        "عدد الاستبانات للهيئة التدريسية اناث": "64",
+        "عدد الاستبانات الكلي للهيئة التدريسية": "145",
+        "عدد الاستبانات للطلبة الإناث": "605",
+        "عدد الاستبانات للطلبة الذكور": "469",
+        "عدد الاستبانات الكلي للطلبة": "1074",
+        "نسبة الرضا العام للهيئة التدريسية": "90.78%",
+        "نسبة الرضا العام للطلبة": "81.63%"
+      }
+    ],
+    "count": 1
+  },
+  {
+    "id": "8-5",
+    "title": "جدول (8-5): نتائج استجابات طلبة الجامعة على استبانة قياس فاعلية أداء وخدمات ومصادر المعلومات بالمكتبة للعام الجامعي (2023/2024).",
+    "headers": [
+      "الكلية",
+      "عدد الاستبانات للعام 2024",
+      "نسبة الرضا للعام 2024"
+    ],
+    "rows": [
+      {
+        "الكلية": "كلية الهندسة",
+        "عدد الاستبانات للعام 2024": "43",
+        "نسبة الرضا للعام 2024": "93.59173%"
+      },
+      {
+        "الكلية": "كلية طب الأسنان",
+        "عدد الاستبانات للعام 2024": "56",
+        "نسبة الرضا للعام 2024": "82.81746%"
+      },
+      {
+        "الكلية": "كلية تكنولوجيا المعلومات",
+        "عدد الاستبانات للعام 2024": "103",
+        "نسبة الرضا للعام 2024": "82.69687%"
+      },
+      {
+        "الكلية": "كلية الإعلام",
+        "عدد الاستبانات للعام 2024": "45",
+        "نسبة الرضا للعام 2024": "82.66667%"
+      },
+      {
+        "الكلية": "كلية الصيدلة",
+        "عدد الاستبانات للعام 2024": "94",
+        "نسبة الرضا للعام 2024": "82.1513%"
+      },
+      {
+        "الكلية": "كلية الآداب والعلوم",
+        "عدد الاستبانات للعام 2024": "146",
+        "نسبة الرضا للعام 2024": "81.15677%"
+      },
+      {
+        "الكلية": "كلية الحقوق",
+        "عدد الاستبانات للعام 2024": "143",
+        "نسبة الرضا للعام 2024": "81.0101%"
+      },
+      {
+        "الكلية": "كلية العلوم الإدارية",
+        "عدد الاستبانات للعام 2024": "349",
+        "نسبة الرضا للعام 2024": "80.5476%"
+      },
+      {
+        "الكلية": "كلية العمارة والتصميم",
+        "عدد الاستبانات للعام 2024": "95",
+        "نسبة الرضا للعام 2024": "78.97076%"
+      }
+    ],
+    "count": 9
+  }
+]

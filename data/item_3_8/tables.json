@@ -1,0 +1,550 @@
+[
+  {
+    "id": "3-13",
+    "title": "جدول (3-13) : عدد أعضاء هيئة التدريس المشاركين في المؤتمرات للعام 2024.",
+    "headers": [
+      "الرقم",
+      "اسم الباحث",
+      "الكلية",
+      "عنوان المؤتمر",
+      "الجهة المنظمة",
+      "المكان",
+      "اسم البحث"
+    ],
+    "rows": [
+      {
+        "الرقم": "1",
+        "اسم الباحث": "أ.د. فيصل أبو الرب",
+        "الكلية": "العلوم الإدارية والمالية",
+        "عنوان المؤتمر": "IEEE 14th International Conference on Pattern Recognition Systems",
+        "الجهة المنظمة": "University of Westminster (UK), collaboration with IEEE",
+        "المكان": "لندن - المملكة المتحدة",
+        "اسم البحث": "IEEE 14th International Conference on Pattern Recognition Systems"
+      },
+      {
+        "الرقم": "2",
+        "اسم الباحث": "د. علي المقوسي",
+        "الكلية": "تكنولوجيا المعلومات",
+        "عنوان المؤتمر": "6th International Conference on Statistics: Theory and Applications (ICSTA 2024)",
+        "الجهة المنظمة": "INTERNATIONAL ASET INC",
+        "المكان": "Barcelona, Spain",
+        "اسم البحث": "Enhancing Security in Remote Laboratory Environments: A Layered Approach"
+      },
+      {
+        "الرقم": "3",
+        "اسم الباحث": "د. هشام العميان",
+        "الكلية": "الآداب والعلوم",
+        "عنوان المؤتمر": "The 18th International Conference on e-Learning and Digital Learning (ELDL 2024)",
+        "الجهة المنظمة": "International Association for Development of the Information of Society",
+        "المكان": "Budapest, Hungary",
+        "اسم البحث": "Advancing Early Childhood Education: A Conceptual Framework for Artificial Intelligence Applications in Early Childhood Education"
+      },
+      {
+        "الرقم": "4",
+        "اسم الباحث": "د. حسام فاخوري",
+        "الكلية": "تكنولوجيا المعلومات",
+        "عنوان المؤتمر": "2nd IEEE International Conference on Artificial Intelligence, Blockchain, and Internet of Things",
+        "الجهة المنظمة": "Central Michigan University (CMU), IEEE Northeast Michigan section USA",
+        "المكان": "Michigan, USA",
+        "اسم البحث": "Hybrid Four Vector Intelligent Optimizer with SaDE for Solving Robot Gripper Optimization Problem"
+      },
+      {
+        "الرقم": "5",
+        "اسم الباحث": "د. حازم النجار",
+        "الكلية": "تكنولوجيا المعلومات",
+        "عنوان المؤتمر": "2nd International Conference on Cyber Resilience (ICCR2024)",
+        "الجهة المنظمة": "Skyline University College, Universiti Kebangsaan Malaysia (IIKM),  \ncollaboration with IEEE",
+        "المكان": "دبي -الإمارات",
+        "اسم البحث": "Enhancing Image Security with Rossler Attractor-Based Encryption"
+      },
+      {
+        "الرقم": "6",
+        "اسم الباحث": "د. جمال زراقو",
+        "الكلية": "تكنولوجيا المعلومات",
+        "عنوان المؤتمر": "2nd International Conference on Cyber Resilience (ICCR2024)",
+        "الجهة المنظمة": "Skyline University College, Universiti Kebangsaan Malaysia (IIKM),  \ncollaboration with IEEE",
+        "المكان": "دبي -الإمارات",
+        "اسم البحث": "Vegetation Change Detection in Amman, Jordan using Remote Sensing and GIS"
+      },
+      {
+        "الرقم": "7",
+        "اسم الباحث": "د. حسام فاخوري",
+        "الكلية": "تكنولوجيا المعلومات",
+        "عنوان المؤتمر": "2nd International Conference on Cyber Resilience (ICCR2024)",
+        "الجهة المنظمة": "Skyline University College, Universiti Kebangsaan Malaysia (IIKM),  \ncollaboration with IEEE",
+        "المكان": "دبي -الإمارات",
+        "اسم البحث": "AI-Driven Solutions for Social Engineering Attacks: Detection, Prevention, and Response"
+      },
+      {
+        "الرقم": "8",
+        "اسم الباحث": "د. حسام فاخوري",
+        "الكلية": "تكنولوجيا المعلومات",
+        "عنوان المؤتمر": "2nd International Conference on Cyber Resilience (ICCR2024)",
+        "الجهة المنظمة": "Skyline University College, Universiti Kebangsaan Malaysia (IIKM),  \ncollaboration with IEEE",
+        "المكان": "دبي -الإمارات",
+        "اسم البحث": "Comprehensive Overview of Challenges faced by Digital forensic"
+      },
+      {
+        "الرقم": "9",
+        "اسم الباحث": "د. محمد الخالدي",
+        "الكلية": "العلوم الإدارية والمالية",
+        "عنوان المؤتمر": "2nd International Conference on Cyber Resilience (ICCR2024)",
+        "الجهة المنظمة": "Skyline University College, Universiti Kebangsaan Malaysia (IIKM),  \ncollaboration with IEEE",
+        "المكان": "دبي -الإمارات",
+        "اسم البحث": "Securing Digital Finance: Applying Machine Learning for Fraud Analysis in Fintech"
+      },
+      {
+        "الرقم": "10",
+        "اسم الباحث": "د. حازم النجار",
+        "الكلية": "تكنولوجيا المعلومات",
+        "عنوان المؤتمر": "2nd International Conference on Cyber Resilience (ICCR2024)",
+        "الجهة المنظمة": "Skyline University College, Universiti Kebangsaan Malaysia (IIKM),  \ncollaboration with IEEE",
+        "المكان": "دبي -الإمارات",
+        "اسم البحث": "Decision Tree-Based IoT Botnet Attack Detection"
+      },
+      {
+        "الرقم": "11",
+        "اسم الباحث": "د. سلام عماري",
+        "الكلية": "تكنولوجيا المعلومات",
+        "عنوان المؤتمر": "2nd International Conference on Cyber Resilience (ICCR2024)",
+        "الجهة المنظمة": "Skyline University College, Universiti Kebangsaan Malaysia (IIKM),  \ncollaboration with IEEE",
+        "المكان": "دبي -الإمارات",
+        "اسم البحث": "Comparative Evaluation of Bio-inspired Feature Selection Methods in Intrusion Detection"
+      },
+      {
+        "الرقم": "12",
+        "اسم الباحث": "د. شريف مخامة",
+        "الكلية": "تكنولوجيا المعلومات",
+        "عنوان المؤتمر": "2nd International Conference on Cyber Resilience (ICCR2024)",
+        "الجهة المنظمة": "Skyline University College, Universiti Kebangsaan Malaysia (IIKM),  \ncollaboration with IEEE",
+        "المكان": "دبي -الإمارات",
+        "اسم البحث": "Intrusion Detection System using Modified Arithmetic Optimization Algorithm for Large-scale IoT"
+      },
+      {
+        "الرقم": "13",
+        "اسم الباحث": "د. سلام عماري",
+        "الكلية": "تكنولوجيا المعلومات",
+        "عنوان المؤتمر": "2nd International Conference on Cyber Resilience (ICCR2024)",
+        "الجهة المنظمة": "Skyline University College, Universiti Kebangsaan Malaysia (IIKM),  \ncollaboration with IEEE",
+        "المكان": "دبي -الإمارات",
+        "اسم البحث": "Digital Forensics Meets Blockchain: Enhancing Evidence Authenticity and Traceability"
+      },
+      {
+        "الرقم": "14",
+        "اسم الباحث": "د. بلال صوان",
+        "الكلية": "العلوم الإدارية والمالية",
+        "عنوان المؤتمر": "2nd International Conference on Cyber Resilience (ICCR2024)",
+        "الجهة المنظمة": "Skyline University College, Universiti Kebangsaan Malaysia (IIKM),  \ncollaboration with IEEE",
+        "المكان": "دبي -الإمارات",
+        "اسم البحث": "PDF Malware Detection: A Hybrid Approach Using Random Forest and K-Nearest Neighbors"
+      },
+      {
+        "الرقم": "15",
+        "اسم الباحث": "د. شريف مخامة",
+        "الكلية": "تكنولوجيا المعلومات",
+        "عنوان المؤتمر": "2nd International Conference on Cyber Resilience (ICCR2024)",
+        "الجهة المنظمة": "Skyline University College, Universiti Kebangsaan Malaysia (IIKM),  \ncollaboration with IEEE",
+        "المكان": "دبي -الإمارات",
+        "اسم البحث": "Marine Predators Algorithm for Energy Scheduling Problem Using Renewable Energy"
+      },
+      {
+        "الرقم": "16",
+        "اسم الباحث": "د. حازم النجار",
+        "الكلية": "تكنولوجيا المعلومات",
+        "عنوان المؤتمر": "2nd International Conference on Cyber Resilience (ICCR2024)",
+        "الجهة المنظمة": "Skyline University College, Universiti Kebangsaan Malaysia (IIKM),  \ncollaboration with IEEE",
+        "المكان": "دبي -الإمارات",
+        "اسم البحث": "Improving the Efficiency of Smart Grid Scheduling: A Linear Regression Model with Meta Job Information"
+      },
+      {
+        "الرقم": "17",
+        "اسم الباحث": "د. علاء أبو سماحة",
+        "الكلية": "تكنولوجيا المعلومات",
+        "عنوان المؤتمر": "2nd International Conference on Cyber Resilience (ICCR2024)",
+        "الجهة المنظمة": "Skyline University College, Universiti Kebangsaan Malaysia (IIKM),  \ncollaboration with IEEE",
+        "المكان": "دبي -الإمارات",
+        "اسم البحث": "Hybrid PSO-Naive Bayes Algorithm based COVID-19 Prediction Model (2)"
+      },
+      {
+        "الرقم": "18",
+        "اسم الباحث": "د. حسام محمد مصطفى",
+        "الكلية": "تكنولوجيا المعلومات",
+        "عنوان المؤتمر": "2nd International Conference on Cyber Resilience (ICCR2024)",
+        "الجهة المنظمة": "Skyline University College, Universiti Kebangsaan Malaysia (IIKM),  \ncollaboration with IEEE",
+        "المكان": "دبي -الإمارات",
+        "اسم البحث": "Cloud Computing Malware Detection Using Feature Selection Based on Optimized White Shark Algorithm (WSO)"
+      },
+      {
+        "الرقم": "19",
+        "اسم الباحث": "د. محمد فاشة",
+        "الكلية": "العلوم الإدارية والمالية",
+        "عنوان المؤتمر": "2nd International Conference on Cyber Resilience (ICCR2024)",
+        "الجهة المنظمة": "Skyline University College, Universiti Kebangsaan Malaysia (IIKM),  \ncollaboration with IEEE",
+        "المكان": "دبي -الإمارات",
+        "اسم البحث": "itigating the OWASP Top 10 For Large Language Models Applications using Intelligent Agents"
+      },
+      {
+        "الرقم": "20",
+        "اسم الباحث": "أ. د. فيصل أبو الرب",
+        "الكلية": "العلوم الإدارية والمالية",
+        "عنوان المؤتمر": "2nd International Conference on Cyber Resilience (ICCR2024)",
+        "الجهة المنظمة": "Skyline University College, Universiti Kebangsaan Malaysia (IIKM),  \ncollaboration with IEEE",
+        "المكان": "دبي -الإمارات",
+        "اسم البحث": "The Impact of Big Data Analytics Capabilities on Decision Making at the Telecommunications Sector in Jordan"
+      },
+      {
+        "الرقم": "21",
+        "اسم الباحث": "د. سلام عماري",
+        "الكلية": "تكنولوجيا المعلومات",
+        "عنوان المؤتمر": "2nd International Conference on Cyber Resilience (ICCR2024)",
+        "الجهة المنظمة": "Skyline University College, Universiti Kebangsaan Malaysia (IIKM),  \ncollaboration with IEEE",
+        "المكان": "دبي -الإمارات",
+        "اسم البحث": "Integrating Enhanced Security Protocols with Moving Object Detection: A Yolo-Based Approach for Real-Time Surveillance"
+      },
+      {
+        "الرقم": "22",
+        "اسم الباحث": "أ. د. مياس الريماوي",
+        "الكلية": "الصيدلة والعلوم الطبية",
+        "عنوان المؤتمر": "2nd International Conference on Cyber Resilience (ICCR2024)",
+        "الجهة المنظمة": "Skyline University College, Universiti Kebangsaan Malaysia (IIKM),  \ncollaboration with IEEE",
+        "المكان": "دبي -الإمارات",
+        "اسم البحث": "Clinical Applications of AI in Post-Cancer Rehabilitation"
+      },
+      {
+        "الرقم": "23",
+        "اسم الباحث": "أ. د. فيصل أبو الرب",
+        "الكلية": "العلوم الإدارية والمالية",
+        "عنوان المؤتمر": "2nd International Conference on Cyber Resilience (ICCR2024)",
+        "الجهة المنظمة": "Skyline University College, Universiti Kebangsaan Malaysia (IIKM),  \ncollaboration with IEEE",
+        "المكان": "دبي -الإمارات",
+        "اسم البحث": "AI-Driven Psychological Support and Cognitive Rehabilitation Strategies in Post-Cancer Care"
+      },
+      {
+        "الرقم": "24",
+        "اسم الباحث": "د. مي النشاشيبي",
+        "الكلية": "تكنولوجيا المعلومات",
+        "عنوان المؤتمر": "2nd International Conference on Cyber Resilience (ICCR2024)",
+        "الجهة المنظمة": "Skyline University College, Universiti Kebangsaan Malaysia (IIKM),  \ncollaboration with IEEE",
+        "المكان": "دبي -الإمارات",
+        "اسم البحث": "Machine Learning for Enhanced Autism Screening: A Comparative Evaluation of Classification Algorithms"
+      },
+      {
+        "الرقم": "25",
+        "اسم الباحث": "د. عبدالرؤوف اشتيوي",
+        "الكلية": "تكنولوجيا المعلومات",
+        "عنوان المؤتمر": "2nd International Conference on Cyber Resilience (ICCR2024)",
+        "الجهة المنظمة": "Skyline University College, Universiti Kebangsaan Malaysia (IIKM),  \ncollaboration with IEEE",
+        "المكان": "دبي -الإمارات",
+        "اسم البحث": "Realizing the Potential of Metaverse to Revolutionize the Future of Healthcare"
+      },
+      {
+        "الرقم": "26",
+        "اسم الباحث": "د. عبدالرؤوف اشتيوي",
+        "الكلية": "تكنولوجيا المعلومات",
+        "عنوان المؤتمر": "2nd International Conference on Cyber Resilience (ICCR2024)",
+        "الجهة المنظمة": "Skyline University College, Universiti Kebangsaan Malaysia (IIKM),  \ncollaboration with IEEE",
+        "المكان": "دبي -الإمارات",
+        "اسم البحث": "Securing Emerging IoT Environments with Super Learner Ensembles"
+      },
+      {
+        "الرقم": "27",
+        "اسم الباحث": "د. محمد العثمان",
+        "الكلية": "تكنولوجيا المعلومات",
+        "عنوان المؤتمر": "2nd International Conference on Cyber Resilience (ICCR2024)",
+        "الجهة المنظمة": "Skyline University College, Universiti Kebangsaan Malaysia (IIKM),  \ncollaboration with IEEE",
+        "المكان": "دبي -الإمارات",
+        "اسم البحث": "A Framework for Cybersecurity in the Metaverse"
+      },
+      {
+        "الرقم": "28",
+        "اسم الباحث": "د. محمد العثمان",
+        "الكلية": "تكنولوجيا المعلومات",
+        "عنوان المؤتمر": "2nd International Conference on Cyber Resilience (ICCR2024)",
+        "الجهة المنظمة": "Skyline University College, Universiti Kebangsaan Malaysia (IIKM),  \ncollaboration with IEEE",
+        "المكان": "دبي -الإمارات",
+        "اسم البحث": "IoT Security Challenges in Modern Smart Cities"
+      },
+      {
+        "الرقم": "29",
+        "اسم الباحث": "أ. د. مياس الريماوي",
+        "الكلية": "الصيدلة والعلوم الطبية",
+        "عنوان المؤتمر": "2nd International Conference on Cyber Resilience (ICCR2024)",
+        "الجهة المنظمة": "Skyline University College, Universiti Kebangsaan Malaysia (IIKM),  \ncollaboration with IEEE",
+        "المكان": "دبي -الإمارات",
+        "اسم البحث": "Applications of AI in Biomedical Genomics and Pharmaceuticals"
+      },
+      {
+        "الرقم": "30",
+        "اسم الباحث": "أ. د. فيصل العكايلة",
+        "الكلية": "الصيدلة والعلوم الطبية",
+        "عنوان المؤتمر": "2nd International Conference on Cyber Resilience (ICCR2024)",
+        "الجهة المنظمة": "Skyline University College, Universiti Kebangsaan Malaysia (IIKM),  \ncollaboration with IEEE",
+        "المكان": "دبي -الإمارات",
+        "اسم البحث": "AI-Driven Physical Rehabilitation Strategies in Post-Cancer Care"
+      },
+      {
+        "الرقم": "31",
+        "اسم الباحث": "د. محمد نوفل",
+        "الكلية": "العلوم الإدارية والمالية",
+        "عنوان المؤتمر": "2nd International Conference on Cyber Resilience (ICCR2024)",
+        "الجهة المنظمة": "Skyline University College, Universiti Kebangsaan Malaysia (IIKM),  \ncollaboration with IEEE",
+        "المكان": "دبي -الإمارات",
+        "اسم البحث": "A Framework for Using Blockchain-Enabled Supply Chain Management to Enhance Transparency, Traceability, and Trust"
+      },
+      {
+        "الرقم": "32",
+        "اسم الباحث": "د. محمد العثمان",
+        "الكلية": "تكنولوجيا المعلومات",
+        "عنوان المؤتمر": "2nd International Conference on Cyber Resilience (ICCR2024)",
+        "الجهة المنظمة": "Skyline University College, Universiti Kebangsaan Malaysia (IIKM),  \ncollaboration with IEEE",
+        "المكان": "دبي -الإمارات",
+        "اسم البحث": "Malware Threats Targeting Cryptocurrency: A Comparative Study"
+      },
+      {
+        "الرقم": "33",
+        "اسم الباحث": "عطوفة أ. د. رامي عبد الرحيم الأكرم",
+        "الكلية": "الآداب والعلوم",
+        "عنوان المؤتمر": "2nd International Conference on Cyber Resilience (ICCR2024)",
+        "الجهة المنظمة": "Skyline University College, Universiti Kebangsaan Malaysia (IIKM),  \ncollaboration with IEEE",
+        "المكان": "دبي -الإمارات",
+        "اسم البحث": "Integrative Analysis of Genomic Data Types and AI Methodologies in Healthcare Applications"
+      },
+      {
+        "الرقم": "34",
+        "اسم الباحث": "أ. د. فيصل العكايلة",
+        "الكلية": "الصيدلة والعلوم الطبية",
+        "عنوان المؤتمر": "2nd International Conference on Cyber Resilience (ICCR2024)",
+        "الجهة المنظمة": "Skyline University College, Universiti Kebangsaan Malaysia (IIKM),  \ncollaboration with IEEE",
+        "المكان": "دبي -الإمارات",
+        "اسم البحث": "Trust, Ethics, and User-Centric Design in AI-Integrated Genomics"
+      },
+      {
+        "الرقم": "35",
+        "اسم الباحث": "د. خليل عمر",
+        "الكلية": "تكنولوجيا المعلومات",
+        "عنوان المؤتمر": "2nd International Conference on Cyber Resilience (ICCR2024)",
+        "الجهة المنظمة": "Skyline University College, Universiti Kebangsaan Malaysia (IIKM),  \ncollaboration with IEEE",
+        "المكان": "دبي -الإمارات",
+        "اسم البحث": "Challenges of Distance Learning During the Coronavirus (COVID-19) Pandemic - A Case Study of the University of Petra"
+      },
+      {
+        "الرقم": "36",
+        "اسم الباحث": "أ. د. نهى الخليلي",
+        "الكلية": "تكنولوجيا المعلومات",
+        "عنوان المؤتمر": "2nd International Conference on Cyber Resilience (ICCR2024)",
+        "الجهة المنظمة": "Skyline University College, Universiti Kebangsaan Malaysia (IIKM),  \ncollaboration with IEEE",
+        "المكان": "دبي -الإمارات",
+        "اسم البحث": "Empowering Learning Analytics with Business Intelligenc"
+      },
+      {
+        "الرقم": "37",
+        "اسم الباحث": "د. شريف مخامة",
+        "الكلية": "تكنولوجيا المعلومات",
+        "عنوان المؤتمر": "2nd International Conference on Cyber Resilience (ICCR2024)",
+        "الجهة المنظمة": "Skyline University College, Universiti Kebangsaan Malaysia (IIKM),  \ncollaboration with IEEE",
+        "المكان": "دبي -الإمارات",
+        "اسم البحث": "Modified White Shark Optimizer for Gene Selection Optimization Problem"
+      },
+      {
+        "الرقم": "38",
+        "اسم الباحث": "أ. د. نهى الخليلي",
+        "الكلية": "تكنولوجيا المعلومات",
+        "عنوان المؤتمر": "2nd International Conference on Cyber Resilience (ICCR2024)",
+        "الجهة المنظمة": "Skyline University College, Universiti Kebangsaan Malaysia (IIKM),  \ncollaboration with IEEE",
+        "المكان": "دبي -الإمارات",
+        "اسم البحث": "Impact of Generative Artificial Intelligence on Learning: A Case Study at the University of Petra"
+      },
+      {
+        "الرقم": "39",
+        "اسم الباحث": "د. عبد الرحمن الناطور",
+        "الكلية": "العلوم الإدارية والمالية",
+        "عنوان المؤتمر": "2nd International Conference on Cyber Resilience (ICCR2024)",
+        "الجهة المنظمة": "Skyline University College, Universiti Kebangsaan Malaysia (IIKM),  \ncollaboration with IEEE",
+        "المكان": "دبي -الإمارات",
+        "اسم البحث": "The Role of Forensic Accounting Skills and CAATTs Application in Enhancing Firm’s Cyber"
+      },
+      {
+        "الرقم": "40",
+        "اسم الباحث": "د. نضال الصالحي",
+        "الكلية": "العلوم الإدارية والمالية",
+        "عنوان المؤتمر": "2nd International Conference on Cyber Resilience (ICCR2024)",
+        "الجهة المنظمة": "Skyline University College, Universiti Kebangsaan Malaysia (IIKM),  \ncollaboration with IEEE",
+        "المكان": "دبي -الإمارات",
+        "اسم البحث": "The Impact of Organizational Learning Capability on Organizational Agility"
+      },
+      {
+        "الرقم": "41",
+        "اسم الباحث": "د. عبد الكريم البنا",
+        "الكلية": "تكنولوجيا المعلومات",
+        "عنوان المؤتمر": "2nd International Conference on Cyber Resilience (ICCR2024)",
+        "الجهة المنظمة": "Skyline University College, Universiti Kebangsaan Malaysia (IIKM),  \ncollaboration with IEEE",
+        "المكان": "دبي -الإمارات",
+        "اسم البحث": "The Impact of Stuttering Event Representation on Detection Performance"
+      },
+      {
+        "الرقم": "42",
+        "اسم الباحث": "د. أنس كنعان",
+        "الكلية": "العلوم الإدارية والمالية",
+        "عنوان المؤتمر": "2nd International Conference on Cyber Resilience (ICCR2024)",
+        "الجهة المنظمة": "Skyline University College, Universiti Kebangsaan Malaysia (IIKM),  \ncollaboration with IEEE",
+        "المكان": "دبي -الإمارات",
+        "اسم البحث": "Cybersecurity Resilience for Business: A Comprehensive Model for Proactive Defense and Swift Recovery"
+      },
+      {
+        "الرقم": "43",
+        "اسم الباحث": "د. خليل عمر",
+        "الكلية": "تكنولوجيا المعلومات",
+        "عنوان المؤتمر": "2nd International Conference on Cyber Resilience (ICCR2024)",
+        "الجهة المنظمة": "Skyline University College, Universiti Kebangsaan Malaysia (IIKM),  \ncollaboration with IEEE",
+        "المكان": "دبي -الإمارات",
+        "اسم البحث": "A Comprehensive Model for Securing Metaverse"
+      },
+      {
+        "الرقم": "44",
+        "اسم الباحث": "د. سائد زيغان",
+        "الكلية": "العلوم الإدارية والمالية",
+        "عنوان المؤتمر": "2nd International Conference on Cyber Resilience (ICCR2024)",
+        "الجهة المنظمة": "Skyline University College, Universiti Kebangsaan Malaysia (IIKM),  \ncollaboration with IEEE",
+        "المكان": "دبي -الإمارات",
+        "اسم البحث": "Navigating the Cyber Landscape: A Framework for Transitioning from Business Continuity to Digital Resilience"
+      },
+      {
+        "الرقم": "45",
+        "اسم الباحث": "د. ايمان الذويب",
+        "الكلية": "تكنولوجيا المعلومات",
+        "عنوان المؤتمر": "2nd International Conference on Cyber Resilience (ICCR2024)",
+        "الجهة المنظمة": "Skyline University College, Universiti Kebangsaan Malaysia (IIKM),  \ncollaboration with IEEE",
+        "المكان": "دبي -الإمارات",
+        "اسم البحث": "Automated Machine Learning for Information Management and Information Systems: An Overview"
+      },
+      {
+        "الرقم": "46",
+        "اسم الباحث": "د. نسيم مطر",
+        "الكلية": "العلوم الإدارية والمالية",
+        "عنوان المؤتمر": "2nd International Conference on Cyber Resilience (ICCR2024)",
+        "الجهة المنظمة": "Skyline University College, Universiti Kebangsaan Malaysia (IIKM),  \ncollaboration with IEEE",
+        "المكان": "دبي -الإمارات",
+        "اسم البحث": "Evaluating Models Performance for Credit Risk Detection for Imbalanced Data"
+      },
+      {
+        "الرقم": "47",
+        "اسم الباحث": "د. حسام فاخوري",
+        "الكلية": "تكنولوجيا المعلومات",
+        "عنوان المؤتمر": "2nd International Conference on Cyber Resilience (ICCR2024)",
+        "الجهة المنظمة": "Skyline University College, Universiti Kebangsaan Malaysia (IIKM),  \ncollaboration with IEEE",
+        "المكان": "دبي -الإمارات",
+        "اسم البحث": "Securing Data and Digital Communication in Artificial Intelligence Environment"
+      },
+      {
+        "الرقم": "48",
+        "اسم الباحث": "د. واصف مطر",
+        "الكلية": "العلوم الإدارية والمالية",
+        "عنوان المؤتمر": "2nd International Conference on Cyber Resilience (ICCR2024)",
+        "الجهة المنظمة": "Skyline University College, Universiti Kebangsaan Malaysia (IIKM),  \ncollaboration with IEEE",
+        "المكان": "دبي -الإمارات",
+        "اسم البحث": "Intention to use ChatGPT from healthcare workers: Jordan Case study"
+      },
+      {
+        "الرقم": "49",
+        "اسم الباحث": "د. محمد الخالدي",
+        "الكلية": "العلوم الإدارية والمالية",
+        "عنوان المؤتمر": "2nd International Conference on Cyber Resilience (ICCR2024)",
+        "الجهة المنظمة": "Skyline University College, Universiti Kebangsaan Malaysia (IIKM),  \ncollaboration with IEEE",
+        "المكان": "دبي -الإمارات",
+        "اسم البحث": "Blockchain as a Resilient Infrastructure for e-Business Transactions"
+      },
+      {
+        "الرقم": "50",
+        "اسم الباحث": "د. أحمد شبيطة",
+        "الكلية": "تكنولوجيا المعلومات",
+        "عنوان المؤتمر": "2nd International Conference on Cyber Resilience (ICCR2024)",
+        "الجهة المنظمة": "Skyline University College, Universiti Kebangsaan Malaysia (IIKM),  \ncollaboration with IEEE",
+        "المكان": "دبي -الإمارات",
+        "اسم البحث": "Technological and Societal Shifts in Virtual Worlds: A Comparative Perspective"
+      },
+      {
+        "الرقم": "51",
+        "اسم الباحث": "د. خليل عمر",
+        "الكلية": "تكنولوجيا المعلومات",
+        "عنوان المؤتمر": "2nd International Conference on Cyber Resilience (ICCR2024)",
+        "الجهة المنظمة": "Skyline University College, Universiti Kebangsaan Malaysia (IIKM),  \ncollaboration with IEEE",
+        "المكان": "دبي -الإمارات",
+        "اسم البحث": "Analyzing Jordanian Higher Education Instructors’ Perception towards Metaversebased Education"
+      },
+      {
+        "الرقم": "52",
+        "اسم الباحث": "د. فراس عمر",
+        "الكلية": "العلوم الإدارية والمالية",
+        "عنوان المؤتمر": "2nd International Conference on Cyber Resilience (ICCR2024)",
+        "الجهة المنظمة": "Skyline University College, Universiti Kebangsaan Malaysia (IIKM),  \ncollaboration with IEEE",
+        "المكان": "دبي -الإمارات",
+        "اسم البحث": "Implementing Corporate Social Responsibility for Sustainable Education: A Comprehensive Case Study Analysis"
+      }
+    ],
+    "count": 52
+  },
+  {
+    "id": "3-14",
+    "title": "الجدول (3-14) : المؤتمرات التي قدمت جامعة البترا الدعم لها للعام 2024.",
+    "headers": [
+      "الجهة المدعومة",
+      "اسم المؤتمر",
+      "المكان"
+    ],
+    "rows": [
+      {
+        "الجهة المدعومة": "الأكاديمية العربية للعلوم",
+        "اسم المؤتمر": "Higher Education in the Arab World: Artificial Intelligence",
+        "المكان": "بيروت-لبنان"
+      },
+      {
+        "الجهة المدعومة": "المركز الريادي الأردني",
+        "اسم المؤتمر": "البيئة الآمنة والتنمية المستدامة",
+        "المكان": "عمان – الاردن"
+      },
+      {
+        "الجهة المدعومة": "مؤسسة الياسمين لعقد الدورات التدريبية",
+        "اسم المؤتمر": "منظومة التعليم في الأردن (واقع وتطلعات)",
+        "المكان": "عمان – الاردن"
+      },
+      {
+        "الجهة المدعومة": "المجلس العربي للموهوبين والمتفوقين",
+        "اسم المؤتمر": "الموهبة والتفوق والذكاء الاصطناعي في التعليم: رؤى مستقبلية",
+        "المكان": "جامعة البترا"
+      },
+      {
+        "الجهة المدعومة": "الجمعية الأردنية للبحث العلمي والريادة والإبداع",
+        "اسم المؤتمر": "",
+        "المكان": "عمان – الاردن"
+      }
+    ],
+    "count": 5
+  },
+  {
+    "id": "3-15",
+    "title": "الجدول (3-15) : الندوات التي قدمت لها جامعة البترا الدعم للعام 2024.",
+    "headers": [
+      "الكلية",
+      "القسم",
+      "عنوان الندوة"
+    ],
+    "rows": [
+      {
+        "الكلية": "كلية الصيدلة والعلوم الطبية",
+        "القسم": "قسم التغذية",
+        "عنوان الندوة": "Innovative food Technology Trends"
+      },
+      {
+        "الكلية": "كلية العمارة والتصميم",
+        "القسم": "قسم هندسة العمارة",
+        "عنوان الندوة": "صامدون- التراث والتغير المناخي"
+      },
+      {
+        "الكلية": "كلية تكنولوجيا المعلومات",
+        "القسم": "قسم أمن المعلومات",
+        "عنوان الندوة": "Information Technology for the Society"
+      }
+    ],
+    "count": 3
+  }
+]

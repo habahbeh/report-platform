@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { api } from '@/lib/api';
+import { PageTransition, FadeIn } from '@/components/ui/motion';
 
 interface Axis {
   id: number;
@@ -35,6 +36,7 @@ export default function AxisDetailPage() {
   const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState(false);
   const [formData, setFormData] = useState({ name: '', code: '', description: '' });
+  const [deleteConfirm, setDeleteConfirm] = useState(false);
 
   useEffect(() => {
     loadData();
@@ -70,7 +72,8 @@ export default function AxisDetailPage() {
   }
 
   async function handleDelete() {
-    if (!confirm('هل أنت متأكد من حذف هذا المحور؟')) return;
+    if (!deleteConfirm) { setDeleteConfirm(true); return; }
+    setDeleteConfirm(false);
     try {
       await api.axes.delete(parseInt(axisId));
       router.push(`/dashboard/templates/${templateId}`);
@@ -81,8 +84,24 @@ export default function AxisDetailPage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-64">
-        <div className="animate-spin h-12 w-12 border-4 border-blue-600 border-t-transparent rounded-full"></div>
+      <div className="space-y-6 animate-pulse">
+        <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-48" />
+        <div className="flex items-center justify-between">
+          <div className="space-y-2">
+            <div className="h-7 bg-gray-200 dark:bg-gray-700 rounded w-56" />
+            <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-40" />
+          </div>
+          <div className="flex gap-2">
+            <div className="h-9 bg-gray-200 dark:bg-gray-700 rounded w-20" />
+            <div className="h-9 bg-gray-200 dark:bg-gray-700 rounded w-16" />
+          </div>
+        </div>
+        <div className="card h-24 bg-gray-100 dark:bg-gray-800" />
+        <div className="card space-y-3">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <div key={i} className="h-14 bg-gray-100 dark:bg-gray-800 rounded-xl" />
+          ))}
+        </div>
       </div>
     );
   }
@@ -90,7 +109,6 @@ export default function AxisDetailPage() {
   if (!axis) {
     return (
       <div className="card text-center py-12">
-        <div className="text-6xl mb-4">❌</div>
         <h3 className="text-xl font-bold text-gray-900 mb-2">المحور غير موجود</h3>
         <Link href={`/dashboard/templates/${templateId}`} className="btn btn-primary mt-4">
           العودة للقالب
@@ -100,6 +118,7 @@ export default function AxisDetailPage() {
   }
 
   return (
+    <PageTransition>
     <div className="space-y-6">
       {/* Breadcrumb */}
       <div className="flex items-center gap-2 text-sm text-gray-500">
@@ -113,9 +132,8 @@ export default function AxisDetailPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
-            <span>📊</span>
-            <span>{editing ? 'تعديل المحور' : axis.name}</span>
+          <h1 className="text-2xl font-bold text-gray-900">
+            {editing ? 'تعديل المحور' : axis.name}
           </h1>
           <p className="text-gray-500 mt-1">
             الكود: {axis.code} • {items.length} بند
@@ -125,11 +143,19 @@ export default function AxisDetailPage() {
           {!editing && (
             <>
               <button onClick={() => setEditing(true)} className="btn btn-secondary">
-                ✏️ تعديل
+                تعديل
               </button>
-              <button onClick={handleDelete} className="btn bg-red-100 text-red-700 hover:bg-red-200">
-                🗑️ حذف
-              </button>
+              {deleteConfirm ? (
+                <div className="flex items-center gap-2">
+                  <span className="text-sm text-red-600">تأكيد الحذف؟</span>
+                  <button onClick={handleDelete} className="btn bg-red-500 text-white hover:bg-red-600 text-sm">نعم</button>
+                  <button onClick={() => setDeleteConfirm(false)} className="btn btn-secondary text-sm">لا</button>
+                </div>
+              ) : (
+                <button onClick={handleDelete} className="btn bg-red-100 text-red-700 hover:bg-red-200">
+                  حذف
+                </button>
+              )}
             </>
           )}
         </div>
@@ -166,7 +192,7 @@ export default function AxisDetailPage() {
             />
           </div>
           <div className="flex gap-2">
-            <button onClick={handleSave} className="btn btn-primary">💾 حفظ</button>
+            <button onClick={handleSave} className="btn btn-primary">حفظ</button>
             <button onClick={() => setEditing(false)} className="btn btn-secondary">إلغاء</button>
           </div>
         </div>
@@ -185,13 +211,12 @@ export default function AxisDetailPage() {
             href={`/dashboard/templates/structure?axis=${axisId}`}
             className="btn btn-primary text-sm"
           >
-            ➕ إضافة بند
+            + إضافة بند
           </Link>
         </div>
 
         {items.length === 0 ? (
           <div className="text-center py-8 text-gray-500">
-            <div className="text-4xl mb-2">📝</div>
             <p>لا توجد بنود في هذا المحور</p>
           </div>
         ) : (
@@ -216,7 +241,7 @@ export default function AxisDetailPage() {
                   href={`/dashboard/templates/items/${item.id}/components`}
                   className="text-blue-600 hover:text-blue-700 text-sm"
                 >
-                  🧩 المكونات
+                  المكونات
                 </Link>
               </div>
             ))}
@@ -224,5 +249,6 @@ export default function AxisDetailPage() {
         )}
       </div>
     </div>
+    </PageTransition>
   );
 }

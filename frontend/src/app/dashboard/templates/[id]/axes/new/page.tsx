@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { api } from '@/lib/api';
+import { PageTransition, FadeIn } from '@/components/ui/motion';
 
 export default function NewAxisPage() {
   const params = useParams();
@@ -11,6 +12,7 @@ export default function NewAxisPage() {
   const templateId = params.id as string;
 
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     name: '',
     code: '',
@@ -29,13 +31,15 @@ export default function NewAxisPage() {
       router.push(`/dashboard/templates/${templateId}`);
     } catch (error) {
       console.error('Failed to create axis:', error);
-      alert('فشل في إنشاء المحور');
+      setError('فشل في إنشاء المحور');
     } finally {
       setLoading(false);
     }
   }
 
   return (
+    <PageTransition>
+    <FadeIn>
     <div className="space-y-6">
       {/* Breadcrumb */}
       <div className="flex items-center gap-2 text-sm text-gray-500">
@@ -48,10 +52,7 @@ export default function NewAxisPage() {
 
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
-          <span>➕</span>
-          <span>إضافة محور جديد</span>
-        </h1>
+        <h1 className="text-2xl font-bold text-gray-900">إضافة محور جديد</h1>
         <p className="text-gray-500 mt-1">
           أضف محوراً جديداً للقالب
         </p>
@@ -97,13 +98,14 @@ export default function NewAxisPage() {
           />
         </div>
 
+        {error && <p className="text-sm text-red-600 bg-red-50 px-3 py-2 rounded-lg">{error}</p>}
         <div className="flex gap-3 pt-4 border-t">
           <button
             type="submit"
             disabled={loading}
             className="btn btn-primary"
           >
-            {loading ? '⏳ جاري الإنشاء...' : '✅ إنشاء المحور'}
+            {loading ? 'جاري الإنشاء...' : 'إنشاء المحور'}
           </button>
           <Link
             href={`/dashboard/templates/${templateId}`}
@@ -114,5 +116,7 @@ export default function NewAxisPage() {
         </div>
       </form>
     </div>
+    </FadeIn>
+    </PageTransition>
   );
 }

@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { api } from '@/lib/api';
+import { PageTransition, FadeIn } from '@/components/ui/motion';
 
 interface Template {
   id: number;
@@ -73,34 +74,39 @@ export default function EntitiesPage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-64">
-        <div className="animate-spin h-12 w-12 border-4 border-blue-600 border-t-transparent rounded-full"></div>
+      <div className="space-y-6 animate-pulse">
+        <div className="flex items-center justify-between">
+          <div className="space-y-2">
+            <div className="h-7 bg-gray-200 dark:bg-gray-700 rounded w-32" />
+            <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-56" />
+          </div>
+          <div className="h-9 bg-gray-200 dark:bg-gray-700 rounded w-28" />
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <div key={i} className="card h-40 bg-gray-100 dark:bg-gray-800" />
+          ))}
+        </div>
       </div>
     );
   }
 
   return (
+    <PageTransition>
     <div className="space-y-6">
       {/* Header */}
+      <FadeIn>
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
-            <span>🏢</span>
-            <span>الجهات</span>
-          </h1>
-          <p className="text-gray-500 mt-1">
-            إدارة الجهات المشاركة في التقرير
-          </p>
+          <h1 className="text-2xl font-bold text-gray-900">الجهات</h1>
+          <p className="text-gray-500 mt-1">إدارة الجهات المشاركة في التقرير</p>
         </div>
-        <button className="btn btn-primary flex items-center gap-2">
-          <span>➕</span>
-          <span>إضافة جهة</span>
-        </button>
+        <button className="btn btn-primary">إضافة جهة</button>
       </div>
+      </FadeIn>
 
       {templates.length === 0 ? (
         <div className="card text-center py-12">
-          <div className="text-6xl mb-4">📋</div>
           <h3 className="text-xl font-bold text-gray-900 mb-2">لا توجد قوالب</h3>
           <p className="text-gray-500 mb-4">أنشئ قالباً أولاً لإضافة الجهات</p>
           <Link href="/dashboard/templates" className="btn btn-primary">
@@ -143,7 +149,6 @@ export default function EntitiesPage() {
           {/* Entities Grid */}
           {filteredEntities.length === 0 ? (
             <div className="card text-center py-12">
-              <div className="text-6xl mb-4">🏢</div>
               <h3 className="text-xl font-bold text-gray-900 mb-2">
                 {searchQuery ? 'لا توجد نتائج' : 'لا توجد جهات'}
               </h3>
@@ -168,7 +173,7 @@ export default function EntitiesPage() {
                     <span
                       className={`px-2 py-1 rounded-full text-xs ${
                         entity.is_active
-                          ? 'bg-green-100 text-green-700'
+                          ? 'bg-emerald-100 text-emerald-700'
                           : 'bg-gray-100 text-gray-500'
                       }`}
                     >
@@ -182,22 +187,13 @@ export default function EntitiesPage() {
 
                   <div className="space-y-2 text-sm">
                     {entity.email && (
-                      <div className="flex items-center gap-2 text-gray-600">
-                        <span>📧</span>
-                        <span>{entity.email}</span>
-                      </div>
+                      <div className="text-gray-600">{entity.email}</div>
                     )}
                     {entity.phone && (
-                      <div className="flex items-center gap-2 text-gray-600">
-                        <span>📞</span>
-                        <span>{entity.phone}</span>
-                      </div>
+                      <div className="text-gray-600">{entity.phone}</div>
                     )}
                     {entity.contact_person && (
-                      <div className="flex items-center gap-2 text-gray-600">
-                        <span>👤</span>
-                        <span>{entity.contact_person}</span>
-                      </div>
+                      <div className="text-gray-600">{entity.contact_person}</div>
                     )}
                   </div>
 
@@ -221,5 +217,6 @@ export default function EntitiesPage() {
         </>
       )}
     </div>
+    </PageTransition>
   );
 }

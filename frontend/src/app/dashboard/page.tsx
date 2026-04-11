@@ -17,7 +17,24 @@ import {
   ArrowLeft,
   Activity,
   Zap,
+  X,
 } from 'lucide-react';
+
+function FirstTimeBanner({ onDismiss }: { onDismiss: () => void }) {
+  return (
+    <div className="relative bg-gradient-to-l from-indigo-600 to-blue-600 rounded-xl px-5 py-4 text-white flex items-center gap-4">
+      <Zap className="w-5 h-5 flex-shrink-0 text-blue-200" />
+      <p className="text-sm font-medium flex-1">
+        مرحباً! ابدأ بـ:{' '}
+        <Link href="/dashboard/projects/new" className="underline underline-offset-2 hover:text-blue-100">إنشاء مشروع</Link>
+        {' '}← دعوة المساهمين ← مراجعة البيانات ← توليد التقرير ← تصديره
+      </p>
+      <button onClick={onDismiss} className="text-blue-200 hover:text-white p-1 rounded-lg hover:bg-white/10">
+        <X className="w-4 h-4" />
+      </button>
+    </div>
+  );
+}
 
 // ==========================================
 // Types
@@ -45,12 +62,12 @@ interface Stats {
 // Project Stage Helpers
 // ==========================================
 const stageConfig: Record<string, { label: string; step: number; color: string; icon: typeof Clock }> = {
-  draft: { label: 'مسودة', step: 1, color: 'gray', icon: Clock },
-  collecting: { label: 'جمع البيانات', step: 2, color: 'amber', icon: Database },
-  reviewing: { label: 'المراجعة', step: 3, color: 'blue', icon: FileText },
-  generating: { label: 'توليد المحتوى', step: 4, color: 'purple', icon: Sparkles },
-  completed: { label: 'مكتمل', step: 5, color: 'emerald', icon: CheckCircle },
-  exported: { label: 'تم التصدير', step: 5, color: 'emerald', icon: Download },
+  draft:      { label: 'مسودة',         step: 1, color: 'gray',    icon: Clock },
+  collecting: { label: 'جمع البيانات',  step: 2, color: 'amber',   icon: Database },
+  reviewing:  { label: 'هيكل HTML',     step: 3, color: 'blue',    icon: FileText },
+  generating: { label: 'توليد النصوص',  step: 4, color: 'purple',  icon: Sparkles },
+  published:  { label: 'منشور',          step: 5, color: 'emerald', icon: CheckCircle },
+  archived:   { label: 'مؤرشف',          step: 5, color: 'gray',    icon: Download },
 };
 
 const stageColors: Record<string, { bg: string; text: string; badge: string; progress: string }> = {
@@ -252,10 +269,11 @@ function ProjectsGrid({ projects }: { projects: Project[] }) {
 // ==========================================
 function WorkflowGuide() {
   const steps = [
-    { number: 1, title: 'أنشئ مشروعاً', description: 'اختر قالب وأعطه اسماً', icon: FolderKanban, color: 'bg-blue-500' },
-    { number: 2, title: 'اجمع البيانات', description: 'أرسل روابط للمساهمين', icon: Database, color: 'bg-amber-500' },
-    { number: 3, title: 'ولّد التقرير', description: 'AI يكتب النصوص', icon: Sparkles, color: 'bg-purple-500' },
-    { number: 4, title: 'صدّر وشارك', description: 'Word أو PDF', icon: Download, color: 'bg-emerald-500' },
+    { number: 1, title: 'أنشئ مشروعاً',  description: 'اختر قالب وحدد المساهمين',      icon: FolderKanban, color: 'bg-blue-500' },
+    { number: 2, title: 'اجمع البيانات', description: 'أرسل روابط — المساهمون يدخلون الأرقام', icon: Database,    color: 'bg-amber-500' },
+    { number: 3, title: 'ابنِ الهيكل',   description: 'النظام يبني HTML تلقائياً',        icon: FileText,     color: 'bg-teal-500' },
+    { number: 4, title: 'ولّد النصوص',   description: 'AI يكتب التحليلات فقط',           icon: Sparkles,     color: 'bg-purple-500' },
+    { number: 5, title: 'صدّر وشارك',    description: 'Word أو PDF أو HTML',              icon: Download,     color: 'bg-emerald-500' },
   ];
 
   return (
@@ -266,11 +284,11 @@ function WorkflowGuide() {
         </div>
         <div>
           <h2 className="text-lg font-bold text-gray-900 dark:text-white">كيف يعمل؟</h2>
-          <p className="text-sm text-gray-500 dark:text-gray-400">4 خطوات فقط</p>
+          <p className="text-sm text-gray-500 dark:text-gray-400">5 خطوات فقط</p>
         </div>
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
         {steps.map((step) => {
           const Icon = step.icon;
           return (
@@ -296,9 +314,12 @@ export default function DashboardPage() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [stats, setStats] = useState<Stats>({ total_projects: 0, active: 0, completed: 0, pending_data: 0 });
   const [loading, setLoading] = useState(true);
+  const [showBanner, setShowBanner] = useState(false);
 
   useEffect(() => {
     loadData();
+    const dismissed = localStorage.getItem('taqrir_banner_dismissed');
+    if (!dismissed) setShowBanner(true);
   }, []);
 
   async function loadData() {
@@ -308,8 +329,8 @@ export default function DashboardPage() {
 
       setProjects(projectsList.slice(0, 6));
 
-      const active = projectsList.filter((p: Project) => !['completed', 'exported'].includes(p.status));
-      const completed = projectsList.filter((p: Project) => ['completed', 'exported'].includes(p.status));
+      const active = projectsList.filter((p: Project) => !['published', 'archived'].includes(p.status));
+      const completed = projectsList.filter((p: Project) => ['published', 'archived'].includes(p.status));
       const pendingData = projectsList.filter((p: Project) => ['draft', 'collecting'].includes(p.status));
 
       setStats({
@@ -327,18 +348,36 @@ export default function DashboardPage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-64">
-        <div className="text-center">
-          <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-          <p className="text-gray-500">جاري التحميل...</p>
+      <div className="space-y-6 animate-pulse">
+        <div className="h-24 bg-gray-100 dark:bg-gray-800 rounded-2xl" />
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <div key={i} className="card h-28 bg-gray-100 dark:bg-gray-800" />
+          ))}
+        </div>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="lg:col-span-2 card h-64 bg-gray-100 dark:bg-gray-800" />
+          <div className="card h-64 bg-gray-100 dark:bg-gray-800" />
         </div>
       </div>
     );
   }
 
+  function dismissBanner() {
+    localStorage.setItem('taqrir_banner_dismissed', '1');
+    setShowBanner(false);
+  }
+
   return (
     <PageTransition>
       <div className="space-y-6">
+        {/* First-time Banner */}
+        {showBanner && stats.total_projects === 0 && (
+          <FadeIn>
+            <FirstTimeBanner onDismiss={dismissBanner} />
+          </FadeIn>
+        )}
+
         {/* Hero + Stats */}
         <FadeIn>
           <HeroSection stats={stats} />

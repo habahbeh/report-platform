@@ -1090,10 +1090,78 @@ def _format_content_to_html(content: str) -> str:
     return result
 
 
+def _generate_basic_html(project) -> str:
+    """Generate a basic HTML report when no data models are available."""
+    from datetime import datetime
+    org_name = project.organization.name if project.organization else ''
+    
+    css = _get_enhanced_report_css()
+    
+    sections_html = ''
+    if project.template:
+        for axis in project.template.axes.all().order_by('order'):
+            items_html = ''
+            for item in axis.items.all().order_by('order'):
+                items_html += f'''
+                <article class="item" id="item-{item.code}">
+                    <h3 class="item-title">{item.code}: {item.name}</h3>
+                    <p class="placeholder">لم يتم إدخال بيانات بعد</p>
+                </article>
+'''
+            sections_html += f'''
+        <section class="axis" id="axis-{axis.code}">
+            <h2 class="axis-title">المحور {axis.code}: {axis.name}</h2>
+            {items_html}
+        </section>
+'''
+    
+    return f'''<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>{project.name}</title>
+    <style>{css}</style>
+</head>
+<body>
+    <header class="report-header">
+        <h1>{project.name}</h1>
+        <p class="subtitle">{org_name}</p>
+        <p class="period">{project.period}</p>
+    </header>
+    <main class="report-content">
+        {sections_html}
+    </main>
+    <footer class="report-footer">
+        <p>تم توليد هذا التقرير بتاريخ: {datetime.now().strftime("%Y-%m-%d %H:%M")}</p>
+    </footer>
+</body>
+</html>'''
+
+
 def generate_project_html(project, progress_callback=None) -> str:
     """Generate professional HTML content for the project report."""
-    from apps.reports.models import ItemDraft, AxisDraft
-    from apps.data_collection.models import DataCollectionPeriod
+    # Try V2 system first (ItemStructure-based)
+    try:
+        from apps.reports.models import ItemStructure
+        if ItemStructure.objects.filter(project=project).exists():
+            return generate_project_html_v2(project, progress_callback)
+    except ImportError:
+        pass
+
+    # Legacy system - try to import old models
+    try:
+        from apps.reports.models import ItemDraft, AxisDraft
+    except ImportError:
+        # Old models don't exist - return basic HTML
+        return _generate_basic_html(project)
+
+    # Try to import DataCollectionPeriod (may not exist)
+    try:
+        from apps.data_collection.models import DataCollectionPeriod
+        has_data_collection = True
+    except ImportError:
+        DataCollectionPeriod = None
+        has_data_collection = False
 
     org_name = project.organization.name if project.organization else ''
 
@@ -1101,7 +1169,7 @@ def generate_project_html(project, progress_callback=None) -> str:
     use_project_drafts = AxisDraft.objects.filter(project=project).exists()
 
     data_period = None
-    if not use_project_drafts:
+    if not use_project_drafts and has_data_collection and DataCollectionPeriod:
         data_period = DataCollectionPeriod.objects.filter(
             template=project.template,
             organization=project.organization,

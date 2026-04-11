@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { api } from '@/lib/api';
+import { PageTransition } from '@/components/ui/motion';
 
 interface Item {
   id: number;
@@ -51,6 +52,10 @@ export default function ItemComponentsPage() {
   const [loading, setLoading] = useState(true);
   const [showAddModal, setShowAddModal] = useState(false);
   const [editingComponent, setEditingComponent] = useState<ItemComponent | null>(null);
+  const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
+  function showToast(message: string, type: 'success' | 'error' = 'error') {
+    setToast({ message, type }); setTimeout(() => setToast(null), 4000);
+  }
 
   // Form state
   const [formData, setFormData] = useState({
@@ -112,31 +117,29 @@ export default function ItemComponentsPage() {
       loadData();
     } catch (error) {
       console.error('Failed to add component:', error);
-      alert('فشل في إضافة المكوّن');
+      showToast('فشل في إضافة المكوّن');
     }
   }
 
   async function handleUpdateComponent() {
     if (!editingComponent) return;
-    
+
     try {
       await fetchAPI(`/templates/item-components/${editingComponent.id}/`, {
         method: 'PATCH',
         body: JSON.stringify(formData),
       });
-      
+
       setEditingComponent(null);
       resetForm();
       loadData();
     } catch (error) {
       console.error('Failed to update component:', error);
-      alert('فشل في تحديث المكوّن');
+      showToast('فشل في تحديث المكوّن');
     }
   }
 
   async function handleDeleteComponent(id: number) {
-    if (!confirm('هل أنت متأكد من حذف هذا المكوّن؟')) return;
-    
     try {
       await fetchAPI(`/templates/item-components/${id}/`, {
         method: 'DELETE',
@@ -144,7 +147,7 @@ export default function ItemComponentsPage() {
       loadData();
     } catch (error) {
       console.error('Failed to delete component:', error);
-      alert('فشل في حذف المكوّن');
+      showToast('فشل في حذف المكوّن');
     }
   }
 
@@ -200,8 +203,12 @@ export default function ItemComponentsPage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-64">
-        <div className="animate-spin h-12 w-12 border-4 border-blue-600 border-t-transparent rounded-full"></div>
+      <div className="space-y-6 animate-pulse">
+        <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-64" />
+        <div className="card h-24 bg-gray-100 dark:bg-gray-800" />
+        {Array.from({ length: 3 }).map((_, i) => (
+          <div key={i} className="card h-20 bg-gray-100 dark:bg-gray-800" />
+        ))}
       </div>
     );
   }
@@ -209,7 +216,6 @@ export default function ItemComponentsPage() {
   if (!item) {
     return (
       <div className="card text-center py-12">
-        <div className="text-6xl mb-4">❌</div>
         <h3 className="text-xl font-bold text-gray-900 mb-2">البند غير موجود</h3>
         <Link href="/dashboard/templates/structure" className="text-blue-600 hover:underline">
           العودة للمحاور والبنود
@@ -219,6 +225,7 @@ export default function ItemComponentsPage() {
   }
 
   return (
+    <PageTransition>
     <div className="space-y-6">
       {/* Breadcrumb */}
       <div className="flex items-center gap-2 text-sm text-gray-500">
@@ -234,7 +241,6 @@ export default function ItemComponentsPage() {
         <div className="flex items-start justify-between">
           <div>
             <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
-              <span>🧩</span>
               <span>مكوّنات البند</span>
             </h1>
             <p className="text-lg text-blue-600 mt-2">{item.code}: {item.name}</p>
@@ -481,6 +487,13 @@ export default function ItemComponentsPage() {
           </div>
         </div>
       )}
+
+      {toast && (
+        <div className={`fixed bottom-6 left-1/2 -translate-x-1/2 px-5 py-3 rounded-xl shadow-xl text-sm font-medium z-50 ${
+          toast.type === 'success' ? 'bg-emerald-500 text-white' : 'bg-red-500 text-white'
+        }`}>{toast.message}</div>
+      )}
     </div>
+    </PageTransition>
   );
 }

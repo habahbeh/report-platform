@@ -1,0 +1,3927 @@
+{
+  "summary": {
+    "total_items": 49,
+    "total_components": 540,
+    "texts": {
+      "total": 409,
+      "with_content": 409
+    },
+    "tables": {
+      "total": 114,
+      "with_data": 114
+    },
+    "charts": {
+      "total": 17,
+      "with_data": 17
+    }
+  },
+  "axes": [
+    {
+      "code": "1",
+      "name": "الاعتمادية وضمان الجودة",
+      "items": [
+        {
+          "code": "1.1",
+          "name": "عدد البرامج التي حصلت على الاعتماد الخاص",
+          "components": [
+            {
+              "ref_id": "p1",
+              "type": "text",
+              "title": "فقرة 1",
+              "has_data": true
+            },
+            {
+              "ref_id": "t1",
+              "type": "table",
+              "title": "جدول (1-1): كليات الجامعة، وال",
+              "has_data": true
+            },
+            {
+              "ref_id": "t2",
+              "type": "table",
+              "title": "جدول 2",
+              "has_data": true
+            }
+          ],
+          "texts": 1,
+          "texts_ok": 1,
+          "tables": 2,
+          "tables_ok": 2,
+          "charts": 0,
+          "charts_ok": 0
+        },
+        {
+          "code": "1.2",
+          "name": "عدد البرامج التي حصلت على الاعتماد الخار",
+          "components": [
+            {
+              "ref_id": "p1",
+              "type": "text",
+              "title": "فقرة 1",
+              "has_data": true
+            },
+            {
+              "ref_id": "p2",
+              "type": "text",
+              "title": "فقرة 2",
+              "has_data": true
+            },
+            {
+              "ref_id": "p3",
+              "type": "text",
+              "title": "فقرة 3",
+              "has_data": true
+            },
+            {
+              "ref_id": "p4",
+              "type": "text",
+              "title": "فقرة 4",
+              "has_data": true
+            },
+            {
+              "ref_id": "p5",
+              "type": "text",
+              "title": "فقرة 5",
+              "has_data": true
+            },
+            {
+              "ref_id": "p6",
+              "type": "text",
+              "title": "فقرة 6",
+              "has_data": true
+            },
+            {
+              "ref_id": "p7",
+              "type": "text",
+              "title": "فقرة 7",
+              "has_data": true
+            },
+            {
+              "ref_id": "p8",
+              "type": "text",
+              "title": "فقرة 8",
+              "has_data": true
+            },
+            {
+              "ref_id": "p9",
+              "type": "text",
+              "title": "فقرة 9",
+              "has_data": true
+            },
+            {
+              "ref_id": "p10",
+              "type": "text",
+              "title": "فقرة 10",
+              "has_data": true
+            },
+            {
+              "ref_id": "p11",
+              "type": "text",
+              "title": "فقرة 11",
+              "has_data": true
+            },
+            {
+              "ref_id": "p12",
+              "type": "text",
+              "title": "فقرة 12",
+              "has_data": true
+            },
+            {
+              "ref_id": "p13",
+              "type": "text",
+              "title": "فقرة 13",
+              "has_data": true
+            },
+            {
+              "ref_id": "p14",
+              "type": "text",
+              "title": "فقرة 14",
+              "has_data": true
+            }
+          ],
+          "texts": 14,
+          "texts_ok": 14,
+          "tables": 0,
+          "tables_ok": 0,
+          "charts": 0,
+          "charts_ok": 0
+        },
+        {
+          "code": "1.3",
+          "name": "عدد البرامج التي حصلت على شهادة ضمان الج",
+          "components": [
+            {
+              "ref_id": "p1",
+              "type": "text",
+              "title": "فقرة 1",
+              "has_data": true
+            },
+            {
+              "ref_id": "p2",
+              "type": "text",
+              "title": "فقرة 2",
+              "has_data": true
+            },
+            {
+              "ref_id": "p3",
+              "type": "text",
+              "title": "فقرة 3",
+              "has_data": true
+            },
+            {
+              "ref_id": "p4",
+              "type": "text",
+              "title": "فقرة 4",
+              "has_data": true
+            },
+            {
+              "ref_id": "p5",
+              "type": "text",
+              "title": "فقرة 5",
+              "has_data": true
+            },
+            {
+              "ref_id": "p6",
+              "type": "text",
+              "title": "فقرة 6",
+              "has_data": true
+            },
+            {
+              "ref_id": "p7",
+              "type": "text",
+              "title": "فقرة 7",
+              "has_data": true
+            },
+            {
+              "ref_id": "p8",
+              "type": "text",
+              "title": "فقرة 8",
+              "has_data": true
+            },
+            {
+              "ref_id": "p9",
+              "type": "text",
+              "title": "فقرة 9",
+              "has_data": true
+            },
+            {
+              "ref_id": "p10",
+              "type": "text",
+              "title": "فقرة 10",
+              "has_data": true
+            },
+            {
+              "ref_id": "p11",
+              "type": "text",
+              "title": "فقرة 11",
+              "has_data": true
+            },
+            {
+              "ref_id": "p12",
+              "type": "text",
+              "title": "فقرة 12",
+              "has_data": true
+            },
+            {
+              "ref_id": "p13",
+              "type": "text",
+              "title": "فقرة 13",
+              "has_data": true
+            },
+            {
+              "ref_id": "p14",
+              "type": "text",
+              "title": "فقرة 14",
+              "has_data": true
+            },
+            {
+              "ref_id": "t1",
+              "type": "table",
+              "title": "جدول 1",
+              "has_data": true
+            },
+            {
+              "ref_id": "c1",
+              "type": "chart",
+              "title": "شكل (1-1): بعض شهادات ضمان الج",
+              "has_data": true
+            }
+          ],
+          "texts": 14,
+          "texts_ok": 14,
+          "tables": 1,
+          "tables_ok": 1,
+          "charts": 1,
+          "charts_ok": 1
+        },
+        {
+          "code": "1.4",
+          "name": "عدد البرامج المستحدثة",
+          "components": [
+            {
+              "ref_id": "p1",
+              "type": "text",
+              "title": "فقرة 1",
+              "has_data": true
+            },
+            {
+              "ref_id": "p2",
+              "type": "text",
+              "title": "فقرة 2",
+              "has_data": true
+            },
+            {
+              "ref_id": "p3",
+              "type": "text",
+              "title": "فقرة 3",
+              "has_data": true
+            },
+            {
+              "ref_id": "p4",
+              "type": "text",
+              "title": "فقرة 4",
+              "has_data": true
+            },
+            {
+              "ref_id": "p5",
+              "type": "text",
+              "title": "فقرة 5",
+              "has_data": true
+            },
+            {
+              "ref_id": "p6",
+              "type": "text",
+              "title": "فقرة 6",
+              "has_data": true
+            },
+            {
+              "ref_id": "p7",
+              "type": "text",
+              "title": "فقرة 7",
+              "has_data": true
+            },
+            {
+              "ref_id": "p8",
+              "type": "text",
+              "title": "فقرة 8",
+              "has_data": true
+            },
+            {
+              "ref_id": "p9",
+              "type": "text",
+              "title": "فقرة 9",
+              "has_data": true
+            },
+            {
+              "ref_id": "p10",
+              "type": "text",
+              "title": "فقرة 10",
+              "has_data": true
+            },
+            {
+              "ref_id": "p11",
+              "type": "text",
+              "title": "فقرة 11",
+              "has_data": true
+            },
+            {
+              "ref_id": "p12",
+              "type": "text",
+              "title": "فقرة 12",
+              "has_data": true
+            },
+            {
+              "ref_id": "p13",
+              "type": "text",
+              "title": "فقرة 13",
+              "has_data": true
+            },
+            {
+              "ref_id": "p14",
+              "type": "text",
+              "title": "فقرة 14",
+              "has_data": true
+            }
+          ],
+          "texts": 14,
+          "texts_ok": 14,
+          "tables": 0,
+          "tables_ok": 0,
+          "charts": 0,
+          "charts_ok": 0
+        },
+        {
+          "code": "1.5",
+          "name": "تصنيف الجامعة العالمي بناء على QS",
+          "components": [
+            {
+              "ref_id": "p1",
+              "type": "text",
+              "title": "فقرة 1",
+              "has_data": true
+            },
+            {
+              "ref_id": "p2",
+              "type": "text",
+              "title": "فقرة 2",
+              "has_data": true
+            }
+          ],
+          "texts": 2,
+          "texts_ok": 2,
+          "tables": 0,
+          "tables_ok": 0,
+          "charts": 0,
+          "charts_ok": 0
+        },
+        {
+          "code": "1.6",
+          "name": "تصنيف الجامعة العالمي بناء على THE",
+          "components": [
+            {
+              "ref_id": "p1",
+              "type": "text",
+              "title": "فقرة 1",
+              "has_data": true
+            }
+          ],
+          "texts": 1,
+          "texts_ok": 1,
+          "tables": 0,
+          "tables_ok": 0,
+          "charts": 0,
+          "charts_ok": 0
+        },
+        {
+          "code": "1.7",
+          "name": "تصنيف الجامعة العالمي بناء على Shanghai",
+          "components": [
+            {
+              "ref_id": "t1",
+              "type": "table",
+              "title": "جدول (1-2) : التصنيفات العالمي",
+              "has_data": true
+            },
+            {
+              "ref_id": "t2",
+              "type": "table",
+              "title": "جدول 2",
+              "has_data": true
+            },
+            {
+              "ref_id": "p1",
+              "type": "text",
+              "title": "فقرة 1",
+              "has_data": true
+            }
+          ],
+          "texts": 1,
+          "texts_ok": 1,
+          "tables": 2,
+          "tables_ok": 2,
+          "charts": 0,
+          "charts_ok": 0
+        },
+        {
+          "code": "1.8",
+          "name": "عدد الطلبة غير الأردنيين",
+          "components": [],
+          "texts": 0,
+          "texts_ok": 0,
+          "tables": 0,
+          "tables_ok": 0,
+          "charts": 0,
+          "charts_ok": 0
+        },
+        {
+          "code": "1.9",
+          "name": "نسبة عدد الطلبة غير الأردنيين إلى إجمالي",
+          "components": [
+            {
+              "ref_id": "p1",
+              "type": "text",
+              "title": "فقرة 1",
+              "has_data": true
+            },
+            {
+              "ref_id": "c1",
+              "type": "chart",
+              "title": "شكل (1-2) : النسبة المئوية للط",
+              "has_data": true
+            },
+            {
+              "ref_id": "t1",
+              "type": "table",
+              "title": "جدول (1-3): أعداد الطلبة المسج",
+              "has_data": true
+            },
+            {
+              "ref_id": "t2",
+              "type": "table",
+              "title": "جدول 2",
+              "has_data": true
+            },
+            {
+              "ref_id": "p2",
+              "type": "text",
+              "title": "فقرة 2",
+              "has_data": true
+            },
+            {
+              "ref_id": "p3",
+              "type": "text",
+              "title": "فقرة 3",
+              "has_data": true
+            },
+            {
+              "ref_id": "p4",
+              "type": "text",
+              "title": "فقرة 4",
+              "has_data": true
+            },
+            {
+              "ref_id": "c2",
+              "type": "chart",
+              "title": "شكل (1-3) : أعداد الطلبة المنت",
+              "has_data": true
+            },
+            {
+              "ref_id": "p5",
+              "type": "text",
+              "title": "فقرة 5",
+              "has_data": true
+            },
+            {
+              "ref_id": "t3",
+              "type": "table",
+              "title": "جدول (1-4): أعداد الطلبة المنت",
+              "has_data": true
+            },
+            {
+              "ref_id": "t4",
+              "type": "table",
+              "title": "جدول 4",
+              "has_data": true
+            },
+            {
+              "ref_id": "p6",
+              "type": "text",
+              "title": "فقرة 6",
+              "has_data": true
+            },
+            {
+              "ref_id": "t5",
+              "type": "table",
+              "title": "جدول 5",
+              "has_data": true
+            },
+            {
+              "ref_id": "c3",
+              "type": "chart",
+              "title": "شكل (4-1): توزيع أعداد الطلبة ",
+              "has_data": true
+            },
+            {
+              "ref_id": "p7",
+              "type": "text",
+              "title": "فقرة 7",
+              "has_data": true
+            },
+            {
+              "ref_id": "t6",
+              "type": "table",
+              "title": "جدول 6",
+              "has_data": true
+            },
+            {
+              "ref_id": "c4",
+              "type": "chart",
+              "title": "شكل (5-1): توزيع أعداد الطلبة ",
+              "has_data": true
+            },
+            {
+              "ref_id": "p8",
+              "type": "text",
+              "title": "فقرة 8",
+              "has_data": true
+            },
+            {
+              "ref_id": "t7",
+              "type": "table",
+              "title": "جدول (1-5): أعداد الطلبة المسج",
+              "has_data": true
+            },
+            {
+              "ref_id": "t8",
+              "type": "table",
+              "title": "جدول 8",
+              "has_data": true
+            }
+          ],
+          "texts": 8,
+          "texts_ok": 8,
+          "tables": 8,
+          "tables_ok": 8,
+          "charts": 4,
+          "charts_ok": 4
+        },
+        {
+          "code": "1.10",
+          "name": "عدد البرامج المشتركة مع جامعات عالمية مر",
+          "components": [
+            {
+              "ref_id": "p1",
+              "type": "text",
+              "title": "فقرة 1",
+              "has_data": true
+            },
+            {
+              "ref_id": "p2",
+              "type": "text",
+              "title": "فقرة 2",
+              "has_data": true
+            },
+            {
+              "ref_id": "p3",
+              "type": "text",
+              "title": "فقرة 3",
+              "has_data": true
+            },
+            {
+              "ref_id": "c1",
+              "type": "chart",
+              "title": "شكل (6-1): نمو عدد وثائق التعا",
+              "has_data": true
+            },
+            {
+              "ref_id": "c2",
+              "type": "chart",
+              "title": "شكل (7-1): تطور الرقعة الجغراف",
+              "has_data": true
+            },
+            {
+              "ref_id": "c3",
+              "type": "chart",
+              "title": "شكل (8-1): التوزيع الجغرافي لو",
+              "has_data": true
+            },
+            {
+              "ref_id": "p4",
+              "type": "text",
+              "title": "فقرة 4",
+              "has_data": true
+            },
+            {
+              "ref_id": "p5",
+              "type": "text",
+              "title": "فقرة 5",
+              "has_data": true
+            },
+            {
+              "ref_id": "p6",
+              "type": "text",
+              "title": "فقرة 6",
+              "has_data": true
+            },
+            {
+              "ref_id": "p7",
+              "type": "text",
+              "title": "فقرة 7",
+              "has_data": true
+            },
+            {
+              "ref_id": "p8",
+              "type": "text",
+              "title": "فقرة 8",
+              "has_data": true
+            },
+            {
+              "ref_id": "t1",
+              "type": "table",
+              "title": "جدول (1-6): وثائق التعاون للفت",
+              "has_data": true
+            },
+            {
+              "ref_id": "t2",
+              "type": "table",
+              "title": "جدول 2",
+              "has_data": true
+            },
+            {
+              "ref_id": "t3",
+              "type": "table",
+              "title": "جدول 3",
+              "has_data": true
+            },
+            {
+              "ref_id": "p9",
+              "type": "text",
+              "title": "فقرة 9",
+              "has_data": true
+            },
+            {
+              "ref_id": "t4",
+              "type": "table",
+              "title": "جدول (1-7): نتائج إدارة مذكرات",
+              "has_data": true
+            },
+            {
+              "ref_id": "t5",
+              "type": "table",
+              "title": "جدول 5",
+              "has_data": true
+            },
+            {
+              "ref_id": "p10",
+              "type": "text",
+              "title": "فقرة 10",
+              "has_data": true
+            },
+            {
+              "ref_id": "p11",
+              "type": "text",
+              "title": "فقرة 11",
+              "has_data": true
+            },
+            {
+              "ref_id": "p12",
+              "type": "text",
+              "title": "فقرة 12",
+              "has_data": true
+            },
+            {
+              "ref_id": "p13",
+              "type": "text",
+              "title": "فقرة 13",
+              "has_data": true
+            },
+            {
+              "ref_id": "p14",
+              "type": "text",
+              "title": "فقرة 14",
+              "has_data": true
+            },
+            {
+              "ref_id": "p15",
+              "type": "text",
+              "title": "فقرة 15",
+              "has_data": true
+            },
+            {
+              "ref_id": "p16",
+              "type": "text",
+              "title": "فقرة 16",
+              "has_data": true
+            },
+            {
+              "ref_id": "p17",
+              "type": "text",
+              "title": "فقرة 17",
+              "has_data": true
+            },
+            {
+              "ref_id": "p18",
+              "type": "text",
+              "title": "فقرة 18",
+              "has_data": true
+            },
+            {
+              "ref_id": "p19",
+              "type": "text",
+              "title": "فقرة 19",
+              "has_data": true
+            },
+            {
+              "ref_id": "p20",
+              "type": "text",
+              "title": "فقرة 20",
+              "has_data": true
+            },
+            {
+              "ref_id": "p21",
+              "type": "text",
+              "title": "فقرة 21",
+              "has_data": true
+            },
+            {
+              "ref_id": "p22",
+              "type": "text",
+              "title": "فقرة 22",
+              "has_data": true
+            },
+            {
+              "ref_id": "p23",
+              "type": "text",
+              "title": "فقرة 23",
+              "has_data": true
+            },
+            {
+              "ref_id": "p24",
+              "type": "text",
+              "title": "فقرة 24",
+              "has_data": true
+            },
+            {
+              "ref_id": "p25",
+              "type": "text",
+              "title": "فقرة 25",
+              "has_data": true
+            },
+            {
+              "ref_id": "p26",
+              "type": "text",
+              "title": "فقرة 26",
+              "has_data": true
+            },
+            {
+              "ref_id": "p27",
+              "type": "text",
+              "title": "فقرة 27",
+              "has_data": true
+            },
+            {
+              "ref_id": "p28",
+              "type": "text",
+              "title": "فقرة 28",
+              "has_data": true
+            },
+            {
+              "ref_id": "p29",
+              "type": "text",
+              "title": "فقرة 29",
+              "has_data": true
+            }
+          ],
+          "texts": 29,
+          "texts_ok": 29,
+          "tables": 5,
+          "tables_ok": 5,
+          "charts": 3,
+          "charts_ok": 3
+        }
+      ],
+      "totals": {
+        "texts": 84,
+        "texts_ok": 84,
+        "tables": 18,
+        "tables_ok": 18,
+        "charts": 8,
+        "charts_ok": 8
+      }
+    },
+    {
+      "code": "2",
+      "name": "التدريس",
+      "items": [
+        {
+          "code": "2.1",
+          "name": "إجمالي النقص في عدد أعضاء الهيئة التدريس",
+          "components": [],
+          "texts": 0,
+          "texts_ok": 0,
+          "tables": 0,
+          "tables_ok": 0,
+          "charts": 0,
+          "charts_ok": 0
+        },
+        {
+          "code": "2.2",
+          "name": "إجمالي الزيادة في عدد أعضاء الهيئة التدر",
+          "components": [
+            {
+              "ref_id": "p1",
+              "type": "text",
+              "title": "فقرة 1",
+              "has_data": true
+            },
+            {
+              "ref_id": "t1",
+              "type": "table",
+              "title": "جدول (2-1): أعداد أعضاء الهيئة",
+              "has_data": true
+            },
+            {
+              "ref_id": "t2",
+              "type": "table",
+              "title": "جدول 2",
+              "has_data": true
+            },
+            {
+              "ref_id": "p2",
+              "type": "text",
+              "title": "فقرة 2",
+              "has_data": true
+            },
+            {
+              "ref_id": "c1",
+              "type": "chart",
+              "title": "شكل (1-2) : توزيع أعضاء الهيئة",
+              "has_data": true
+            },
+            {
+              "ref_id": "c2",
+              "type": "chart",
+              "title": "شكل (2-2): توزيع أعضاء الهيئة ",
+              "has_data": true
+            }
+          ],
+          "texts": 2,
+          "texts_ok": 2,
+          "tables": 2,
+          "tables_ok": 2,
+          "charts": 2,
+          "charts_ok": 2
+        },
+        {
+          "code": "2.3",
+          "name": "نتائج الاستبانات لقياس رضا أعضاء الهيئة ",
+          "components": [],
+          "texts": 0,
+          "texts_ok": 0,
+          "tables": 0,
+          "tables_ok": 0,
+          "charts": 0,
+          "charts_ok": 0
+        },
+        {
+          "code": "2.4",
+          "name": "نتائج الاستبانات لقياس رضا الطلبة عن الت",
+          "components": [
+            {
+              "ref_id": "p1",
+              "type": "text",
+              "title": "فقرة 1",
+              "has_data": true
+            },
+            {
+              "ref_id": "p2",
+              "type": "text",
+              "title": "فقرة 2",
+              "has_data": true
+            },
+            {
+              "ref_id": "p3",
+              "type": "text",
+              "title": "فقرة 3",
+              "has_data": true
+            },
+            {
+              "ref_id": "p4",
+              "type": "text",
+              "title": "فقرة 4",
+              "has_data": true
+            },
+            {
+              "ref_id": "p5",
+              "type": "text",
+              "title": "فقرة 5",
+              "has_data": true
+            },
+            {
+              "ref_id": "p6",
+              "type": "text",
+              "title": "فقرة 6",
+              "has_data": true
+            },
+            {
+              "ref_id": "p7",
+              "type": "text",
+              "title": "فقرة 7",
+              "has_data": true
+            },
+            {
+              "ref_id": "p8",
+              "type": "text",
+              "title": "فقرة 8",
+              "has_data": true
+            },
+            {
+              "ref_id": "p9",
+              "type": "text",
+              "title": "فقرة 9",
+              "has_data": true
+            },
+            {
+              "ref_id": "p10",
+              "type": "text",
+              "title": "فقرة 10",
+              "has_data": true
+            },
+            {
+              "ref_id": "p11",
+              "type": "text",
+              "title": "فقرة 11",
+              "has_data": true
+            },
+            {
+              "ref_id": "p12",
+              "type": "text",
+              "title": "فقرة 12",
+              "has_data": true
+            },
+            {
+              "ref_id": "p13",
+              "type": "text",
+              "title": "فقرة 13",
+              "has_data": true
+            },
+            {
+              "ref_id": "p14",
+              "type": "text",
+              "title": "فقرة 14",
+              "has_data": true
+            },
+            {
+              "ref_id": "p15",
+              "type": "text",
+              "title": "فقرة 15",
+              "has_data": true
+            },
+            {
+              "ref_id": "p16",
+              "type": "text",
+              "title": "فقرة 16",
+              "has_data": true
+            },
+            {
+              "ref_id": "p17",
+              "type": "text",
+              "title": "فقرة 17",
+              "has_data": true
+            },
+            {
+              "ref_id": "p18",
+              "type": "text",
+              "title": "فقرة 18",
+              "has_data": true
+            },
+            {
+              "ref_id": "p19",
+              "type": "text",
+              "title": "فقرة 19",
+              "has_data": true
+            },
+            {
+              "ref_id": "p20",
+              "type": "text",
+              "title": "فقرة 20",
+              "has_data": true
+            },
+            {
+              "ref_id": "p21",
+              "type": "text",
+              "title": "فقرة 21",
+              "has_data": true
+            },
+            {
+              "ref_id": "p22",
+              "type": "text",
+              "title": "فقرة 22",
+              "has_data": true
+            },
+            {
+              "ref_id": "p23",
+              "type": "text",
+              "title": "فقرة 23",
+              "has_data": true
+            }
+          ],
+          "texts": 23,
+          "texts_ok": 23,
+          "tables": 0,
+          "tables_ok": 0,
+          "charts": 0,
+          "charts_ok": 0
+        },
+        {
+          "code": "2.5",
+          "name": "عدد الطلبة الموفدين",
+          "components": [
+            {
+              "ref_id": "p1",
+              "type": "text",
+              "title": "فقرة 1",
+              "has_data": true
+            },
+            {
+              "ref_id": "p2",
+              "type": "text",
+              "title": "فقرة 2",
+              "has_data": true
+            },
+            {
+              "ref_id": "p3",
+              "type": "text",
+              "title": "فقرة 3",
+              "has_data": true
+            },
+            {
+              "ref_id": "p4",
+              "type": "text",
+              "title": "فقرة 4",
+              "has_data": true
+            },
+            {
+              "ref_id": "p5",
+              "type": "text",
+              "title": "فقرة 5",
+              "has_data": true
+            },
+            {
+              "ref_id": "p6",
+              "type": "text",
+              "title": "فقرة 6",
+              "has_data": true
+            },
+            {
+              "ref_id": "t1",
+              "type": "table",
+              "title": "جدول (2-2) : قائمة بالموفدين ا",
+              "has_data": true
+            },
+            {
+              "ref_id": "t2",
+              "type": "table",
+              "title": "جدول 2",
+              "has_data": true
+            },
+            {
+              "ref_id": "p7",
+              "type": "text",
+              "title": "فقرة 7",
+              "has_data": true
+            },
+            {
+              "ref_id": "t3",
+              "type": "table",
+              "title": "جدول (3-2): الإيفاد للعام الجا",
+              "has_data": true
+            },
+            {
+              "ref_id": "t4",
+              "type": "table",
+              "title": "جدول 4",
+              "has_data": true
+            },
+            {
+              "ref_id": "p8",
+              "type": "text",
+              "title": "فقرة 8",
+              "has_data": true
+            },
+            {
+              "ref_id": "t5",
+              "type": "table",
+              "title": "جدول (2-4): إحصائية بالموفدين ",
+              "has_data": true
+            },
+            {
+              "ref_id": "t6",
+              "type": "table",
+              "title": "جدول 6",
+              "has_data": true
+            },
+            {
+              "ref_id": "t7",
+              "type": "table",
+              "title": "جدول (2-5) : قائمة بأسماء المو",
+              "has_data": true
+            },
+            {
+              "ref_id": "t8",
+              "type": "table",
+              "title": "جدول 8",
+              "has_data": true
+            }
+          ],
+          "texts": 8,
+          "texts_ok": 8,
+          "tables": 8,
+          "tables_ok": 8,
+          "charts": 0,
+          "charts_ok": 0
+        },
+        {
+          "code": "2.6",
+          "name": "عدد دورات تأهيل وتدريب أعضاء هيئة التدري",
+          "components": [],
+          "texts": 0,
+          "texts_ok": 0,
+          "tables": 0,
+          "tables_ok": 0,
+          "charts": 0,
+          "charts_ok": 0
+        },
+        {
+          "code": "2.7",
+          "name": "نسبة المشاركين في دورات تأهيل وتدريب أعض",
+          "components": [
+            {
+              "ref_id": "p1",
+              "type": "text",
+              "title": "فقرة 1",
+              "has_data": true
+            },
+            {
+              "ref_id": "p2",
+              "type": "text",
+              "title": "فقرة 2",
+              "has_data": true
+            },
+            {
+              "ref_id": "p3",
+              "type": "text",
+              "title": "فقرة 3",
+              "has_data": true
+            },
+            {
+              "ref_id": "p4",
+              "type": "text",
+              "title": "فقرة 4",
+              "has_data": true
+            },
+            {
+              "ref_id": "p5",
+              "type": "text",
+              "title": "فقرة 5",
+              "has_data": true
+            },
+            {
+              "ref_id": "p6",
+              "type": "text",
+              "title": "فقرة 6",
+              "has_data": true
+            },
+            {
+              "ref_id": "t1",
+              "type": "table",
+              "title": "جدول (6-2): تصنيف الدورات التد",
+              "has_data": true
+            },
+            {
+              "ref_id": "t2",
+              "type": "table",
+              "title": "جدول 2",
+              "has_data": true
+            },
+            {
+              "ref_id": "p7",
+              "type": "text",
+              "title": "فقرة 7",
+              "has_data": true
+            },
+            {
+              "ref_id": "p8",
+              "type": "text",
+              "title": "فقرة 8",
+              "has_data": true
+            },
+            {
+              "ref_id": "p9",
+              "type": "text",
+              "title": "فقرة 9",
+              "has_data": true
+            },
+            {
+              "ref_id": "p10",
+              "type": "text",
+              "title": "فقرة 10",
+              "has_data": true
+            },
+            {
+              "ref_id": "p11",
+              "type": "text",
+              "title": "فقرة 11",
+              "has_data": true
+            },
+            {
+              "ref_id": "p12",
+              "type": "text",
+              "title": "فقرة 12",
+              "has_data": true
+            },
+            {
+              "ref_id": "p13",
+              "type": "text",
+              "title": "فقرة 13",
+              "has_data": true
+            },
+            {
+              "ref_id": "p14",
+              "type": "text",
+              "title": "فقرة 14",
+              "has_data": true
+            },
+            {
+              "ref_id": "p15",
+              "type": "text",
+              "title": "فقرة 15",
+              "has_data": true
+            },
+            {
+              "ref_id": "t3",
+              "type": "table",
+              "title": "جدول (7-2): الدورات التدريبية ",
+              "has_data": true
+            },
+            {
+              "ref_id": "t4",
+              "type": "table",
+              "title": "جدول 4",
+              "has_data": true
+            },
+            {
+              "ref_id": "p16",
+              "type": "text",
+              "title": "فقرة 16",
+              "has_data": true
+            },
+            {
+              "ref_id": "p17",
+              "type": "text",
+              "title": "فقرة 17",
+              "has_data": true
+            },
+            {
+              "ref_id": "t5",
+              "type": "table",
+              "title": "جدول (2-8) : نتائج امتحانات ال",
+              "has_data": true
+            },
+            {
+              "ref_id": "t6",
+              "type": "table",
+              "title": "جدول 6",
+              "has_data": true
+            },
+            {
+              "ref_id": "p18",
+              "type": "text",
+              "title": "فقرة 18",
+              "has_data": true
+            },
+            {
+              "ref_id": "p19",
+              "type": "text",
+              "title": "فقرة 19",
+              "has_data": true
+            },
+            {
+              "ref_id": "p20",
+              "type": "text",
+              "title": "فقرة 20",
+              "has_data": true
+            }
+          ],
+          "texts": 20,
+          "texts_ok": 20,
+          "tables": 6,
+          "tables_ok": 6,
+          "charts": 0,
+          "charts_ok": 0
+        }
+      ],
+      "totals": {
+        "texts": 53,
+        "texts_ok": 53,
+        "tables": 16,
+        "tables_ok": 16,
+        "charts": 2,
+        "charts_ok": 2
+      }
+    },
+    {
+      "code": "3",
+      "name": "البحث العلمي",
+      "items": [
+        {
+          "code": "3.1",
+          "name": "عدد الأبحاث المنشورة في SCOPUS و ISI",
+          "components": [
+            {
+              "ref_id": "p1",
+              "type": "text",
+              "title": "فقرة 1",
+              "has_data": true
+            },
+            {
+              "ref_id": "c1",
+              "type": "chart",
+              "title": "شكل (1-3): عدد الأبحاث السنوية",
+              "has_data": true
+            },
+            {
+              "ref_id": "p2",
+              "type": "text",
+              "title": "فقرة 2",
+              "has_data": true
+            },
+            {
+              "ref_id": "c2",
+              "type": "chart",
+              "title": "شكل (2-3) : العدد التراكمي الس",
+              "has_data": true
+            },
+            {
+              "ref_id": "p3",
+              "type": "text",
+              "title": "فقرة 3",
+              "has_data": true
+            },
+            {
+              "ref_id": "t1",
+              "type": "table",
+              "title": "جدول (3-1): مؤشرات أداء البحث ",
+              "has_data": true
+            },
+            {
+              "ref_id": "t2",
+              "type": "table",
+              "title": "جدول 2",
+              "has_data": true
+            },
+            {
+              "ref_id": "p4",
+              "type": "text",
+              "title": "فقرة 4",
+              "has_data": true
+            },
+            {
+              "ref_id": "t3",
+              "type": "table",
+              "title": "جدول (2-3): قائمة بالأبحاث الم",
+              "has_data": true
+            },
+            {
+              "ref_id": "t4",
+              "type": "table",
+              "title": "جدول 4",
+              "has_data": true
+            },
+            {
+              "ref_id": "p5",
+              "type": "text",
+              "title": "فقرة 5",
+              "has_data": true
+            },
+            {
+              "ref_id": "t5",
+              "type": "table",
+              "title": "جدول (3-3): نسبة النشر في محرك",
+              "has_data": true
+            },
+            {
+              "ref_id": "t6",
+              "type": "table",
+              "title": "جدول 6",
+              "has_data": true
+            }
+          ],
+          "texts": 5,
+          "texts_ok": 5,
+          "tables": 6,
+          "tables_ok": 6,
+          "charts": 2,
+          "charts_ok": 2
+        },
+        {
+          "code": "3.2",
+          "name": "معدل الاستشهاد إلى عدد أعضاء الهيئة التد",
+          "components": [
+            {
+              "ref_id": "p1",
+              "type": "text",
+              "title": "فقرة 1",
+              "has_data": true
+            },
+            {
+              "ref_id": "c1",
+              "type": "chart",
+              "title": "شكل (3-3) : عدد الاستشهادات ال",
+              "has_data": true
+            },
+            {
+              "ref_id": "p2",
+              "type": "text",
+              "title": "فقرة 2",
+              "has_data": true
+            },
+            {
+              "ref_id": "c2",
+              "type": "chart",
+              "title": "شكل (4-3) : عدد الاستشهادات ال",
+              "has_data": true
+            },
+            {
+              "ref_id": "p3",
+              "type": "text",
+              "title": "فقرة 3",
+              "has_data": true
+            },
+            {
+              "ref_id": "c3",
+              "type": "chart",
+              "title": "شكل (5-3) : التحسن في مقياس مؤ",
+              "has_data": true
+            },
+            {
+              "ref_id": "p4",
+              "type": "text",
+              "title": "فقرة 4",
+              "has_data": true
+            },
+            {
+              "ref_id": "c4",
+              "type": "chart",
+              "title": "شكل (6-3) : نسبة توزيع الأعمال",
+              "has_data": true
+            }
+          ],
+          "texts": 4,
+          "texts_ok": 4,
+          "tables": 0,
+          "tables_ok": 0,
+          "charts": 4,
+          "charts_ok": 4
+        },
+        {
+          "code": "3.3",
+          "name": "عدد الجوائز العلمية وبراءات الاختراع الم",
+          "components": [
+            {
+              "ref_id": "p1",
+              "type": "text",
+              "title": "فقرة 1",
+              "has_data": true
+            },
+            {
+              "ref_id": "t1",
+              "type": "table",
+              "title": "جدول (3-4) : الباحثون المتميزو",
+              "has_data": true
+            },
+            {
+              "ref_id": "t2",
+              "type": "table",
+              "title": "جدول 2",
+              "has_data": true
+            },
+            {
+              "ref_id": "p2",
+              "type": "text",
+              "title": "فقرة 2",
+              "has_data": true
+            },
+            {
+              "ref_id": "t3",
+              "type": "table",
+              "title": "جدول (3-5) : الباحثون الحاصلون",
+              "has_data": true
+            },
+            {
+              "ref_id": "t4",
+              "type": "table",
+              "title": "جدول 4",
+              "has_data": true
+            },
+            {
+              "ref_id": "t5",
+              "type": "table",
+              "title": "جدول (3-6) : أعضاء الهيئة التد",
+              "has_data": true
+            },
+            {
+              "ref_id": "t6",
+              "type": "table",
+              "title": "جدول 6",
+              "has_data": true
+            },
+            {
+              "ref_id": "p3",
+              "type": "text",
+              "title": "فقرة 3",
+              "has_data": true
+            },
+            {
+              "ref_id": "t7",
+              "type": "table",
+              "title": "جدول (3-7) : براءات الاختراع و",
+              "has_data": true
+            },
+            {
+              "ref_id": "t8",
+              "type": "table",
+              "title": "جدول 8",
+              "has_data": true
+            },
+            {
+              "ref_id": "p4",
+              "type": "text",
+              "title": "فقرة 4",
+              "has_data": true
+            }
+          ],
+          "texts": 4,
+          "texts_ok": 4,
+          "tables": 8,
+          "tables_ok": 8,
+          "charts": 0,
+          "charts_ok": 0
+        },
+        {
+          "code": "3.4",
+          "name": "نسبة رسائل الماجستير المنشورة في مجلات م",
+          "components": [
+            {
+              "ref_id": "p1",
+              "type": "text",
+              "title": "فقرة 1",
+              "has_data": true
+            },
+            {
+              "ref_id": "c1",
+              "type": "chart",
+              "title": "شكل (7-3) : نسبة المنشور من رس",
+              "has_data": true
+            }
+          ],
+          "texts": 1,
+          "texts_ok": 1,
+          "tables": 0,
+          "tables_ok": 0,
+          "charts": 1,
+          "charts_ok": 1
+        },
+        {
+          "code": "3.5",
+          "name": "نسبة رسائل الدكتوراه المنشورة في مجلات م",
+          "components": [
+            {
+              "ref_id": "p1",
+              "type": "text",
+              "title": "فقرة 1",
+              "has_data": true
+            }
+          ],
+          "texts": 1,
+          "texts_ok": 1,
+          "tables": 0,
+          "tables_ok": 0,
+          "charts": 0,
+          "charts_ok": 0
+        },
+        {
+          "code": "3.6",
+          "name": "عدد المشاريع البحثية المدعومة محلياً أو ",
+          "components": [
+            {
+              "ref_id": "p1",
+              "type": "text",
+              "title": "فقرة 1",
+              "has_data": true
+            }
+          ],
+          "texts": 1,
+          "texts_ok": 1,
+          "tables": 0,
+          "tables_ok": 0,
+          "charts": 0,
+          "charts_ok": 0
+        },
+        {
+          "code": "3.7",
+          "name": "نسبة الدعم المالي من المشاريع البحثية إل",
+          "components": [
+            {
+              "ref_id": "p1",
+              "type": "text",
+              "title": "فقرة 1",
+              "has_data": true
+            },
+            {
+              "ref_id": "t1",
+              "type": "table",
+              "title": "جدول (3-8) : موازنة البحث العل",
+              "has_data": true
+            },
+            {
+              "ref_id": "t2",
+              "type": "table",
+              "title": "جدول 2",
+              "has_data": true
+            },
+            {
+              "ref_id": "p2",
+              "type": "text",
+              "title": "فقرة 2",
+              "has_data": true
+            },
+            {
+              "ref_id": "p3",
+              "type": "text",
+              "title": "فقرة 3",
+              "has_data": true
+            },
+            {
+              "ref_id": "p4",
+              "type": "text",
+              "title": "فقرة 4",
+              "has_data": true
+            },
+            {
+              "ref_id": "p5",
+              "type": "text",
+              "title": "فقرة 5",
+              "has_data": true
+            },
+            {
+              "ref_id": "p6",
+              "type": "text",
+              "title": "فقرة 6",
+              "has_data": true
+            },
+            {
+              "ref_id": "p7",
+              "type": "text",
+              "title": "فقرة 7",
+              "has_data": true
+            },
+            {
+              "ref_id": "p8",
+              "type": "text",
+              "title": "فقرة 8",
+              "has_data": true
+            },
+            {
+              "ref_id": "p9",
+              "type": "text",
+              "title": "فقرة 9",
+              "has_data": true
+            },
+            {
+              "ref_id": "p10",
+              "type": "text",
+              "title": "فقرة 10",
+              "has_data": true
+            },
+            {
+              "ref_id": "p11",
+              "type": "text",
+              "title": "فقرة 11",
+              "has_data": true
+            },
+            {
+              "ref_id": "p12",
+              "type": "text",
+              "title": "فقرة 12",
+              "has_data": true
+            },
+            {
+              "ref_id": "p13",
+              "type": "text",
+              "title": "فقرة 13",
+              "has_data": true
+            },
+            {
+              "ref_id": "p14",
+              "type": "text",
+              "title": "فقرة 14",
+              "has_data": true
+            },
+            {
+              "ref_id": "p15",
+              "type": "text",
+              "title": "فقرة 15",
+              "has_data": true
+            },
+            {
+              "ref_id": "p16",
+              "type": "text",
+              "title": "فقرة 16",
+              "has_data": true
+            },
+            {
+              "ref_id": "t3",
+              "type": "table",
+              "title": "جدول (3-9) : المشاريع البحثية ",
+              "has_data": true
+            },
+            {
+              "ref_id": "t4",
+              "type": "table",
+              "title": "جدول 4",
+              "has_data": true
+            },
+            {
+              "ref_id": "p17",
+              "type": "text",
+              "title": "فقرة 17",
+              "has_data": true
+            },
+            {
+              "ref_id": "t5",
+              "type": "table",
+              "title": "جدول (3-10) : الأوراق العلمية ",
+              "has_data": true
+            },
+            {
+              "ref_id": "t6",
+              "type": "table",
+              "title": "جدول 6",
+              "has_data": true
+            },
+            {
+              "ref_id": "p18",
+              "type": "text",
+              "title": "فقرة 18",
+              "has_data": true
+            },
+            {
+              "ref_id": "p19",
+              "type": "text",
+              "title": "فقرة 19",
+              "has_data": true
+            },
+            {
+              "ref_id": "p20",
+              "type": "text",
+              "title": "فقرة 20",
+              "has_data": true
+            },
+            {
+              "ref_id": "p21",
+              "type": "text",
+              "title": "فقرة 21",
+              "has_data": true
+            },
+            {
+              "ref_id": "p22",
+              "type": "text",
+              "title": "فقرة 22",
+              "has_data": true
+            },
+            {
+              "ref_id": "p23",
+              "type": "text",
+              "title": "فقرة 23",
+              "has_data": true
+            },
+            {
+              "ref_id": "p24",
+              "type": "text",
+              "title": "فقرة 24",
+              "has_data": true
+            },
+            {
+              "ref_id": "p25",
+              "type": "text",
+              "title": "فقرة 25",
+              "has_data": true
+            },
+            {
+              "ref_id": "p26",
+              "type": "text",
+              "title": "فقرة 26",
+              "has_data": true
+            },
+            {
+              "ref_id": "p27",
+              "type": "text",
+              "title": "فقرة 27",
+              "has_data": true
+            },
+            {
+              "ref_id": "p28",
+              "type": "text",
+              "title": "فقرة 28",
+              "has_data": true
+            },
+            {
+              "ref_id": "p29",
+              "type": "text",
+              "title": "فقرة 29",
+              "has_data": true
+            },
+            {
+              "ref_id": "p30",
+              "type": "text",
+              "title": "فقرة 30",
+              "has_data": true
+            },
+            {
+              "ref_id": "p31",
+              "type": "text",
+              "title": "فقرة 31",
+              "has_data": true
+            },
+            {
+              "ref_id": "p32",
+              "type": "text",
+              "title": "فقرة 32",
+              "has_data": true
+            },
+            {
+              "ref_id": "p33",
+              "type": "text",
+              "title": "فقرة 33",
+              "has_data": true
+            },
+            {
+              "ref_id": "p34",
+              "type": "text",
+              "title": "فقرة 34",
+              "has_data": true
+            },
+            {
+              "ref_id": "p35",
+              "type": "text",
+              "title": "فقرة 35",
+              "has_data": true
+            },
+            {
+              "ref_id": "p36",
+              "type": "text",
+              "title": "فقرة 36",
+              "has_data": true
+            },
+            {
+              "ref_id": "p37",
+              "type": "text",
+              "title": "فقرة 37",
+              "has_data": true
+            },
+            {
+              "ref_id": "p38",
+              "type": "text",
+              "title": "فقرة 38",
+              "has_data": true
+            },
+            {
+              "ref_id": "p39",
+              "type": "text",
+              "title": "فقرة 39",
+              "has_data": true
+            },
+            {
+              "ref_id": "p40",
+              "type": "text",
+              "title": "فقرة 40",
+              "has_data": true
+            },
+            {
+              "ref_id": "p41",
+              "type": "text",
+              "title": "فقرة 41",
+              "has_data": true
+            },
+            {
+              "ref_id": "p42",
+              "type": "text",
+              "title": "فقرة 42",
+              "has_data": true
+            },
+            {
+              "ref_id": "p43",
+              "type": "text",
+              "title": "فقرة 43",
+              "has_data": true
+            },
+            {
+              "ref_id": "p44",
+              "type": "text",
+              "title": "فقرة 44",
+              "has_data": true
+            },
+            {
+              "ref_id": "p45",
+              "type": "text",
+              "title": "فقرة 45",
+              "has_data": true
+            },
+            {
+              "ref_id": "p46",
+              "type": "text",
+              "title": "فقرة 46",
+              "has_data": true
+            },
+            {
+              "ref_id": "p47",
+              "type": "text",
+              "title": "فقرة 47",
+              "has_data": true
+            },
+            {
+              "ref_id": "p48",
+              "type": "text",
+              "title": "فقرة 48",
+              "has_data": true
+            },
+            {
+              "ref_id": "p49",
+              "type": "text",
+              "title": "فقرة 49",
+              "has_data": true
+            },
+            {
+              "ref_id": "p50",
+              "type": "text",
+              "title": "فقرة 50",
+              "has_data": true
+            },
+            {
+              "ref_id": "p51",
+              "type": "text",
+              "title": "فقرة 51",
+              "has_data": true
+            },
+            {
+              "ref_id": "p52",
+              "type": "text",
+              "title": "فقرة 52",
+              "has_data": true
+            },
+            {
+              "ref_id": "p53",
+              "type": "text",
+              "title": "فقرة 53",
+              "has_data": true
+            },
+            {
+              "ref_id": "p54",
+              "type": "text",
+              "title": "فقرة 54",
+              "has_data": true
+            },
+            {
+              "ref_id": "p55",
+              "type": "text",
+              "title": "فقرة 55",
+              "has_data": true
+            },
+            {
+              "ref_id": "p56",
+              "type": "text",
+              "title": "فقرة 56",
+              "has_data": true
+            },
+            {
+              "ref_id": "p57",
+              "type": "text",
+              "title": "فقرة 57",
+              "has_data": true
+            },
+            {
+              "ref_id": "p58",
+              "type": "text",
+              "title": "فقرة 58",
+              "has_data": true
+            },
+            {
+              "ref_id": "p59",
+              "type": "text",
+              "title": "فقرة 59",
+              "has_data": true
+            },
+            {
+              "ref_id": "p60",
+              "type": "text",
+              "title": "فقرة 60",
+              "has_data": true
+            },
+            {
+              "ref_id": "t7",
+              "type": "table",
+              "title": "جدول (3-11) : أسماء الجامعات و",
+              "has_data": true
+            },
+            {
+              "ref_id": "t8",
+              "type": "table",
+              "title": "جدول 8",
+              "has_data": true
+            },
+            {
+              "ref_id": "p61",
+              "type": "text",
+              "title": "فقرة 61",
+              "has_data": true
+            },
+            {
+              "ref_id": "t9",
+              "type": "table",
+              "title": "جدول (3-12) : أعداد المنشورات ",
+              "has_data": true
+            },
+            {
+              "ref_id": "t10",
+              "type": "table",
+              "title": "جدول 10",
+              "has_data": true
+            },
+            {
+              "ref_id": "p62",
+              "type": "text",
+              "title": "فقرة 62",
+              "has_data": true
+            }
+          ],
+          "texts": 62,
+          "texts_ok": 62,
+          "tables": 10,
+          "tables_ok": 10,
+          "charts": 0,
+          "charts_ok": 0
+        },
+        {
+          "code": "3.8",
+          "name": "نسبة أعضاء هيئة التدريس المشاركين في الم",
+          "components": [
+            {
+              "ref_id": "p1",
+              "type": "text",
+              "title": "فقرة 1",
+              "has_data": true
+            },
+            {
+              "ref_id": "t1",
+              "type": "table",
+              "title": "جدول (3-13) : عدد أعضاء هيئة ا",
+              "has_data": true
+            },
+            {
+              "ref_id": "t2",
+              "type": "table",
+              "title": "جدول 2",
+              "has_data": true
+            },
+            {
+              "ref_id": "p2",
+              "type": "text",
+              "title": "فقرة 2",
+              "has_data": true
+            },
+            {
+              "ref_id": "p3",
+              "type": "text",
+              "title": "فقرة 3",
+              "has_data": true
+            },
+            {
+              "ref_id": "t3",
+              "type": "table",
+              "title": "جدول 3",
+              "has_data": true
+            },
+            {
+              "ref_id": "p4",
+              "type": "text",
+              "title": "فقرة 4",
+              "has_data": true
+            },
+            {
+              "ref_id": "p5",
+              "type": "text",
+              "title": "فقرة 5",
+              "has_data": true
+            },
+            {
+              "ref_id": "t4",
+              "type": "table",
+              "title": "جدول 4",
+              "has_data": true
+            },
+            {
+              "ref_id": "p6",
+              "type": "text",
+              "title": "فقرة 6",
+              "has_data": true
+            },
+            {
+              "ref_id": "p7",
+              "type": "text",
+              "title": "فقرة 7",
+              "has_data": true
+            },
+            {
+              "ref_id": "p8",
+              "type": "text",
+              "title": "فقرة 8",
+              "has_data": true
+            },
+            {
+              "ref_id": "p9",
+              "type": "text",
+              "title": "فقرة 9",
+              "has_data": true
+            },
+            {
+              "ref_id": "p10",
+              "type": "text",
+              "title": "فقرة 10",
+              "has_data": true
+            },
+            {
+              "ref_id": "p11",
+              "type": "text",
+              "title": "فقرة 11",
+              "has_data": true
+            },
+            {
+              "ref_id": "p12",
+              "type": "text",
+              "title": "فقرة 12",
+              "has_data": true
+            },
+            {
+              "ref_id": "p13",
+              "type": "text",
+              "title": "فقرة 13",
+              "has_data": true
+            },
+            {
+              "ref_id": "p14",
+              "type": "text",
+              "title": "فقرة 14",
+              "has_data": true
+            },
+            {
+              "ref_id": "p15",
+              "type": "text",
+              "title": "فقرة 15",
+              "has_data": true
+            },
+            {
+              "ref_id": "p16",
+              "type": "text",
+              "title": "فقرة 16",
+              "has_data": true
+            },
+            {
+              "ref_id": "p17",
+              "type": "text",
+              "title": "فقرة 17",
+              "has_data": true
+            },
+            {
+              "ref_id": "p18",
+              "type": "text",
+              "title": "فقرة 18",
+              "has_data": true
+            },
+            {
+              "ref_id": "p19",
+              "type": "text",
+              "title": "فقرة 19",
+              "has_data": true
+            },
+            {
+              "ref_id": "p20",
+              "type": "text",
+              "title": "فقرة 20",
+              "has_data": true
+            },
+            {
+              "ref_id": "p21",
+              "type": "text",
+              "title": "فقرة 21",
+              "has_data": true
+            },
+            {
+              "ref_id": "p22",
+              "type": "text",
+              "title": "فقرة 22",
+              "has_data": true
+            },
+            {
+              "ref_id": "p23",
+              "type": "text",
+              "title": "فقرة 23",
+              "has_data": true
+            },
+            {
+              "ref_id": "p24",
+              "type": "text",
+              "title": "فقرة 24",
+              "has_data": true
+            },
+            {
+              "ref_id": "p25",
+              "type": "text",
+              "title": "فقرة 25",
+              "has_data": true
+            },
+            {
+              "ref_id": "p26",
+              "type": "text",
+              "title": "فقرة 26",
+              "has_data": true
+            },
+            {
+              "ref_id": "p27",
+              "type": "text",
+              "title": "فقرة 27",
+              "has_data": true
+            },
+            {
+              "ref_id": "p28",
+              "type": "text",
+              "title": "فقرة 28",
+              "has_data": true
+            },
+            {
+              "ref_id": "p29",
+              "type": "text",
+              "title": "فقرة 29",
+              "has_data": true
+            },
+            {
+              "ref_id": "p30",
+              "type": "text",
+              "title": "فقرة 30",
+              "has_data": true
+            },
+            {
+              "ref_id": "p31",
+              "type": "text",
+              "title": "فقرة 31",
+              "has_data": true
+            },
+            {
+              "ref_id": "p32",
+              "type": "text",
+              "title": "فقرة 32",
+              "has_data": true
+            },
+            {
+              "ref_id": "p33",
+              "type": "text",
+              "title": "فقرة 33",
+              "has_data": true
+            },
+            {
+              "ref_id": "p34",
+              "type": "text",
+              "title": "فقرة 34",
+              "has_data": true
+            },
+            {
+              "ref_id": "p35",
+              "type": "text",
+              "title": "فقرة 35",
+              "has_data": true
+            },
+            {
+              "ref_id": "p36",
+              "type": "text",
+              "title": "فقرة 36",
+              "has_data": true
+            },
+            {
+              "ref_id": "p37",
+              "type": "text",
+              "title": "فقرة 37",
+              "has_data": true
+            },
+            {
+              "ref_id": "p38",
+              "type": "text",
+              "title": "فقرة 38",
+              "has_data": true
+            },
+            {
+              "ref_id": "p39",
+              "type": "text",
+              "title": "فقرة 39",
+              "has_data": true
+            },
+            {
+              "ref_id": "p40",
+              "type": "text",
+              "title": "فقرة 40",
+              "has_data": true
+            },
+            {
+              "ref_id": "p41",
+              "type": "text",
+              "title": "فقرة 41",
+              "has_data": true
+            },
+            {
+              "ref_id": "p42",
+              "type": "text",
+              "title": "فقرة 42",
+              "has_data": true
+            },
+            {
+              "ref_id": "p43",
+              "type": "text",
+              "title": "فقرة 43",
+              "has_data": true
+            },
+            {
+              "ref_id": "p44",
+              "type": "text",
+              "title": "فقرة 44",
+              "has_data": true
+            },
+            {
+              "ref_id": "p45",
+              "type": "text",
+              "title": "فقرة 45",
+              "has_data": true
+            },
+            {
+              "ref_id": "p46",
+              "type": "text",
+              "title": "فقرة 46",
+              "has_data": true
+            },
+            {
+              "ref_id": "p47",
+              "type": "text",
+              "title": "فقرة 47",
+              "has_data": true
+            },
+            {
+              "ref_id": "p48",
+              "type": "text",
+              "title": "فقرة 48",
+              "has_data": true
+            },
+            {
+              "ref_id": "p49",
+              "type": "text",
+              "title": "فقرة 49",
+              "has_data": true
+            },
+            {
+              "ref_id": "p50",
+              "type": "text",
+              "title": "فقرة 50",
+              "has_data": true
+            },
+            {
+              "ref_id": "p51",
+              "type": "text",
+              "title": "فقرة 51",
+              "has_data": true
+            },
+            {
+              "ref_id": "p52",
+              "type": "text",
+              "title": "فقرة 52",
+              "has_data": true
+            },
+            {
+              "ref_id": "p53",
+              "type": "text",
+              "title": "فقرة 53",
+              "has_data": true
+            },
+            {
+              "ref_id": "p54",
+              "type": "text",
+              "title": "فقرة 54",
+              "has_data": true
+            }
+          ],
+          "texts": 54,
+          "texts_ok": 54,
+          "tables": 4,
+          "tables_ok": 4,
+          "charts": 0,
+          "charts_ok": 0
+        }
+      ],
+      "totals": {
+        "texts": 132,
+        "texts_ok": 132,
+        "tables": 28,
+        "tables_ok": 28,
+        "charts": 7,
+        "charts_ok": 7
+      }
+    },
+    {
+      "code": "4",
+      "name": "إدارة الموارد البشرية",
+      "items": [
+        {
+          "code": "4.1",
+          "name": "نسبة الانحرافات بين المبالغ المقدرة والف",
+          "components": [
+            {
+              "ref_id": "p1",
+              "type": "text",
+              "title": "فقرة 1",
+              "has_data": true
+            },
+            {
+              "ref_id": "p2",
+              "type": "text",
+              "title": "فقرة 2",
+              "has_data": true
+            },
+            {
+              "ref_id": "p3",
+              "type": "text",
+              "title": "فقرة 3",
+              "has_data": true
+            },
+            {
+              "ref_id": "p4",
+              "type": "text",
+              "title": "فقرة 4",
+              "has_data": true
+            }
+          ],
+          "texts": 4,
+          "texts_ok": 4,
+          "tables": 0,
+          "tables_ok": 0,
+          "charts": 0,
+          "charts_ok": 0
+        },
+        {
+          "code": "4.2",
+          "name": "نسبة تغطية الإيرادات المباشرة للنفقات ال",
+          "components": [
+            {
+              "ref_id": "p1",
+              "type": "text",
+              "title": "فقرة 1",
+              "has_data": true
+            },
+            {
+              "ref_id": "t1",
+              "type": "table",
+              "title": "جدول (4-1) : الإيرادات التشغيل",
+              "has_data": true
+            },
+            {
+              "ref_id": "t2",
+              "type": "table",
+              "title": "جدول 2",
+              "has_data": true
+            },
+            {
+              "ref_id": "p2",
+              "type": "text",
+              "title": "فقرة 2",
+              "has_data": true
+            },
+            {
+              "ref_id": "t3",
+              "type": "table",
+              "title": "جدول (4-2): نسبة تغطية الإيراد",
+              "has_data": true
+            },
+            {
+              "ref_id": "t4",
+              "type": "table",
+              "title": "جدول 4",
+              "has_data": true
+            },
+            {
+              "ref_id": "p3",
+              "type": "text",
+              "title": "فقرة 3",
+              "has_data": true
+            },
+            {
+              "ref_id": "p4",
+              "type": "text",
+              "title": "فقرة 4",
+              "has_data": true
+            },
+            {
+              "ref_id": "p5",
+              "type": "text",
+              "title": "فقرة 5",
+              "has_data": true
+            },
+            {
+              "ref_id": "p6",
+              "type": "text",
+              "title": "فقرة 6",
+              "has_data": true
+            }
+          ],
+          "texts": 6,
+          "texts_ok": 6,
+          "tables": 4,
+          "tables_ok": 4,
+          "charts": 0,
+          "charts_ok": 0
+        },
+        {
+          "code": "4.3",
+          "name": "إيرادات الجامعة من مشاريع الربط مع الصنا",
+          "components": [
+            {
+              "ref_id": "p1",
+              "type": "text",
+              "title": "فقرة 1",
+              "has_data": true
+            },
+            {
+              "ref_id": "t1",
+              "type": "table",
+              "title": "جدول (4-3): إيرادات الجامعة من",
+              "has_data": true
+            },
+            {
+              "ref_id": "t2",
+              "type": "table",
+              "title": "جدول 2",
+              "has_data": true
+            }
+          ],
+          "texts": 1,
+          "texts_ok": 1,
+          "tables": 2,
+          "tables_ok": 2,
+          "charts": 0,
+          "charts_ok": 0
+        },
+        {
+          "code": "4.4",
+          "name": "مبلغ الزيادة/النقص في صافي الدخل من الوح",
+          "components": [
+            {
+              "ref_id": "p1",
+              "type": "text",
+              "title": "فقرة 1",
+              "has_data": true
+            }
+          ],
+          "texts": 1,
+          "texts_ok": 1,
+          "tables": 0,
+          "tables_ok": 0,
+          "charts": 0,
+          "charts_ok": 0
+        },
+        {
+          "code": "4.5",
+          "name": "مبلغ الزيادة/النقص في صافي الدخل من الأن",
+          "components": [
+            {
+              "ref_id": "p1",
+              "type": "text",
+              "title": "فقرة 1",
+              "has_data": true
+            }
+          ],
+          "texts": 1,
+          "texts_ok": 1,
+          "tables": 0,
+          "tables_ok": 0,
+          "charts": 0,
+          "charts_ok": 0
+        },
+        {
+          "code": "4.6",
+          "name": "مبلغ الزيادة/النقص في الوفر/العجز النقدي",
+          "components": [
+            {
+              "ref_id": "p1",
+              "type": "text",
+              "title": "فقرة 1",
+              "has_data": true
+            },
+            {
+              "ref_id": "p2",
+              "type": "text",
+              "title": "فقرة 2",
+              "has_data": true
+            }
+          ],
+          "texts": 2,
+          "texts_ok": 2,
+          "tables": 0,
+          "tables_ok": 0,
+          "charts": 0,
+          "charts_ok": 0
+        },
+        {
+          "code": "4.7",
+          "name": "العجز الفعلي المتراكم",
+          "components": [
+            {
+              "ref_id": "p1",
+              "type": "text",
+              "title": "فقرة 1",
+              "has_data": true
+            },
+            {
+              "ref_id": "t1",
+              "type": "table",
+              "title": "جدول (4-4): فرق الإيرادات عن ا",
+              "has_data": true
+            },
+            {
+              "ref_id": "t2",
+              "type": "table",
+              "title": "جدول 2",
+              "has_data": true
+            }
+          ],
+          "texts": 1,
+          "texts_ok": 1,
+          "tables": 2,
+          "tables_ok": 2,
+          "charts": 0,
+          "charts_ok": 0
+        },
+        {
+          "code": "4.8",
+          "name": "مساهمة الجامعة السنوية في صندوق تعويض نه",
+          "components": [
+            {
+              "ref_id": "p1",
+              "type": "text",
+              "title": "فقرة 1",
+              "has_data": true
+            }
+          ],
+          "texts": 1,
+          "texts_ok": 1,
+          "tables": 0,
+          "tables_ok": 0,
+          "charts": 0,
+          "charts_ok": 0
+        },
+        {
+          "code": "4.9",
+          "name": "مساهمة الجامعة السنوية في صندوق التأمين ",
+          "components": [
+            {
+              "ref_id": "p1",
+              "type": "text",
+              "title": "فقرة 1",
+              "has_data": true
+            }
+          ],
+          "texts": 1,
+          "texts_ok": 1,
+          "tables": 0,
+          "tables_ok": 0,
+          "charts": 0,
+          "charts_ok": 0
+        },
+        {
+          "code": "4.10",
+          "name": "نسبة المكافآت والعمل الإضافي للإداريين م",
+          "components": [
+            {
+              "ref_id": "p1",
+              "type": "text",
+              "title": "فقرة 1",
+              "has_data": true
+            }
+          ],
+          "texts": 1,
+          "texts_ok": 1,
+          "tables": 0,
+          "tables_ok": 0,
+          "charts": 0,
+          "charts_ok": 0
+        },
+        {
+          "code": "4.11",
+          "name": "عدد دورات التدريب والتأهيل للموظفين الإد",
+          "components": [
+            {
+              "ref_id": "p1",
+              "type": "text",
+              "title": "فقرة 1",
+              "has_data": true
+            }
+          ],
+          "texts": 1,
+          "texts_ok": 1,
+          "tables": 0,
+          "tables_ok": 0,
+          "charts": 0,
+          "charts_ok": 0
+        },
+        {
+          "code": "4.12",
+          "name": "نسبة عدد الإداريين إلى عدد أعضاء هيئة ال",
+          "components": [
+            {
+              "ref_id": "p1",
+              "type": "text",
+              "title": "فقرة 1",
+              "has_data": true
+            },
+            {
+              "ref_id": "p2",
+              "type": "text",
+              "title": "فقرة 2",
+              "has_data": true
+            }
+          ],
+          "texts": 2,
+          "texts_ok": 2,
+          "tables": 0,
+          "tables_ok": 0,
+          "charts": 0,
+          "charts_ok": 0
+        },
+        {
+          "code": "4.13",
+          "name": "مجموع مبالغ القروض القائمة وغير المسددة",
+          "components": [
+            {
+              "ref_id": "p1",
+              "type": "text",
+              "title": "فقرة 1",
+              "has_data": true
+            }
+          ],
+          "texts": 1,
+          "texts_ok": 1,
+          "tables": 0,
+          "tables_ok": 0,
+          "charts": 0,
+          "charts_ok": 0
+        },
+        {
+          "code": "4.14",
+          "name": "مبلغ الفوائد البنكية السنوية المرتبطة با",
+          "components": [],
+          "texts": 0,
+          "texts_ok": 0,
+          "tables": 0,
+          "tables_ok": 0,
+          "charts": 0,
+          "charts_ok": 0
+        }
+      ],
+      "totals": {
+        "texts": 23,
+        "texts_ok": 23,
+        "tables": 8,
+        "tables_ok": 8,
+        "charts": 0,
+        "charts_ok": 0
+      }
+    },
+    {
+      "code": "5",
+      "name": "البنية التحتية والبيئة الجامعية",
+      "items": [
+        {
+          "code": "5.1",
+          "name": "المبالغ التي أنفقت على إنشاء مبانٍ لكافة",
+          "components": [
+            {
+              "ref_id": "p1",
+              "type": "text",
+              "title": "فقرة 1",
+              "has_data": true
+            },
+            {
+              "ref_id": "p2",
+              "type": "text",
+              "title": "فقرة 2",
+              "has_data": true
+            },
+            {
+              "ref_id": "p3",
+              "type": "text",
+              "title": "فقرة 3",
+              "has_data": true
+            },
+            {
+              "ref_id": "p4",
+              "type": "text",
+              "title": "فقرة 4",
+              "has_data": true
+            },
+            {
+              "ref_id": "p5",
+              "type": "text",
+              "title": "فقرة 5",
+              "has_data": true
+            }
+          ],
+          "texts": 5,
+          "texts_ok": 5,
+          "tables": 0,
+          "tables_ok": 0,
+          "charts": 0,
+          "charts_ok": 0
+        },
+        {
+          "code": "5.2",
+          "name": "المبالغ التي أنفقت على الصيانة الدورية ا",
+          "components": [
+            {
+              "ref_id": "p1",
+              "type": "text",
+              "title": "فقرة 1",
+              "has_data": true
+            },
+            {
+              "ref_id": "p2",
+              "type": "text",
+              "title": "فقرة 2",
+              "has_data": true
+            },
+            {
+              "ref_id": "p3",
+              "type": "text",
+              "title": "فقرة 3",
+              "has_data": true
+            },
+            {
+              "ref_id": "p4",
+              "type": "text",
+              "title": "فقرة 4",
+              "has_data": true
+            },
+            {
+              "ref_id": "p5",
+              "type": "text",
+              "title": "فقرة 5",
+              "has_data": true
+            }
+          ],
+          "texts": 5,
+          "texts_ok": 5,
+          "tables": 0,
+          "tables_ok": 0,
+          "charts": 0,
+          "charts_ok": 0
+        },
+        {
+          "code": "5.3",
+          "name": "المبالغ التي أنفقت على الخدمات المكتبية ",
+          "components": [
+            {
+              "ref_id": "p1",
+              "type": "text",
+              "title": "فقرة 1",
+              "has_data": true
+            },
+            {
+              "ref_id": "p2",
+              "type": "text",
+              "title": "فقرة 2",
+              "has_data": true
+            },
+            {
+              "ref_id": "p3",
+              "type": "text",
+              "title": "فقرة 3",
+              "has_data": true
+            },
+            {
+              "ref_id": "t1",
+              "type": "table",
+              "title": "جدول (1-5): توزيع مقتنيات المك",
+              "has_data": true
+            },
+            {
+              "ref_id": "t2",
+              "type": "table",
+              "title": "جدول 2",
+              "has_data": true
+            },
+            {
+              "ref_id": "p4",
+              "type": "text",
+              "title": "فقرة 4",
+              "has_data": true
+            },
+            {
+              "ref_id": "p5",
+              "type": "text",
+              "title": "فقرة 5",
+              "has_data": true
+            },
+            {
+              "ref_id": "p6",
+              "type": "text",
+              "title": "فقرة 6",
+              "has_data": true
+            },
+            {
+              "ref_id": "p7",
+              "type": "text",
+              "title": "فقرة 7",
+              "has_data": true
+            },
+            {
+              "ref_id": "p8",
+              "type": "text",
+              "title": "فقرة 8",
+              "has_data": true
+            },
+            {
+              "ref_id": "p9",
+              "type": "text",
+              "title": "فقرة 9",
+              "has_data": true
+            },
+            {
+              "ref_id": "p10",
+              "type": "text",
+              "title": "فقرة 10",
+              "has_data": true
+            },
+            {
+              "ref_id": "p11",
+              "type": "text",
+              "title": "فقرة 11",
+              "has_data": true
+            },
+            {
+              "ref_id": "p12",
+              "type": "text",
+              "title": "فقرة 12",
+              "has_data": true
+            },
+            {
+              "ref_id": "p13",
+              "type": "text",
+              "title": "فقرة 13",
+              "has_data": true
+            },
+            {
+              "ref_id": "t3",
+              "type": "table",
+              "title": "جدول (2-5): قائمة بأسماء القوا",
+              "has_data": true
+            },
+            {
+              "ref_id": "t4",
+              "type": "table",
+              "title": "جدول 4",
+              "has_data": true
+            },
+            {
+              "ref_id": "p14",
+              "type": "text",
+              "title": "فقرة 14",
+              "has_data": true
+            },
+            {
+              "ref_id": "p15",
+              "type": "text",
+              "title": "فقرة 15",
+              "has_data": true
+            },
+            {
+              "ref_id": "p16",
+              "type": "text",
+              "title": "فقرة 16",
+              "has_data": true
+            },
+            {
+              "ref_id": "p17",
+              "type": "text",
+              "title": "فقرة 17",
+              "has_data": true
+            },
+            {
+              "ref_id": "p18",
+              "type": "text",
+              "title": "فقرة 18",
+              "has_data": true
+            },
+            {
+              "ref_id": "p19",
+              "type": "text",
+              "title": "فقرة 19",
+              "has_data": true
+            },
+            {
+              "ref_id": "p20",
+              "type": "text",
+              "title": "فقرة 20",
+              "has_data": true
+            },
+            {
+              "ref_id": "p21",
+              "type": "text",
+              "title": "فقرة 21",
+              "has_data": true
+            },
+            {
+              "ref_id": "p22",
+              "type": "text",
+              "title": "فقرة 22",
+              "has_data": true
+            },
+            {
+              "ref_id": "p23",
+              "type": "text",
+              "title": "فقرة 23",
+              "has_data": true
+            },
+            {
+              "ref_id": "p24",
+              "type": "text",
+              "title": "فقرة 24",
+              "has_data": true
+            },
+            {
+              "ref_id": "p25",
+              "type": "text",
+              "title": "فقرة 25",
+              "has_data": true
+            },
+            {
+              "ref_id": "p26",
+              "type": "text",
+              "title": "فقرة 26",
+              "has_data": true
+            },
+            {
+              "ref_id": "p27",
+              "type": "text",
+              "title": "فقرة 27",
+              "has_data": true
+            },
+            {
+              "ref_id": "p28",
+              "type": "text",
+              "title": "فقرة 28",
+              "has_data": true
+            },
+            {
+              "ref_id": "p29",
+              "type": "text",
+              "title": "فقرة 29",
+              "has_data": true
+            },
+            {
+              "ref_id": "p30",
+              "type": "text",
+              "title": "فقرة 30",
+              "has_data": true
+            },
+            {
+              "ref_id": "p31",
+              "type": "text",
+              "title": "فقرة 31",
+              "has_data": true
+            },
+            {
+              "ref_id": "t5",
+              "type": "table",
+              "title": "جدول (3-5): إحصاءات استخدام قو",
+              "has_data": true
+            },
+            {
+              "ref_id": "t6",
+              "type": "table",
+              "title": "جدول 6",
+              "has_data": true
+            },
+            {
+              "ref_id": "p32",
+              "type": "text",
+              "title": "فقرة 32",
+              "has_data": true
+            },
+            {
+              "ref_id": "p33",
+              "type": "text",
+              "title": "فقرة 33",
+              "has_data": true
+            },
+            {
+              "ref_id": "p34",
+              "type": "text",
+              "title": "فقرة 34",
+              "has_data": true
+            },
+            {
+              "ref_id": "p35",
+              "type": "text",
+              "title": "فقرة 35",
+              "has_data": true
+            },
+            {
+              "ref_id": "p36",
+              "type": "text",
+              "title": "فقرة 36",
+              "has_data": true
+            },
+            {
+              "ref_id": "t7",
+              "type": "table",
+              "title": "جدول (4-5): إحصائية المحاضرات ",
+              "has_data": true
+            },
+            {
+              "ref_id": "t8",
+              "type": "table",
+              "title": "جدول 8",
+              "has_data": true
+            },
+            {
+              "ref_id": "p37",
+              "type": "text",
+              "title": "فقرة 37",
+              "has_data": true
+            },
+            {
+              "ref_id": "t9",
+              "type": "table",
+              "title": "جدول (5-5): حركات الإعارة والت",
+              "has_data": true
+            },
+            {
+              "ref_id": "t10",
+              "type": "table",
+              "title": "جدول 10",
+              "has_data": true
+            },
+            {
+              "ref_id": "p38",
+              "type": "text",
+              "title": "فقرة 38",
+              "has_data": true
+            },
+            {
+              "ref_id": "t11",
+              "type": "table",
+              "title": "جدول (6-5): إحصاءات الإعارة حس",
+              "has_data": true
+            },
+            {
+              "ref_id": "t12",
+              "type": "table",
+              "title": "جدول 12",
+              "has_data": true
+            },
+            {
+              "ref_id": "p39",
+              "type": "text",
+              "title": "فقرة 39",
+              "has_data": true
+            },
+            {
+              "ref_id": "p40",
+              "type": "text",
+              "title": "فقرة 40",
+              "has_data": true
+            },
+            {
+              "ref_id": "p41",
+              "type": "text",
+              "title": "فقرة 41",
+              "has_data": true
+            },
+            {
+              "ref_id": "p42",
+              "type": "text",
+              "title": "فقرة 42",
+              "has_data": true
+            },
+            {
+              "ref_id": "p43",
+              "type": "text",
+              "title": "فقرة 43",
+              "has_data": true
+            },
+            {
+              "ref_id": "p44",
+              "type": "text",
+              "title": "فقرة 44",
+              "has_data": true
+            },
+            {
+              "ref_id": "t13",
+              "type": "table",
+              "title": "جدول (7-5): نتائج استبانة فاعل",
+              "has_data": true
+            },
+            {
+              "ref_id": "t14",
+              "type": "table",
+              "title": "جدول 14",
+              "has_data": true
+            },
+            {
+              "ref_id": "p45",
+              "type": "text",
+              "title": "فقرة 45",
+              "has_data": true
+            },
+            {
+              "ref_id": "t15",
+              "type": "table",
+              "title": "جدول (8-5): نتائج استجابات طلب",
+              "has_data": true
+            },
+            {
+              "ref_id": "t16",
+              "type": "table",
+              "title": "جدول 16",
+              "has_data": true
+            },
+            {
+              "ref_id": "p46",
+              "type": "text",
+              "title": "فقرة 46",
+              "has_data": true
+            },
+            {
+              "ref_id": "p47",
+              "type": "text",
+              "title": "فقرة 47",
+              "has_data": true
+            },
+            {
+              "ref_id": "p48",
+              "type": "text",
+              "title": "فقرة 48",
+              "has_data": true
+            },
+            {
+              "ref_id": "p49",
+              "type": "text",
+              "title": "فقرة 49",
+              "has_data": true
+            },
+            {
+              "ref_id": "p50",
+              "type": "text",
+              "title": "فقرة 50",
+              "has_data": true
+            },
+            {
+              "ref_id": "p51",
+              "type": "text",
+              "title": "فقرة 51",
+              "has_data": true
+            },
+            {
+              "ref_id": "p52",
+              "type": "text",
+              "title": "فقرة 52",
+              "has_data": true
+            },
+            {
+              "ref_id": "p53",
+              "type": "text",
+              "title": "فقرة 53",
+              "has_data": true
+            },
+            {
+              "ref_id": "p54",
+              "type": "text",
+              "title": "فقرة 54",
+              "has_data": true
+            },
+            {
+              "ref_id": "p55",
+              "type": "text",
+              "title": "فقرة 55",
+              "has_data": true
+            },
+            {
+              "ref_id": "p56",
+              "type": "text",
+              "title": "فقرة 56",
+              "has_data": true
+            },
+            {
+              "ref_id": "p57",
+              "type": "text",
+              "title": "فقرة 57",
+              "has_data": true
+            },
+            {
+              "ref_id": "p58",
+              "type": "text",
+              "title": "فقرة 58",
+              "has_data": true
+            },
+            {
+              "ref_id": "p59",
+              "type": "text",
+              "title": "فقرة 59",
+              "has_data": true
+            },
+            {
+              "ref_id": "p60",
+              "type": "text",
+              "title": "فقرة 60",
+              "has_data": true
+            },
+            {
+              "ref_id": "p61",
+              "type": "text",
+              "title": "فقرة 61",
+              "has_data": true
+            },
+            {
+              "ref_id": "p62",
+              "type": "text",
+              "title": "فقرة 62",
+              "has_data": true
+            },
+            {
+              "ref_id": "p63",
+              "type": "text",
+              "title": "فقرة 63",
+              "has_data": true
+            },
+            {
+              "ref_id": "p64",
+              "type": "text",
+              "title": "فقرة 64",
+              "has_data": true
+            },
+            {
+              "ref_id": "p65",
+              "type": "text",
+              "title": "فقرة 65",
+              "has_data": true
+            },
+            {
+              "ref_id": "p66",
+              "type": "text",
+              "title": "فقرة 66",
+              "has_data": true
+            },
+            {
+              "ref_id": "p67",
+              "type": "text",
+              "title": "فقرة 67",
+              "has_data": true
+            },
+            {
+              "ref_id": "p68",
+              "type": "text",
+              "title": "فقرة 68",
+              "has_data": true
+            },
+            {
+              "ref_id": "p69",
+              "type": "text",
+              "title": "فقرة 69",
+              "has_data": true
+            },
+            {
+              "ref_id": "p70",
+              "type": "text",
+              "title": "فقرة 70",
+              "has_data": true
+            },
+            {
+              "ref_id": "p71",
+              "type": "text",
+              "title": "فقرة 71",
+              "has_data": true
+            },
+            {
+              "ref_id": "p72",
+              "type": "text",
+              "title": "فقرة 72",
+              "has_data": true
+            },
+            {
+              "ref_id": "p73",
+              "type": "text",
+              "title": "فقرة 73",
+              "has_data": true
+            }
+          ],
+          "texts": 73,
+          "texts_ok": 73,
+          "tables": 16,
+          "tables_ok": 16,
+          "charts": 0,
+          "charts_ok": 0
+        },
+        {
+          "code": "5.4",
+          "name": "المبالغ التي أنفقت على المختبرات العلمية",
+          "components": [
+            {
+              "ref_id": "p1",
+              "type": "text",
+              "title": "فقرة 1",
+              "has_data": true
+            },
+            {
+              "ref_id": "p2",
+              "type": "text",
+              "title": "فقرة 2",
+              "has_data": true
+            },
+            {
+              "ref_id": "p3",
+              "type": "text",
+              "title": "فقرة 3",
+              "has_data": true
+            },
+            {
+              "ref_id": "p4",
+              "type": "text",
+              "title": "فقرة 4",
+              "has_data": true
+            },
+            {
+              "ref_id": "t1",
+              "type": "table",
+              "title": "جدول (9-5): المختبرات في كلية ",
+              "has_data": true
+            },
+            {
+              "ref_id": "t2",
+              "type": "table",
+              "title": "جدول 2",
+              "has_data": true
+            },
+            {
+              "ref_id": "p5",
+              "type": "text",
+              "title": "فقرة 5",
+              "has_data": true
+            },
+            {
+              "ref_id": "t3",
+              "type": "table",
+              "title": "جدول (5-10) : المختبرات في كلي",
+              "has_data": true
+            },
+            {
+              "ref_id": "t4",
+              "type": "table",
+              "title": "جدول 4",
+              "has_data": true
+            },
+            {
+              "ref_id": "p6",
+              "type": "text",
+              "title": "فقرة 6",
+              "has_data": true
+            },
+            {
+              "ref_id": "t5",
+              "type": "table",
+              "title": "جدول (5-11): المختبرات في كلية",
+              "has_data": true
+            },
+            {
+              "ref_id": "t6",
+              "type": "table",
+              "title": "جدول 6",
+              "has_data": true
+            },
+            {
+              "ref_id": "p7",
+              "type": "text",
+              "title": "فقرة 7",
+              "has_data": true
+            },
+            {
+              "ref_id": "t7",
+              "type": "table",
+              "title": "جدول (12-5): المختبرات في كلية",
+              "has_data": true
+            },
+            {
+              "ref_id": "t8",
+              "type": "table",
+              "title": "جدول 8",
+              "has_data": true
+            },
+            {
+              "ref_id": "p8",
+              "type": "text",
+              "title": "فقرة 8",
+              "has_data": true
+            },
+            {
+              "ref_id": "t9",
+              "type": "table",
+              "title": "جدول (5-13) : المختبرات و المر",
+              "has_data": true
+            },
+            {
+              "ref_id": "t10",
+              "type": "table",
+              "title": "جدول 10",
+              "has_data": true
+            },
+            {
+              "ref_id": "t11",
+              "type": "table",
+              "title": "جدول (5-14) : المختبرات في كلي",
+              "has_data": true
+            },
+            {
+              "ref_id": "t12",
+              "type": "table",
+              "title": "جدول 12",
+              "has_data": true
+            },
+            {
+              "ref_id": "t13",
+              "type": "table",
+              "title": "جدول (5-15) : المختبرات في كلي",
+              "has_data": true
+            },
+            {
+              "ref_id": "t14",
+              "type": "table",
+              "title": "جدول 14",
+              "has_data": true
+            },
+            {
+              "ref_id": "t15",
+              "type": "table",
+              "title": "جدول (5-16) : الأستوديوهات في ",
+              "has_data": true
+            },
+            {
+              "ref_id": "t16",
+              "type": "table",
+              "title": "جدول 16",
+              "has_data": true
+            },
+            {
+              "ref_id": "p9",
+              "type": "text",
+              "title": "فقرة 9",
+              "has_data": true
+            },
+            {
+              "ref_id": "t17",
+              "type": "table",
+              "title": "جدول (5-17) : المختبرات والمشا",
+              "has_data": true
+            },
+            {
+              "ref_id": "t18",
+              "type": "table",
+              "title": "جدول 18",
+              "has_data": true
+            },
+            {
+              "ref_id": "t19",
+              "type": "table",
+              "title": "جدول (5-18) : المختبرات في كلي",
+              "has_data": true
+            },
+            {
+              "ref_id": "t20",
+              "type": "table",
+              "title": "جدول 20",
+              "has_data": true
+            }
+          ],
+          "texts": 9,
+          "texts_ok": 9,
+          "tables": 20,
+          "tables_ok": 20,
+          "charts": 0,
+          "charts_ok": 0
+        },
+        {
+          "code": "5.5",
+          "name": "نسبة الإجراءات الأكاديمية والإدارية والم",
+          "components": [
+            {
+              "ref_id": "p1",
+              "type": "text",
+              "title": "فقرة 1",
+              "has_data": true
+            },
+            {
+              "ref_id": "p2",
+              "type": "text",
+              "title": "فقرة 2",
+              "has_data": true
+            },
+            {
+              "ref_id": "t1",
+              "type": "table",
+              "title": "جدول (5-19): نسبة الإجراءات ال",
+              "has_data": true
+            },
+            {
+              "ref_id": "t2",
+              "type": "table",
+              "title": "جدول 2",
+              "has_data": true
+            },
+            {
+              "ref_id": "p3",
+              "type": "text",
+              "title": "فقرة 3",
+              "has_data": true
+            },
+            {
+              "ref_id": "p4",
+              "type": "text",
+              "title": "فقرة 4",
+              "has_data": true
+            },
+            {
+              "ref_id": "t3",
+              "type": "table",
+              "title": "جدول (5-20): إجراءات إدارة الب",
+              "has_data": true
+            },
+            {
+              "ref_id": "t4",
+              "type": "table",
+              "title": "جدول 4",
+              "has_data": true
+            },
+            {
+              "ref_id": "p5",
+              "type": "text",
+              "title": "فقرة 5",
+              "has_data": true
+            }
+          ],
+          "texts": 5,
+          "texts_ok": 5,
+          "tables": 4,
+          "tables_ok": 4,
+          "charts": 0,
+          "charts_ok": 0
+        }
+      ],
+      "totals": {
+        "texts": 97,
+        "texts_ok": 97,
+        "tables": 40,
+        "tables_ok": 40,
+        "charts": 0,
+        "charts_ok": 0
+      }
+    },
+    {
+      "code": "6",
+      "name": "خدمة المجتمع المحلي",
+      "items": [
+        {
+          "code": "6.1",
+          "name": "عدد المشاريع التي تم تنفيذها لتنمية المج",
+          "components": [
+            {
+              "ref_id": "p1",
+              "type": "text",
+              "title": "فقرة 1",
+              "has_data": true
+            },
+            {
+              "ref_id": "p2",
+              "type": "text",
+              "title": "فقرة 2",
+              "has_data": true
+            },
+            {
+              "ref_id": "t1",
+              "type": "table",
+              "title": "جدول (6-1): توزيع الأنشطة والم",
+              "has_data": true
+            },
+            {
+              "ref_id": "t2",
+              "type": "table",
+              "title": "جدول 2",
+              "has_data": true
+            }
+          ],
+          "texts": 2,
+          "texts_ok": 2,
+          "tables": 2,
+          "tables_ok": 2,
+          "charts": 0,
+          "charts_ok": 0
+        },
+        {
+          "code": "6.2",
+          "name": "قيمة المشاريع التي تم تنفيذها لتنمية الم",
+          "components": [
+            {
+              "ref_id": "p1",
+              "type": "text",
+              "title": "فقرة 1",
+              "has_data": true
+            }
+          ],
+          "texts": 1,
+          "texts_ok": 1,
+          "tables": 0,
+          "tables_ok": 0,
+          "charts": 0,
+          "charts_ok": 0
+        },
+        {
+          "code": "6.3",
+          "name": "عدد النشاطات اللامنهجية والتطوعية التي ش",
+          "components": [
+            {
+              "ref_id": "p1",
+              "type": "text",
+              "title": "فقرة 1",
+              "has_data": true
+            }
+          ],
+          "texts": 1,
+          "texts_ok": 1,
+          "tables": 0,
+          "tables_ok": 0,
+          "charts": 0,
+          "charts_ok": 0
+        },
+        {
+          "code": "6.4",
+          "name": "عدد الطلبة المشاركين في النشاطات اللامنه",
+          "components": [
+            {
+              "ref_id": "p1",
+              "type": "text",
+              "title": "فقرة 1",
+              "has_data": true
+            },
+            {
+              "ref_id": "p2",
+              "type": "text",
+              "title": "فقرة 2",
+              "has_data": true
+            },
+            {
+              "ref_id": "p3",
+              "type": "text",
+              "title": "فقرة 3",
+              "has_data": true
+            },
+            {
+              "ref_id": "t1",
+              "type": "table",
+              "title": "جدول 1",
+              "has_data": true
+            },
+            {
+              "ref_id": "t2",
+              "type": "table",
+              "title": "جدول (6-2): عدد الأنشطة اللامن",
+              "has_data": true
+            }
+          ],
+          "texts": 3,
+          "texts_ok": 3,
+          "tables": 2,
+          "tables_ok": 2,
+          "charts": 0,
+          "charts_ok": 0
+        },
+        {
+          "code": "6.5",
+          "name": "عدد الفعاليات التي شارك فيها الرئيس حول ",
+          "components": [
+            {
+              "ref_id": "p1",
+              "type": "text",
+              "title": "فقرة 1",
+              "has_data": true
+            },
+            {
+              "ref_id": "p2",
+              "type": "text",
+              "title": "فقرة 2",
+              "has_data": true
+            },
+            {
+              "ref_id": "p3",
+              "type": "text",
+              "title": "فقرة 3",
+              "has_data": true
+            },
+            {
+              "ref_id": "p4",
+              "type": "text",
+              "title": "فقرة 4",
+              "has_data": true
+            },
+            {
+              "ref_id": "p5",
+              "type": "text",
+              "title": "فقرة 5",
+              "has_data": true
+            },
+            {
+              "ref_id": "p6",
+              "type": "text",
+              "title": "فقرة 6",
+              "has_data": true
+            },
+            {
+              "ref_id": "p7",
+              "type": "text",
+              "title": "فقرة 7",
+              "has_data": true
+            },
+            {
+              "ref_id": "p8",
+              "type": "text",
+              "title": "فقرة 8",
+              "has_data": true
+            },
+            {
+              "ref_id": "p9",
+              "type": "text",
+              "title": "فقرة 9",
+              "has_data": true
+            },
+            {
+              "ref_id": "p10",
+              "type": "text",
+              "title": "فقرة 10",
+              "has_data": true
+            },
+            {
+              "ref_id": "p11",
+              "type": "text",
+              "title": "فقرة 11",
+              "has_data": true
+            },
+            {
+              "ref_id": "p12",
+              "type": "text",
+              "title": "فقرة 12",
+              "has_data": true
+            },
+            {
+              "ref_id": "p13",
+              "type": "text",
+              "title": "فقرة 13",
+              "has_data": true
+            }
+          ],
+          "texts": 13,
+          "texts_ok": 13,
+          "tables": 0,
+          "tables_ok": 0,
+          "charts": 0,
+          "charts_ok": 0
+        }
+      ],
+      "totals": {
+        "texts": 20,
+        "texts_ok": 20,
+        "tables": 4,
+        "tables_ok": 4,
+        "charts": 0,
+        "charts_ok": 0
+      }
+    }
+  ]
+}

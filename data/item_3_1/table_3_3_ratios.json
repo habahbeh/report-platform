@@ -1,0 +1,44 @@
+[
+  {
+    "year": "2024",
+    "scopus_ratio": "1.9",
+    "google_ratio": "2.5",
+    "notes": "لكامل العام"
+  },
+  {
+    "year": "2023",
+    "scopus_ratio": "1.01",
+    "google_ratio": "1.7",
+    "notes": "لكامل العام"
+  },
+  {
+    "year": "2022",
+    "scopus_ratio": "0.94",
+    "google_ratio": "1.52",
+    "notes": "لكامل العام"
+  },
+  {
+    "year": "2021",
+    "scopus_ratio": "0.76",
+    "google_ratio": "1.46",
+    "notes": "لكامل العام"
+  },
+  {
+    "year": "2020",
+    "scopus_ratio": "0.57",
+    "google_ratio": "1.47",
+    "notes": "لكامل العام"
+  },
+  {
+    "year": "2019",
+    "scopus_ratio": "0.33",
+    "google_ratio": "1.15",
+    "notes": "لكامل العام"
+  },
+  {
+    "year": "2018",
+    "scopus_ratio": "0.33",
+    "google_ratio": "1.08",
+    "notes": "لكامل العام"
+  }
+]

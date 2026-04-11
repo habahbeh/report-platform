@@ -1,0 +1,1666 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تقرير.ai — التصميم الكامل للنظام</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-light: #dbeafe;
+            --secondary: #059669;
+            --secondary-light: #d1fae5;
+            --warning: #d97706;
+            --warning-light: #fef3c7;
+            --danger: #dc2626;
+            --danger-light: #fee2e2;
+            --purple: #7c3aed;
+            --purple-light: #ede9fe;
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-600: #4b5563;
+            --gray-700: #374151;
+            --gray-800: #1f2937;
+            --gray-900: #111827;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: var(--gray-50);
+            color: var(--gray-800);
+            line-height: 1.8;
+        }
+
+        /* === HEADER === */
+        .hero {
+            background: linear-gradient(135deg, #1e3a8a, #2563eb, #3b82f6);
+            color: white;
+            padding: 60px 40px;
+            text-align: center;
+        }
+        .hero h1 { font-size: 2.8em; font-weight: 900; margin-bottom: 10px; }
+        .hero .subtitle { font-size: 1.3em; opacity: 0.9; font-weight: 300; }
+        .hero .version {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            padding: 5px 20px;
+            border-radius: 20px;
+            margin-top: 15px;
+            font-size: 0.9em;
+        }
+
+        /* === NAVIGATION === */
+        .toc {
+            background: white;
+            padding: 30px 40px;
+            border-bottom: 3px solid var(--primary);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .toc h3 { color: var(--primary); margin-bottom: 15px; font-size: 1.1em; }
+        .toc-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 8px;
+        }
+        .toc a {
+            color: var(--gray-700);
+            text-decoration: none;
+            padding: 8px 15px;
+            border-radius: 8px;
+            display: block;
+            transition: all 0.2s;
+            font-size: 0.95em;
+        }
+        .toc a:hover { background: var(--primary-light); color: var(--primary); }
+        .toc a .num {
+            display: inline-block;
+            width: 28px; height: 28px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 28px;
+            font-size: 0.8em;
+            margin-left: 8px;
+        }
+
+        /* === MAIN CONTENT === */
+        .container { max-width: 1100px; margin: 0 auto; padding: 40px 30px; }
+
+        .section {
+            background: white;
+            border-radius: 16px;
+            padding: 40px;
+            margin-bottom: 40px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+            border: 1px solid var(--gray-200);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid var(--gray-100);
+        }
+        .section-num {
+            width: 50px; height: 50px;
+            background: var(--primary);
+            color: white;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4em;
+            font-weight: 900;
+            flex-shrink: 0;
+        }
+        .section-num.green { background: var(--secondary); }
+        .section-num.orange { background: var(--warning); }
+        .section-num.purple { background: var(--purple); }
+        .section-num.red { background: var(--danger); }
+
+        .section h2 { font-size: 1.6em; color: var(--gray-900); }
+        .section h3 {
+            font-size: 1.2em;
+            color: var(--primary);
+            margin: 25px 0 15px;
+            padding-right: 15px;
+            border-right: 4px solid var(--primary);
+        }
+        .section h3.green { color: var(--secondary); border-color: var(--secondary); }
+        .section h3.orange { color: var(--warning); border-color: var(--warning); }
+        .section h3.purple { color: var(--purple); border-color: var(--purple); }
+
+        p { margin-bottom: 12px; color: var(--gray-700); }
+
+        /* === FLOW DIAGRAMS === */
+        .flow {
+            background: var(--gray-50);
+            border: 2px solid var(--gray-200);
+            border-radius: 12px;
+            padding: 30px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            direction: ltr;
+            text-align: left;
+            line-height: 1.6;
+            font-size: 0.9em;
+            overflow-x: auto;
+            white-space: pre;
+        }
+        .flow.rtl-flow {
+            direction: rtl;
+            text-align: right;
+            font-family: 'Cairo', sans-serif;
+        }
+
+        /* === BOXES === */
+        .box {
+            border-radius: 12px;
+            padding: 20px 25px;
+            margin: 15px 0;
+        }
+        .box-blue { background: var(--primary-light); border-right: 5px solid var(--primary); }
+        .box-green { background: var(--secondary-light); border-right: 5px solid var(--secondary); }
+        .box-orange { background: var(--warning-light); border-right: 5px solid var(--warning); }
+        .box-red { background: var(--danger-light); border-right: 5px solid var(--danger); }
+        .box-purple { background: var(--purple-light); border-right: 5px solid var(--purple); }
+        .box-gray { background: var(--gray-100); border-right: 5px solid var(--gray-600); }
+
+        .box strong { display: block; margin-bottom: 8px; font-size: 1.05em; }
+
+        /* === TABLES === */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 0.95em;
+        }
+        th {
+            background: var(--primary);
+            color: white;
+            padding: 12px 15px;
+            text-align: right;
+            font-weight: 600;
+        }
+        td {
+            padding: 10px 15px;
+            border-bottom: 1px solid var(--gray-200);
+        }
+        tr:nth-child(even) { background: var(--gray-50); }
+        tr:hover { background: var(--primary-light); }
+
+        table.green-table th { background: var(--secondary); }
+        table.orange-table th { background: var(--warning); }
+        table.purple-table th { background: var(--purple); }
+
+        /* === CODE === */
+        .code {
+            background: var(--gray-900);
+            color: #e5e7eb;
+            padding: 20px 25px;
+            border-radius: 10px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            direction: ltr;
+            text-align: left;
+            font-size: 0.88em;
+            line-height: 1.7;
+            overflow-x: auto;
+        }
+        .code .comment { color: #6b7280; }
+        .code .keyword { color: #60a5fa; }
+        .code .string { color: #34d399; }
+        .code .highlight { color: #fbbf24; }
+
+        /* === SCENARIO CARDS === */
+        .scenario {
+            border: 2px solid var(--gray-200);
+            border-radius: 12px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+        .scenario-header {
+            background: var(--gray-100);
+            padding: 15px 20px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .scenario-body { padding: 20px; }
+        .scenario-step {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+            align-items: flex-start;
+        }
+        .step-num {
+            width: 32px; height: 32px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85em;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+        .step-num.green { background: var(--secondary); }
+        .step-num.orange { background: var(--warning); }
+
+        /* === COMPARISON === */
+        .compare {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .compare-card {
+            border-radius: 12px;
+            padding: 20px;
+            border: 2px solid var(--gray-200);
+        }
+        .compare-card.bad { border-color: var(--danger); background: var(--danger-light); }
+        .compare-card.good { border-color: var(--secondary); background: var(--secondary-light); }
+        .compare-card h4 { margin-bottom: 10px; font-size: 1.05em; }
+
+        /* === BADGES === */
+        .badge {
+            display: inline-block;
+            padding: 3px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+        }
+        .badge-ai { background: var(--purple-light); color: var(--purple); }
+        .badge-data { background: var(--secondary-light); color: var(--secondary); }
+        .badge-auto { background: var(--warning-light); color: var(--warning); }
+        .badge-user { background: var(--primary-light); color: var(--primary); }
+
+        /* === ARROWS === */
+        .arrow-down {
+            text-align: center;
+            font-size: 2em;
+            color: var(--primary);
+            margin: 10px 0;
+        }
+
+        /* === CRITIQUE === */
+        .critique {
+            background: #fef2f2;
+            border: 2px solid var(--danger);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .critique h4 { color: var(--danger); margin-bottom: 10px; }
+        .critique .fix {
+            background: var(--secondary-light);
+            border-radius: 8px;
+            padding: 10px 15px;
+            margin-top: 10px;
+        }
+        .critique .fix strong { color: var(--secondary); }
+
+        /* === LIST === */
+        ul, ol { padding-right: 25px; margin: 10px 0; }
+        li { margin-bottom: 8px; color: var(--gray-700); }
+
+        /* === BIG FLOW === */
+        .big-flow {
+            background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+            border: 2px solid var(--primary);
+            border-radius: 16px;
+            padding: 30px;
+            margin: 25px 0;
+        }
+        .big-flow-step {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+        }
+        .big-flow-step:last-child { margin-bottom: 0; }
+        .big-flow-icon {
+            width: 50px; height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+            flex-shrink: 0;
+        }
+        .big-flow-icon.blue { background: var(--primary-light); }
+        .big-flow-icon.green { background: var(--secondary-light); }
+        .big-flow-icon.orange { background: var(--warning-light); }
+        .big-flow-icon.purple { background: var(--purple-light); }
+        .big-flow-icon.red { background: var(--danger-light); }
+
+        .connector {
+            text-align: center;
+            font-size: 1.5em;
+            color: var(--primary);
+            margin: 5px 0;
+        }
+
+        /* === RESPONSIVE === */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 1.8em; }
+            .section { padding: 20px; }
+            .compare { grid-template-columns: 1fr; }
+            .toc-grid { grid-template-columns: 1fr; }
+        }
+
+        /* === PRINT === */
+        @media print {
+            .toc { position: static; }
+            .section { break-inside: avoid; }
+            body { font-size: 11pt; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ==================== HERO ==================== -->
+<div class="hero">
+    <h1>تقرير.ai</h1>
+    <div class="subtitle">التصميم الكامل لنظام توليد التقارير الذكي</div>
+    <div class="version">المستند الاستراتيجي — الإصدار 1.0</div>
+</div>
+
+<!-- ==================== TOC ==================== -->
+<nav class="toc">
+    <h3>فهرس المحتويات</h3>
+    <div class="toc-grid">
+        <a href="#overview"><span class="num">1</span> الفكرة الكاملة من الأعلى</a>
+        <a href="#structure"><span class="num">2</span> ما هو الـ Structure وكيف يُخزَّن</a>
+        <a href="#sources"><span class="num">3</span> مصادر الـ Structure الثلاثة</a>
+        <a href="#response"><span class="num">4</span> نظام Response للبيانات التفصيلية</a>
+        <a href="#generation"><span class="num">5</span> التوليد حبة حبة</a>
+        <a href="#tables"><span class="num">6</span> الجداول — من يحددها وكيف تُبنى</a>
+        <a href="#charts"><span class="num">7</span> الأشكال والرسومات البيانية</a>
+        <a href="#numbering"><span class="num">8</span> الترقيم التلقائي عند التصدير</a>
+        <a href="#integration"><span class="num">9</span> التكاملية بين القطع</a>
+        <a href="#full-scenario"><span class="num">10</span> سيناريو كامل من البداية للنهاية</a>
+        <a href="#critique"><span class="num">11</span> النقد الذاتي — مشاكل وحلول</a>
+    </div>
+</nav>
+
+<div class="container">
+
+<!-- ==================== 1. OVERVIEW ==================== -->
+<section class="section" id="overview">
+    <div class="section-header">
+        <div class="section-num">1</div>
+        <h2>الفكرة الكاملة من الأعلى</h2>
+    </div>
+
+    <p>الفكرة الأساسية بسيطة: <strong>التقرير السنوي = بنية (Structure) + بيانات (Data) + أسلوب كتابة (Style)</strong></p>
+
+    <div class="big-flow">
+        <div class="big-flow-step">
+            <div class="big-flow-icon blue">📐</div>
+            <div>
+                <strong>الـ Structure (البنية)</strong><br>
+                ترتيب المحتوى: فقرة ثم جدول ثم شكل ثم فقرة... <br>
+                <span class="badge badge-user">يُحدَّد مرة واحدة</span>
+            </div>
+        </div>
+        <div class="connector">+</div>
+        <div class="big-flow-step">
+            <div class="big-flow-icon green">📊</div>
+            <div>
+                <strong>البيانات (Data)</strong><br>
+                الأرقام الفعلية: 840 طالب، 33 جنسية، توزيع الكليات...<br>
+                <span class="badge badge-data">تتجدد كل سنة من المساهمين</span>
+            </div>
+        </div>
+        <div class="connector">+</div>
+        <div class="big-flow-step">
+            <div class="big-flow-icon purple">✍️</div>
+            <div>
+                <strong>أسلوب الكتابة (Style)</strong><br>
+                رسمي مؤسسي: "بلغ عدد... حققت الجامعة..."<br>
+                <span class="badge badge-ai">الـ AI يتبعه</span>
+            </div>
+        </div>
+        <div class="connector">⬇️</div>
+        <div class="big-flow-step">
+            <div class="big-flow-icon orange">📄</div>
+            <div>
+                <strong>التقرير النهائي</strong><br>
+                نص احترافي + جداول دقيقة + أشكال بيانية — بنفس بنية التقرير الأصلي
+            </div>
+        </div>
+    </div>
+
+    <div class="box box-blue">
+        <strong>القاعدة الذهبية:</strong>
+        الـ AI يكتب النصوص فقط. الجداول والأشكال تُبنى من البيانات مباشرة بدون AI — لأن الأرقام لازم تكون دقيقة 100%.
+    </div>
+</section>
+
+<!-- ==================== 2. STRUCTURE ==================== -->
+<section class="section" id="structure">
+    <div class="section-header">
+        <div class="section-num">2</div>
+        <h2>ما هو الـ Structure وكيف يُخزَّن</h2>
+    </div>
+
+    <p>الـ Structure هو <strong>"وصفة الطبخ"</strong> لكل بند في التقرير. يحدد:</p>
+    <ul>
+        <li><strong>ما هي القطع:</strong> فقرة؟ جدول؟ شكل بياني؟</li>
+        <li><strong>ترتيبها:</strong> أي قطعة تيجي أولاً</li>
+        <li><strong>وصفها:</strong> ماذا تحتوي كل قطعة</li>
+        <li><strong>مصدر بياناتها:</strong> من أي بيانات تتغذى</li>
+    </ul>
+
+    <h3>مثال: structure بند 1.9 (الطلبة غير الأردنيين)</h3>
+
+    <table>
+        <thead>
+            <tr>
+                <th>الترتيب</th>
+                <th>النوع</th>
+                <th>الوصف</th>
+                <th>مصدر البيانات</th>
+                <th>من يولّده</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>1</td>
+                <td><span class="badge badge-ai">فقرة</span></td>
+                <td>تعريف بالأرقام الرئيسية + إشارة للجدول والشكل القادمين</td>
+                <td>القيمة الإجمالية من Response</td>
+                <td><span class="badge badge-ai">AI</span></td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td><span class="badge badge-data">شكل</span></td>
+                <td>Pie Chart: نسبة الأردنيين لغير الأردنيين</td>
+                <td>بيانات النسب من Response</td>
+                <td><span class="badge badge-data">من البيانات</span></td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td><span class="badge badge-data">جدول</span></td>
+                <td>الطلبة حسب الجنسية (33 جنسية)</td>
+                <td>جدول تفصيلي من Response</td>
+                <td><span class="badge badge-data">من البيانات</span></td>
+            </tr>
+            <tr>
+                <td>4</td>
+                <td><span class="badge badge-ai">فقرة</span></td>
+                <td>وصف البيئة الجامعية + الأرقام الإجمالية</td>
+                <td>من القطع السابقة</td>
+                <td><span class="badge badge-ai">AI</span></td>
+            </tr>
+            <tr>
+                <td>5</td>
+                <td><span class="badge badge-data">شكل</span></td>
+                <td>خط بياني: أعداد الطلبة عبر السنوات</td>
+                <td>بيانات تاريخية من Response</td>
+                <td><span class="badge badge-data">من البيانات</span></td>
+            </tr>
+            <tr>
+                <td>6</td>
+                <td><span class="badge badge-data">جدول</span></td>
+                <td>الطلبة حسب الكلية (9 كليات × 3 فصول)</td>
+                <td>جدول تفصيلي من Response</td>
+                <td><span class="badge badge-data">من البيانات</span></td>
+            </tr>
+            <tr>
+                <td>7</td>
+                <td><span class="badge badge-data">شكل</span></td>
+                <td>Pie Chart: توزيع الطلبة حسب الكلية</td>
+                <td>من بيانات الجدول السابق</td>
+                <td><span class="badge badge-data">من البيانات</span></td>
+            </tr>
+            <tr>
+                <td>8</td>
+                <td><span class="badge badge-data">جدول</span></td>
+                <td>الطلبة حسب التخصص (60 صف)</td>
+                <td>جدول تفصيلي من Response</td>
+                <td><span class="badge badge-data">من البيانات</span></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3>كيف يُخزَّن في الداتابيز</h3>
+    <div class="code">
+<span class="comment">// ItemStructure - يُخزَّن كـ JSON في حقل البند</span>
+{
+  <span class="string">"item_code"</span>: <span class="string">"1.9"</span>,
+  <span class="string">"components"</span>: [
+    {
+      <span class="string">"order"</span>: <span class="highlight">1</span>,
+      <span class="string">"type"</span>: <span class="string">"paragraph"</span>,
+      <span class="string">"id"</span>: <span class="string">"p1"</span>,
+      <span class="string">"description"</span>: <span class="string">"فقرة تعريفية بالأرقام الرئيسية"</span>,
+      <span class="string">"references"</span>: [<span class="string">"t1"</span>, <span class="string">"c1"</span>],  <span class="comment">// يشير لجدول وشكل بعده</span>
+      <span class="string">"generated_by"</span>: <span class="string">"ai"</span>
+    },
+    {
+      <span class="string">"order"</span>: <span class="highlight">2</span>,
+      <span class="string">"type"</span>: <span class="string">"chart"</span>,
+      <span class="string">"id"</span>: <span class="string">"c1"</span>,
+      <span class="string">"chart_type"</span>: <span class="string">"pie"</span>,
+      <span class="string">"title"</span>: <span class="string">"النسبة المئوية للطلبة الأردنيين إلى غير الأردنيين"</span>,
+      <span class="string">"data_source"</span>: <span class="string">"nationality_ratio"</span>,
+      <span class="string">"generated_by"</span>: <span class="string">"data"</span>
+    },
+    {
+      <span class="string">"order"</span>: <span class="highlight">3</span>,
+      <span class="string">"type"</span>: <span class="string">"table"</span>,
+      <span class="string">"id"</span>: <span class="string">"t1"</span>,
+      <span class="string">"title"</span>: <span class="string">"أعداد الطلبة حسب الجنسية"</span>,
+      <span class="string">"data_source"</span>: <span class="string">"nationality_details"</span>,
+      <span class="string">"columns"</span>: [<span class="string">"الجنسية"</span>, <span class="string">"الفصل الأول"</span>, <span class="string">"الفصل الثاني"</span>],
+      <span class="string">"generated_by"</span>: <span class="string">"data"</span>
+    },
+    {
+      <span class="string">"order"</span>: <span class="highlight">4</span>,
+      <span class="string">"type"</span>: <span class="string">"paragraph"</span>,
+      <span class="string">"id"</span>: <span class="string">"p2"</span>,
+      <span class="string">"description"</span>: <span class="string">"وصف البيئة الجامعية والأرقام الإجمالية"</span>,
+      <span class="string">"references"</span>: [<span class="string">"c2"</span>, <span class="string">"t2"</span>],
+      <span class="string">"generated_by"</span>: <span class="string">"ai"</span>
+    },
+    <span class="comment">// ... باقي القطع</span>
+  ]
+}
+    </div>
+</section>
+
+<!-- ==================== 3. SOURCES ==================== -->
+<section class="section" id="sources">
+    <div class="section-header">
+        <div class="section-num green">3</div>
+        <h2>مصادر الـ Structure الثلاثة</h2>
+    </div>
+
+    <p>من أين يأتي الـ Structure؟ ثلاثة مصادر تعمل كطبقات:</p>
+
+    <!-- Source 1 -->
+    <h3 class="green">المصدر 1: قوالب جاهزة (الطبقة الأساسية)</h3>
+
+    <div class="scenario">
+        <div class="scenario-header">🏫 سيناريو: جامعة جديدة تسجل لأول مرة</div>
+        <div class="scenario-body">
+            <div class="scenario-step">
+                <div class="step-num">1</div>
+                <div>الجامعة تسجل في تقرير.ai وتختار: <strong>"تقرير سنوي — جامعة"</strong></div>
+            </div>
+            <div class="scenario-step">
+                <div class="step-num">2</div>
+                <div>النظام يحمّل قالب جاهز فيه كل المحاور والبنود مع structure افتراضي لكل بند</div>
+            </div>
+            <div class="scenario-step">
+                <div class="step-num">3</div>
+                <div>بند 1.9 مثلاً يحصل على structure افتراضي: <strong>[فقرة → جدول → فقرة]</strong></div>
+            </div>
+            <div class="scenario-step">
+                <div class="step-num">4</div>
+                <div>الجامعة تبدأ بإدخال بياناتها فوراً — <strong>بدون أي إعداد</strong></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="box box-green">
+        <strong>متى نستخدم هذا المصدر؟</strong>
+        عميل جديد ما عنده تقرير سابق ويريد يبدأ بسرعة. القالب يعطيه نقطة بداية جيدة.
+    </div>
+
+    <!-- Source 2 -->
+    <h3 class="green">المصدر 2: التقرير السابق (الطبقة الذكية)</h3>
+
+    <div class="scenario">
+        <div class="scenario-header">📄 سيناريو: جامعة عندها تقرير من السنة الماضية</div>
+        <div class="scenario-body">
+            <div class="scenario-step">
+                <div class="step-num green">1</div>
+                <div>الجامعة ترفع ملف Word لتقرير 2023/2024</div>
+            </div>
+            <div class="scenario-step">
+                <div class="step-num green">2</div>
+                <div>النظام يحلل الملف تلقائياً ويستخرج structure كل بند:<br>
+                    "بند 1.9 فيه: فقرة → شكل → جدول 36 صف → فقرة → جدول 12 صف → ..."</div>
+            </div>
+            <div class="scenario-step">
+                <div class="step-num green">3</div>
+                <div>الـ structure المستخرج <strong>يتجاوز</strong> القالب الافتراضي</div>
+            </div>
+            <div class="scenario-step">
+                <div class="step-num green">4</div>
+                <div>كذلك يستخرج <strong>أسلوب الكتابة</strong> من النصوص الأصلية</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="box box-green">
+        <strong>متى نستخدم هذا المصدر؟</strong>
+        عميل عنده تقارير سابقة ويريد التقرير الجديد بنفس الشكل والأسلوب. هذا أقوى مصدر.
+    </div>
+
+    <!-- Source 3 -->
+    <h3 class="green">المصدر 3: التعديل اليدوي (الطبقة المتقدمة)</h3>
+
+    <div class="scenario">
+        <div class="scenario-header">✏️ سيناريو: مسؤول الجودة يريد تعديل الـ structure</div>
+        <div class="scenario-body">
+            <div class="scenario-step">
+                <div class="step-num orange">1</div>
+                <div>يفتح بند 1.9 في واجهة تعديل الـ structure</div>
+            </div>
+            <div class="scenario-step">
+                <div class="step-num orange">2</div>
+                <div>يشوف القطع الحالية ويقدر يسحب ويفلت (drag & drop) لتغيير الترتيب</div>
+            </div>
+            <div class="scenario-step">
+                <div class="step-num orange">3</div>
+                <div>يضيف قطعة جديدة: <strong>"جدول: الطلبة حسب المرحلة الدراسية"</strong></div>
+            </div>
+            <div class="scenario-step">
+                <div class="step-num orange">4</div>
+                <div>يحذف شكل بياني ما يحتاجه</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="box box-green">
+        <strong>متى نستخدم هذا المصدر؟</strong>
+        عميل متقدم يريد تحكم كامل بشكل التقرير. هذا يعطيه المرونة الكاملة.
+    </div>
+
+    <h3 class="green">كيف تعمل الطبقات معاً</h3>
+    <div class="flow rtl-flow">
+┌────────────────────────────────────────────┐
+│                                            │
+│   الأولوية 1: تعديل يدوي (إن وجد)         │
+│        ↓ إذا ما في                         │
+│   الأولوية 2: من التقرير السابق (إن وجد)   │
+│        ↓ إذا ما في                         │
+│   الأولوية 3: القالب الجاهز (دائماً موجود) │
+│                                            │
+│   النتيجة → structure نهائي → يُحقن بالـ   │
+│   prompt عند التوليد                       │
+│                                            │
+└────────────────────────────────────────────┘
+    </div>
+</section>
+
+<!-- ==================== 4. RESPONSE SYSTEM ==================== -->
+<section class="section" id="response">
+    <div class="section-header">
+        <div class="section-num orange">4</div>
+        <h2>نظام Response للبيانات التفصيلية</h2>
+    </div>
+
+    <p>هذي <strong>أهم نقطة</strong> في النظام كله. الآن نظام Response يخزن فقط:</p>
+
+    <div class="compare">
+        <div class="compare-card bad">
+            <h4>❌ الوضع الحالي</h4>
+            <div class="code">
+{
+  "current": 840,
+  "previous": 780,
+  "change": "7.7%"
+}
+            </div>
+            <p><strong>مشكلة:</strong> رقم واحد — ما يكفي لبناء جدول فيه 33 جنسية!</p>
+        </div>
+        <div class="compare-card good">
+            <h4>✅ المطلوب</h4>
+            <div class="code">
+{
+  "summary": {
+    "current": 840,
+    "previous": 780
+  },
+  "detailed_tables": {
+    "nationality_details": {
+      "headers": ["الجنسية", "ف1", "ف2"],
+      "rows": [
+        ["فلسطينية", 330, 313],
+        ["سورية", 196, 174],
+        ...33 صف
+      ]
+    },
+    "faculty_details": {
+      "headers": ["الكلية", "ف1", ...],
+      "rows": [...]
+    }
+  }
+}
+            </div>
+            <p><strong>الحل:</strong> بيانات تفصيلية كاملة!</p>
+        </div>
+    </div>
+
+    <h3 class="orange">كيف يُدخل المساهم البيانات التفصيلية؟</h3>
+
+    <p>المساهم (مثلاً: مسؤول القبول والتسجيل) عنده 3 طرق:</p>
+
+    <table class="orange-table">
+        <thead>
+            <tr>
+                <th>الطريقة</th>
+                <th>كيف</th>
+                <th>مناسبة لـ</th>
+                <th>مثال</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>1. رفع Excel</strong></td>
+                <td>يرفع ملف Excel جاهز عنده</td>
+                <td>بيانات كبيرة (33 جنسية، 60 تخصص)</td>
+                <td>يرفع ملف فيه كل الجنسيات وأعدادها</td>
+            </tr>
+            <tr>
+                <td><strong>2. تعبئة جدول</strong></td>
+                <td>يعبئ جدول تفاعلي في المتصفح</td>
+                <td>بيانات متوسطة (9 كليات)</td>
+                <td>يعبئ عدد الطلبة لكل كلية</td>
+            </tr>
+            <tr>
+                <td><strong>3. رقم واحد</strong></td>
+                <td>يدخل رقم واحد فقط</td>
+                <td>بنود بسيطة (رقم تصنيف)</td>
+                <td>يدخل: ترتيب QS = 801-850</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3 class="orange">من يحدد نوع البيانات المطلوبة؟</h3>
+
+    <div class="box box-orange">
+        <strong>الإجابة: الـ Structure هو اللي يحدد!</strong>
+        <p>لما الـ structure يقول "في هذا البند جدول: الطلبة حسب الجنسية" — النظام يعرف تلقائياً أن المساهم لازم يُدخل بيانات تفصيلية (جدول) وليس رقم واحد فقط.</p>
+    </div>
+
+    <div class="flow rtl-flow">
+┌──────────────┐     ┌────────────────────┐     ┌──────────────────┐
+│              │     │                    │     │                  │
+│  Structure   │────→│  النظام يحدد       │────→│  المساهم يشوف    │
+│  البند       │     │  نوع البيانات      │     │  النموذج المناسب │
+│              │     │  المطلوبة          │     │                  │
+└──────────────┘     └────────────────────┘     └──────────────────┘
+
+   مثال:                 مثال:                    مثال:
+   "جدول جنسيات"    →   بيانات تفصيلية     →    نموذج رفع Excel
+   "رقم تصنيف"      →   رقم واحد           →    حقل رقمي بسيط
+    </div>
+
+    <h3 class="orange">سيناريو كامل: المساهم يدخل بيانات بند 1.9</h3>
+
+    <div class="scenario">
+        <div class="scenario-header">👤 مسؤول القبول والتسجيل يدخل بيانات الطلبة</div>
+        <div class="scenario-body">
+            <div class="scenario-step">
+                <div class="step-num">1</div>
+                <div>يفتح المنصة ويرى البنود المسندة إليه. بند 1.9 يظهر بعلامة: <strong>"مطلوب بيانات تفصيلية"</strong></div>
+            </div>
+            <div class="scenario-step">
+                <div class="step-num">2</div>
+                <div>يضغط على البند. يظهر له:
+                    <ul>
+                        <li>حقل: <strong>العدد الإجمالي للطلبة غير الأردنيين</strong> → يكتب: 840</li>
+                        <li>جدول مطلوب: <strong>الطلبة حسب الجنسية</strong> → خياران: تعبئة يدوية أو رفع Excel</li>
+                        <li>جدول مطلوب: <strong>الطلبة حسب الكلية</strong> → خياران: تعبئة يدوية أو رفع Excel</li>
+                        <li>جدول مطلوب: <strong>الطلبة حسب التخصص</strong> → خياران: تعبئة يدوية أو رفع Excel</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="scenario-step">
+                <div class="step-num">3</div>
+                <div>يختار "رفع Excel" لجدول الجنسيات → يرفع ملف فيه 33 صف</div>
+            </div>
+            <div class="scenario-step">
+                <div class="step-num">4</div>
+                <div>النظام يقرأ الملف ويعرضه كجدول للمراجعة → المساهم يؤكد</div>
+            </div>
+            <div class="scenario-step">
+                <div class="step-num">5</div>
+                <div>البيانات تُخزَّن في Response مربوطة بالبند وبمصدر البيانات</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ==================== 5. GENERATION ==================== -->
+<section class="section" id="generation">
+    <div class="section-header">
+        <div class="section-num purple">5</div>
+        <h2>التوليد حبة حبة</h2>
+    </div>
+
+    <p>عند الضغط على "ولّد التقرير"، النظام يمشي على الـ structure <strong>قطعة قطعة</strong>:</p>
+
+    <div class="big-flow">
+        <div class="big-flow-step">
+            <div class="big-flow-icon purple">1</div>
+            <div>
+                <strong>القطعة 1: فقرة تعريفية</strong> <span class="badge badge-ai">AI يولّد</span><br>
+                الـ prompt: "اكتب فقرة عن 840 طالب غير أردني. بعدك جدول (1-3) وشكل (1-2)."<br>
+                ← الـ AI يكتب ويشير للجدول والشكل
+            </div>
+        </div>
+        <div class="connector">⬇️</div>
+        <div class="big-flow-step">
+            <div class="big-flow-icon green">2</div>
+            <div>
+                <strong>القطعة 2: شكل (1-2) — Pie Chart</strong> <span class="badge badge-data">من البيانات</span><br>
+                بدون AI — يُبنى مباشرة: أردنيين 87.6% / غير أردنيين 12.4%
+            </div>
+        </div>
+        <div class="connector">⬇️</div>
+        <div class="big-flow-step">
+            <div class="big-flow-icon green">3</div>
+            <div>
+                <strong>القطعة 3: جدول (1-3) — الجنسيات</strong> <span class="badge badge-data">من البيانات</span><br>
+                بدون AI — يُبنى مباشرة من الـ Excel المرفوع (33 صف)
+            </div>
+        </div>
+        <div class="connector">⬇️</div>
+        <div class="big-flow-step">
+            <div class="big-flow-icon purple">4</div>
+            <div>
+                <strong>القطعة 4: فقرة وصفية</strong> <span class="badge badge-ai">AI يولّد</span><br>
+                الـ prompt: "قبلك جدول الجنسيات. بعدك جدول الكليات. اكتب فقرة رابطة."<br>
+                ← الـ AI يكتب مع سياق كامل
+            </div>
+        </div>
+        <div class="connector">⬇️</div>
+        <div class="big-flow-step">
+            <div class="big-flow-icon green">5</div>
+            <div>
+                <strong>القطعة 5-8: جداول وأشكال</strong> <span class="badge badge-data">من البيانات</span><br>
+                كلها تُبنى مباشرة من بيانات Response
+            </div>
+        </div>
+        <div class="connector">⬇️</div>
+        <div class="big-flow-step">
+            <div class="big-flow-icon orange">✅</div>
+            <div>
+                <strong>النتيجة: البند الكامل</strong><br>
+                تُجمع كل القطع بالترتيب = محتوى بند 1.9 الكامل
+            </div>
+        </div>
+    </div>
+
+    <h3 class="purple">ماذا يُرسل في prompt كل فقرة؟</h3>
+
+    <div class="code">
+<span class="comment"># prompt القطعة رقم 4 (فقرة وصفية)</span>
+
+<span class="keyword">أنت</span> تكتب الجزء الرابع من بند 1.9: نسبة الطلبة غير الأردنيين.
+
+<span class="keyword">=== موقعك في البند ===</span>
+قبلك مباشرة:
+  - شكل (1-2): رسم دائري يوضح نسبة الأردنيين لغير الأردنيين
+  - جدول (1-3): أعداد الطلبة حسب (33) جنسية
+
+بعدك مباشرة:
+  - شكل (1-3): أعداد الطلبة عبر السنوات (2010-2024)
+  - جدول (1-4): الطلبة حسب الكلية
+
+<span class="keyword">=== البيانات المتاحة ===</span>
+- إجمالي الطلبة: الفصل الأول (6921)، الفصل الثاني (6794)، الصيفي (3565)
+- غير أردنيين: (840) طالب من (33) جنسية
+
+<span class="keyword">=== المطلوب ===</span>
+اكتب فقرة تصف البيئة الجامعية وأعداد الطلبة الإجمالية.
+أشر إلى شكل (1-3) وجدول (1-4) القادمين.
+أسلوب: رسمي مؤسسي. لا تخترع أرقاماً.
+    </div>
+
+    <h3 class="purple">القاعدة الذهبية في التوليد</h3>
+
+    <table class="purple-table">
+        <thead>
+            <tr>
+                <th>نوع القطعة</th>
+                <th>من يولّدها</th>
+                <th>ليش</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>فقرة نصية</strong></td>
+                <td><span class="badge badge-ai">AI</span></td>
+                <td>لأنها تحتاج أسلوب كتابة وربط وتحليل — هذا شغل الـ AI</td>
+            </tr>
+            <tr>
+                <td><strong>جدول بيانات</strong></td>
+                <td><span class="badge badge-data">من البيانات مباشرة</span></td>
+                <td>لأن الأرقام لازم تكون دقيقة 100% — الـ AI ممكن يغلط برقم</td>
+            </tr>
+            <tr>
+                <td><strong>رسم بياني</strong></td>
+                <td><span class="badge badge-data">من البيانات مباشرة</span></td>
+                <td>لأنه يتحول مباشرة من أرقام الجدول إلى رسم</td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+
+<!-- ==================== 6. TABLES ==================== -->
+<section class="section" id="tables">
+    <div class="section-header">
+        <div class="section-num">6</div>
+        <h2>الجداول — من يحددها وكيف تُبنى</h2>
+    </div>
+
+    <p>هذا السؤال المهم: <strong>إذا بدي أبني جدول — من يحدد شكله؟ وكيف تُبنى الأعمدة والصفوف؟</strong></p>
+
+    <h3>الجواب: 3 طبقات تحدد شكل الجدول</h3>
+
+    <div class="big-flow">
+        <div class="big-flow-step">
+            <div class="big-flow-icon blue">📐</div>
+            <div>
+                <strong>الطبقة 1: الـ Structure يحدد "في جدول هنا"</strong><br>
+                يقول: القطعة رقم 3 من بند 1.9 هي جدول عنوانه "الطلبة حسب الجنسية"
+            </div>
+        </div>
+        <div class="connector">⬇️</div>
+        <div class="big-flow-step">
+            <div class="big-flow-icon green">📋</div>
+            <div>
+                <strong>الطبقة 2: تعريف الجدول يحدد "أعمدته"</strong><br>
+                يقول: الأعمدة هي: [الجنسية، الفصل الأول، الفصل الثاني]
+            </div>
+        </div>
+        <div class="connector">⬇️</div>
+        <div class="big-flow-step">
+            <div class="big-flow-icon orange">📊</div>
+            <div>
+                <strong>الطبقة 3: البيانات من Response تملأ "الصفوف"</strong><br>
+                المساهم يرفع Excel أو يعبئ: فلسطينية=330، سورية=196، ...
+            </div>
+        </div>
+        <div class="connector">⬇️</div>
+        <div class="big-flow-step">
+            <div class="big-flow-icon purple">🏗️</div>
+            <div>
+                <strong>النتيجة: النظام يبني الجدول تلقائياً من الأعمدة + الصفوف</strong><br>
+                بدون AI — عملية بناء HTML/PDF مباشرة
+            </div>
+        </div>
+    </div>
+
+    <h3>من يحدد أعمدة الجدول؟ سيناريوهات مختلفة</h3>
+
+    <div class="scenario">
+        <div class="scenario-header">🔵 سيناريو 1: القالب الجاهز يحدد الأعمدة</div>
+        <div class="scenario-body">
+            <p>قالب "تقرير سنوي — جامعة" فيه تعريف جاهز:</p>
+            <div class="code">
+<span class="comment">// جدول الجنسيات - معرّف مسبقاً في القالب</span>
+{
+  <span class="string">"table_id"</span>: <span class="string">"nationality_details"</span>,
+  <span class="string">"title"</span>: <span class="string">"أعداد الطلبة حسب الجنسية"</span>,
+  <span class="string">"columns"</span>: [
+    {<span class="string">"name"</span>: <span class="string">"الجنسية"</span>, <span class="string">"type"</span>: <span class="string">"text"</span>},
+    {<span class="string">"name"</span>: <span class="string">"الفصل الأول"</span>, <span class="string">"type"</span>: <span class="string">"number"</span>},
+    {<span class="string">"name"</span>: <span class="string">"الفصل الثاني"</span>, <span class="string">"type"</span>: <span class="string">"number"</span>}
+  ],
+  <span class="string">"has_total_row"</span>: <span class="highlight">true</span>,
+  <span class="string">"rows"</span>: <span class="comment">// تُملأ من المساهم</span>
+}
+            </div>
+            <p><strong>المساهم يشوف جدول فاضي بأعمدة جاهزة ويعبّئ الصفوف فقط.</strong></p>
+        </div>
+    </div>
+
+    <div class="scenario">
+        <div class="scenario-header">🟢 سيناريو 2: التقرير السابق يحدد الأعمدة</div>
+        <div class="scenario-body">
+            <p>النظام يحلل تقرير السنة الماضية ويستخرج:</p>
+            <div class="scenario-step">
+                <div class="step-num green">1</div>
+                <div>"جدول (1-3) في التقرير السابق فيه 5 أعمدة: التسلسل، الجنسية ف1، العدد ف1، الجنسية ف2، العدد ف2"</div>
+            </div>
+            <div class="scenario-step">
+                <div class="step-num green">2</div>
+                <div>النظام ينشئ تعريف الجدول بنفس الأعمدة تلقائياً</div>
+            </div>
+            <div class="scenario-step">
+                <div class="step-num green">3</div>
+                <div>المساهم يشوف نفس شكل الجدول القديم لكن <strong>فاضي — يعبّئ بيانات السنة الجديدة</strong></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="scenario">
+        <div class="scenario-header">🟠 سيناريو 3: المساهم يحدد الأعمدة بنفسه</div>
+        <div class="scenario-body">
+            <p>المساهم يرفع ملف Excel:</p>
+            <div class="scenario-step">
+                <div class="step-num orange">1</div>
+                <div>يختار "رفع Excel" لبند 1.9</div>
+            </div>
+            <div class="scenario-step">
+                <div class="step-num orange">2</div>
+                <div>النظام يقرأ الأعمدة من السطر الأول من الـ Excel تلقائياً</div>
+            </div>
+            <div class="scenario-step">
+                <div class="step-num orange">3</div>
+                <div>يعرض الجدول للمراجعة → المساهم يؤكد</div>
+            </div>
+            <p><strong>هذي الطريقة الأكثر مرونة — المساهم يحدد كل شي.</strong></p>
+        </div>
+    </div>
+
+    <h3>مثال كامل: كيف يتحول الـ Excel إلى جدول في التقرير</h3>
+
+    <div class="flow rtl-flow">
+┌──────────────────┐    ┌──────────────────┐    ┌──────────────────┐
+│  المساهم يرفع    │    │  النظام يخزّن    │    │  عند التصدير     │
+│  ملف Excel:      │───→│  في Response:     │───→│  يبني HTML:      │
+│                  │    │                  │    │                  │
+│ | جنسية | ف1 |   │    │ headers: [...]   │    │ &lt;table&gt;          │
+│ | فلسطينية|330|  │    │ rows: [[...]]    │    │   &lt;thead&gt;...     │
+│ | سورية | 196|   │    │                  │    │   &lt;tbody&gt;...     │
+│ | عراقية | 171|  │    │                  │    │ &lt;/table&gt;         │
+│                  │    │                  │    │                  │
+└──────────────────┘    └──────────────────┘    └──────────────────┘
+    </div>
+
+    <div class="box box-blue">
+        <strong>النقطة المهمة:</strong>
+        الجدول لا يمر على الـ AI أبداً. البيانات تنتقل مباشرة من Response إلى HTML/PDF. هذا يضمن أن كل رقم دقيق 100%.
+    </div>
+</section>
+
+<!-- ==================== 7. CHARTS ==================== -->
+<section class="section" id="charts">
+    <div class="section-header">
+        <div class="section-num green">7</div>
+        <h2>الأشكال والرسومات البيانية</h2>
+    </div>
+
+    <p>الأشكال البيانية تُبنى بنفس طريقة الجداول — <strong>من البيانات مباشرة بدون AI</strong>.</p>
+
+    <h3 class="green">من يحدد نوع الشكل؟</h3>
+
+    <table class="green-table">
+        <thead>
+            <tr>
+                <th>المصدر</th>
+                <th>كيف يحدد</th>
+                <th>مثال</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>الـ Structure</td>
+                <td>يقول "هنا شكل بياني" ونوعه (pie/bar/line)</td>
+                <td>القطعة 2 = pie chart: نسبة الأردنيين لغير الأردنيين</td>
+            </tr>
+            <tr>
+                <td>تعريف الشكل</td>
+                <td>يحدد العنوان ومصدر البيانات</td>
+                <td>العنوان: "شكل (1-2)"، البيانات من: nationality_ratio</td>
+            </tr>
+            <tr>
+                <td>البيانات</td>
+                <td>تأتي من Response أو من جدول آخر</td>
+                <td>أردنيين: 87.6%، غير أردنيين: 12.4%</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3 class="green">مصادر بيانات الأشكال</h3>
+
+    <div class="compare">
+        <div class="compare-card good">
+            <h4>📊 مصدر 1: من بيانات Response مباشرة</h4>
+            <p>المساهم يدخل: أردنيين 87.6%، غير أردنيين 12.4%</p>
+            <p>→ النظام يبني Pie Chart</p>
+        </div>
+        <div class="compare-card good">
+            <h4>📊 مصدر 2: من جدول آخر في نفس البند</h4>
+            <p>جدول الكليات فيه 9 كليات وأعدادها</p>
+            <p>→ النظام يبني Pie Chart من بيانات الجدول</p>
+        </div>
+    </div>
+
+    <div class="code">
+<span class="comment">// تعريف الشكل في الـ Structure</span>
+{
+  <span class="string">"type"</span>: <span class="string">"chart"</span>,
+  <span class="string">"chart_type"</span>: <span class="string">"pie"</span>,
+  <span class="string">"title"</span>: <span class="string">"توزيع الطلبة حسب الكلية"</span>,
+  <span class="string">"data_source"</span>: <span class="string">"faculty_details"</span>,      <span class="comment">// من جدول الكليات</span>
+  <span class="string">"label_column"</span>: <span class="string">"الكلية"</span>,              <span class="comment">// عمود التسميات</span>
+  <span class="string">"value_column"</span>: <span class="string">"الفصل الأول"</span>,         <span class="comment">// عمود القيم</span>
+  <span class="string">"generated_by"</span>: <span class="string">"data"</span>
+}
+    </div>
+</section>
+
+<!-- ==================== 8. NUMBERING ==================== -->
+<section class="section" id="numbering">
+    <div class="section-header">
+        <div class="section-num orange">8</div>
+        <h2>الترقيم التلقائي عند التصدير</h2>
+    </div>
+
+    <p>مشكلة كبيرة: إذا المستخدم حذف جدول أو أضاف شكل — <strong>كل الأرقام لازم تتغير</strong>.</p>
+
+    <h3 class="orange">المشكلة</h3>
+    <div class="compare">
+        <div class="compare-card bad">
+            <h4>❌ ترقيم ثابت عند التوليد</h4>
+            <p>الـ AI يكتب: "كما في جدول <strong>(1-3)</strong>"</p>
+            <p>المستخدم يحذف جدول (1-2)</p>
+            <p>النتيجة: الإشارة تصير خاطئة! الجدول صار (1-2) لكن النص يقول (1-3)</p>
+        </div>
+        <div class="compare-card good">
+            <h4>✅ ترقيم تلقائي عند التصدير</h4>
+            <p>الـ AI يكتب: "كما في جدول <strong>{ref:t1}</strong>"</p>
+            <p>المستخدم يحذف أي جدول</p>
+            <p>النتيجة: عند التصدير، النظام يرقّم تلقائياً والإشارات تتحدث</p>
+        </div>
+    </div>
+
+    <h3 class="orange">الحل: نظام المراجع (References)</h3>
+
+    <p>داخلياً نستخدم <strong>IDs ثابتة</strong>. عند التصدير نحولها لأرقام.</p>
+
+    <div class="code">
+<span class="comment">// أثناء التوليد — الـ AI يستخدم IDs</span>
+<span class="string">"بلغ عدد الطلبة غير الأردنيين (840) طالباً كما هو مبيّن في {ref:t1} و{ref:c1}."</span>
+
+<span class="comment">// عند التصدير — النظام يستبدل الـ IDs بأرقام</span>
+<span class="highlight">خطوة 1:</span> يعدّ كل الجداول والأشكال بالترتيب
+  t1 → جدول (1-1)
+  c1 → شكل (1-1)
+  t2 → جدول (1-2)
+  c2 → شكل (1-2)
+
+<span class="highlight">خطوة 2:</span> يستبدل في النص
+  {ref:t1} → "جدول (1-1)"
+  {ref:c1} → "شكل (1-1)"
+
+<span class="highlight">النتيجة:</span>
+<span class="string">"بلغ عدد الطلبة غير الأردنيين (840) طالباً كما هو مبيّن في جدول (1-1) وشكل (1-1)."</span>
+    </div>
+
+    <h3 class="orange">سيناريو: المستخدم يحذف جدول</h3>
+
+    <div class="scenario">
+        <div class="scenario-header">✏️ المستخدم يحذف جدول الجنسيات من بند 1.9</div>
+        <div class="scenario-body">
+            <div class="scenario-step">
+                <div class="step-num">1</div>
+                <div>
+                    <strong>قبل الحذف:</strong><br>
+                    شكل (1-1) → جدول (1-1): جنسيات → جدول (1-2): كليات → جدول (1-3): تخصصات
+                </div>
+            </div>
+            <div class="scenario-step">
+                <div class="step-num orange">2</div>
+                <div>
+                    <strong>المستخدم يحذف جدول الجنسيات</strong>
+                </div>
+            </div>
+            <div class="scenario-step">
+                <div class="step-num green">3</div>
+                <div>
+                    <strong>بعد الحذف (تلقائي):</strong><br>
+                    شكل (1-1) → جدول (1-1): كليات → جدول (1-2): تخصصات<br>
+                    <em>كل الأرقام تتحدث تلقائياً + الإشارات في النصوص تتحدث</em>
+                </div>
+            </div>
+            <div class="scenario-step">
+                <div class="step-num">4</div>
+                <div>
+                    <strong>النص اللي كان يشير للجدول المحذوف:</strong><br>
+                    النظام يعلّم المستخدم: "⚠️ هذه الفقرة كانت تشير لجدول محذوف — هل تريد إعادة توليدها؟"
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ==================== 9. INTEGRATION ==================== -->
+<section class="section" id="integration">
+    <div class="section-header">
+        <div class="section-num purple">9</div>
+        <h2>التكاملية بين القطع</h2>
+    </div>
+
+    <p>كل فقرة لازم تعرف <strong>ما قبلها وما بعدها</strong> عشان تشير للجداول والأشكال بشكل طبيعي.</p>
+
+    <h3 class="purple">كيف يُبنى prompt كل فقرة</h3>
+
+    <div class="flow rtl-flow">
+┌──────────────────────────────────────────────────┐
+│                 prompt الفقرة                     │
+│                                                  │
+│  ┌─────────────────────────────────────────────┐ │
+│  │ 1. هوية الفقرة                              │ │
+│  │    "أنت تكتب الجزء 4 من بند 1.9"           │ │
+│  └─────────────────────────────────────────────┘ │
+│  ┌─────────────────────────────────────────────┐ │
+│  │ 2. ما قبلك (ملخص مختصر)                    │ │
+│  │    "قبلك: جدول الجنسيات (33 جنسية)"        │ │
+│  └─────────────────────────────────────────────┘ │
+│  ┌─────────────────────────────────────────────┐ │
+│  │ 3. ما بعدك (عناوين فقط)                    │ │
+│  │    "بعدك: شكل (أعداد الطلبة)، جدول (كليات)"│ │
+│  └─────────────────────────────────────────────┘ │
+│  ┌─────────────────────────────────────────────┐ │
+│  │ 4. البيانات المطلوبة                        │ │
+│  │    "إجمالي: 6921 ف1، 6794 ف2، 3565 صيفي"   │ │
+│  └─────────────────────────────────────────────┘ │
+│  ┌─────────────────────────────────────────────┐ │
+│  │ 5. التعليمات                                │ │
+│  │    "أشر لـ {ref:c2} و{ref:t2}"             │ │
+│  │    "استخدم أسلوب رسمي مؤسسي"               │ │
+│  └─────────────────────────────────────────────┘ │
+│                                                  │
+└──────────────────────────────────────────────────┘
+    </div>
+
+    <h3 class="purple">مثال عملي: 3 فقرات و2 جدول — كيف تترابط</h3>
+
+    <table class="purple-table">
+        <thead>
+            <tr>
+                <th>القطعة</th>
+                <th>النوع</th>
+                <th>المحتوى</th>
+                <th>يشير لـ</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>1</td>
+                <td><span class="badge badge-ai">فقرة</span></td>
+                <td>"بلغ عدد الطلبة غير الأردنيين (840)... كما في {ref:t1} و{ref:c1}"</td>
+                <td>→ t1, c1</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td><span class="badge badge-data">شكل</span></td>
+                <td>[c1] Pie Chart: 87.6% أردنيين، 12.4% غير أردنيين</td>
+                <td>—</td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td><span class="badge badge-data">جدول</span></td>
+                <td>[t1] 33 جنسية × 3 أعمدة</td>
+                <td>—</td>
+            </tr>
+            <tr>
+                <td>4</td>
+                <td><span class="badge badge-ai">فقرة</span></td>
+                <td>"وتوزع الطلبة على (9) كليات... كما يبيّن {ref:t2} و{ref:c2}"</td>
+                <td>→ t2, c2</td>
+            </tr>
+            <tr>
+                <td>5</td>
+                <td><span class="badge badge-data">جدول</span></td>
+                <td>[t2] 9 كليات × 7 أعمدة</td>
+                <td>—</td>
+            </tr>
+            <tr>
+                <td>6</td>
+                <td><span class="badge badge-data">شكل</span></td>
+                <td>[c2] Pie Chart: توزيع حسب الكلية</td>
+                <td>—</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="box box-purple">
+        <strong>النتيجة:</strong>
+        كل فقرة تشير بشكل طبيعي للجداول والأشكال حولها — تماماً مثل التقرير الأصلي.
+        والترقيم الفعلي (1-1, 1-2...) يُحسب تلقائياً عند التصدير.
+    </div>
+</section>
+
+<!-- ==================== 10. FULL SCENARIO ==================== -->
+<section class="section" id="full-scenario">
+    <div class="section-header">
+        <div class="section-num red">10</div>
+        <h2>سيناريو كامل من البداية للنهاية</h2>
+    </div>
+
+    <p>خلينا نمشي سيناريو حقيقي كامل — <strong>جامعة البترا تولّد تقريرها السنوي 2024/2025</strong>.</p>
+
+    <!-- Phase 1 -->
+    <h3>المرحلة 1: الإعداد (مرة واحدة)</h3>
+
+    <div class="scenario">
+        <div class="scenario-header">📋 إعداد المشروع</div>
+        <div class="scenario-body">
+            <div class="scenario-step">
+                <div class="step-num">1</div>
+                <div>
+                    <strong>مسؤول الجودة ينشئ مشروع جديد:</strong><br>
+                    الاسم: "التقرير السنوي 2024/2025"<br>
+                    القالب: "تقرير سنوي — جامعة"
+                </div>
+            </div>
+            <div class="scenario-step">
+                <div class="step-num">2</div>
+                <div>
+                    <strong>يرفع التقرير السابق (2023/2024):</strong><br>
+                    الملف: Word، 200+ صفحة<br>
+                    النظام يحلله بالخلفية (5-10 دقائق)
+                </div>
+            </div>
+            <div class="scenario-step">
+                <div class="step-num">3</div>
+                <div>
+                    <strong>النظام يستخرج تلقائياً:</strong><br>
+                    ✅ Structure كل بند (ترتيب الفقرات والجداول والأشكال)<br>
+                    ✅ تعريف كل جدول (الأعمدة والعناوين)<br>
+                    ✅ أسلوب الكتابة (رسمي، صيغة الغائب، أرقام بين أقواس)<br>
+                    ✅ أسماء الجداول والأشكال
+                </div>
+            </div>
+            <div class="scenario-step">
+                <div class="step-num">4</div>
+                <div>
+                    <strong>مسؤول الجودة يراجع:</strong><br>
+                    يشوف structure كل بند ← يعدّل إذا بده ← يعتمد
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Phase 2 -->
+    <h3>المرحلة 2: جمع البيانات (كل سنة)</h3>
+
+    <div class="scenario">
+        <div class="scenario-header">📊 المساهمون يدخلون بياناتهم</div>
+        <div class="scenario-body">
+            <div class="scenario-step">
+                <div class="step-num green">1</div>
+                <div>
+                    <strong>مسؤول الجودة يسند البنود للمساهمين:</strong><br>
+                    بند 1.9 → مسؤول القبول والتسجيل<br>
+                    بند 1.1 → مسؤول الاعتماد<br>
+                    ...
+                </div>
+            </div>
+            <div class="scenario-step">
+                <div class="step-num green">2</div>
+                <div>
+                    <strong>مسؤول القبول يفتح بند 1.9:</strong><br>
+                    يرى النموذج المناسب حسب structure البند:<br>
+                    - حقل: العدد الإجمالي للطلبة غير الأردنيين → يكتب: <strong>890</strong><br>
+                    - جدول: الجنسيات → يرفع Excel (35 جنسية هذه السنة)<br>
+                    - جدول: الكليات → يعبئ جدول تفاعلي (9 كليات)<br>
+                    - جدول: التخصصات → يرفع Excel (62 تخصص)
+                </div>
+            </div>
+            <div class="scenario-step">
+                <div class="step-num green">3</div>
+                <div>
+                    <strong>النظام يتحقق من البيانات:</strong><br>
+                    ✅ مجموع الجنسيات = العدد الإجمالي؟<br>
+                    ✅ كل الأعمدة المطلوبة موجودة؟<br>
+                    ✅ الأرقام منطقية (ما في أرقام سالبة)؟<br>
+                    ⚠️ إذا في مشكلة → يُنبّه المساهم
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Phase 3 -->
+    <h3>المرحلة 3: التوليد</h3>
+
+    <div class="scenario">
+        <div class="scenario-header">🤖 مسؤول الجودة يضغط "ولّد التقرير"</div>
+        <div class="scenario-body">
+            <div class="scenario-step">
+                <div class="step-num purple">1</div>
+                <div>
+                    <strong>النظام يبدأ ببند 1.1:</strong><br>
+                    يقرأ الـ structure → يمشي قطعة قطعة:<br>
+                    - القطعة 1 (فقرة) → يرسل prompt للـ AI → يحصل على نص<br>
+                    - القطعة 2 (جدول) → يبنيه من البيانات مباشرة<br>
+                    - القطعة 3 (فقرة) → يرسل prompt للـ AI مع سياق<br>
+                    - ...
+                </div>
+            </div>
+            <div class="scenario-step">
+                <div class="step-num purple">2</div>
+                <div>
+                    <strong>ينتقل لبند 1.2، 1.3... حتى ينتهي المحور الأول</strong><br>
+                    ثم المحور الثاني، الثالث... حتى ينتهي التقرير كاملاً
+                </div>
+            </div>
+            <div class="scenario-step">
+                <div class="step-num purple">3</div>
+                <div>
+                    <strong>شريط تقدم يوضح:</strong><br>
+                    "جاري توليد: المحور 1 — بند 1.9 — القطعة 4/8"<br>
+                    الوقت المتوقع: ~15-20 دقيقة للتقرير الكامل
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Phase 4 -->
+    <h3>المرحلة 4: المراجعة والتعديل</h3>
+
+    <div class="scenario">
+        <div class="scenario-header">👀 مسؤول الجودة يراجع التقرير المولّد</div>
+        <div class="scenario-body">
+            <div class="scenario-step">
+                <div class="step-num">1</div>
+                <div>
+                    <strong>يشوف التقرير كامل في المتصفح</strong><br>
+                    كل قطعة محددة بإطار خفيف ← يقدر يضغط عليها
+                </div>
+            </div>
+            <div class="scenario-step">
+                <div class="step-num">2</div>
+                <div>
+                    <strong>يعجبه بند 1.1 ← يعتمده ✅</strong>
+                </div>
+            </div>
+            <div class="scenario-step">
+                <div class="step-num orange">3</div>
+                <div>
+                    <strong>الفقرة الأولى من بند 1.9 طويلة ← يضغط "أعد التوليد"</strong><br>
+                    النظام يعيد توليد هذه الفقرة فقط — باقي القطع ما تتأثر
+                </div>
+            </div>
+            <div class="scenario-step">
+                <div class="step-num orange">4</div>
+                <div>
+                    <strong>جدول التخصصات فيه خطأ في رقم ← يعدّل الرقم يدوياً</strong><br>
+                    التعديل يُحفظ ولا يتأثر بإعادة التوليد
+                </div>
+            </div>
+            <div class="scenario-step">
+                <div class="step-num">5</div>
+                <div>
+                    <strong>يعتمد كل البنود ← يضغط "تصدير"</strong>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Phase 5 -->
+    <h3>المرحلة 5: التصدير النهائي</h3>
+
+    <div class="scenario">
+        <div class="scenario-header">📄 التصدير إلى Word/PDF</div>
+        <div class="scenario-body">
+            <div class="scenario-step">
+                <div class="step-num">1</div>
+                <div>
+                    <strong>النظام يجمع كل القطع بالترتيب</strong>
+                </div>
+            </div>
+            <div class="scenario-step">
+                <div class="step-num">2</div>
+                <div>
+                    <strong>يرقّم تلقائياً:</strong><br>
+                    كل جدول: جدول (رقم المحور - تسلسلي)<br>
+                    كل شكل: شكل (رقم المحور - تسلسلي)<br>
+                    يستبدل {ref:t1} → "جدول (1-3)" في كل النصوص
+                </div>
+            </div>
+            <div class="scenario-step">
+                <div class="step-num">3</div>
+                <div>
+                    <strong>يولّد فهرس الجداول وفهرس الأشكال تلقائياً</strong>
+                </div>
+            </div>
+            <div class="scenario-step">
+                <div class="step-num">4</div>
+                <div>
+                    <strong>يصدّر: Word / PDF / HTML</strong><br>
+                    التقرير جاهز للطباعة!
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ==================== 11. CRITIQUE ==================== -->
+<section class="section" id="critique">
+    <div class="section-header">
+        <div class="section-num red">11</div>
+        <h2>النقد الذاتي — مشاكل محتملة وحلولها</h2>
+    </div>
+
+    <p>ما أقدر أقدم لك خطة بدون ما أنتقدها. هذي المشاكل اللي ممكن تواجهنا وحلولها:</p>
+
+    <!-- Critique 1 -->
+    <div class="critique">
+        <h4>⚠️ مشكلة 1: تحليل التقرير السابق قد يكون غير دقيق</h4>
+        <p>ملفات Word ممكن تكون بتنسيقات مختلفة. الجداول ممكن تكون صور وليست جداول حقيقية. بعض الملفات ممكن تكون PDF ممسوح (scanned).</p>
+        <div class="fix">
+            <strong>✅ الحل:</strong>
+            مرحلة المراجعة اليدوية إلزامية. النظام يحلل ويقترح، والمستخدم يراجع ويعتمد. إذا التحليل فشل لبند معين — المستخدم يعدّل يدوياً أو يستخدم القالب الافتراضي.
+        </div>
+    </div>
+
+    <!-- Critique 2 -->
+    <div class="critique">
+        <h4>⚠️ مشكلة 2: تكلفة الـ AI تزيد مع التوليد قطعة قطعة</h4>
+        <p>بدل prompt واحد لكل بند، صار عندنا 3-5 prompts. التقرير الكامل قد يكلف 300+ طلب AI.</p>
+        <div class="fix">
+            <strong>✅ الحل:</strong>
+            أولاً: الفقرات فقط تمر على الـ AI (الجداول والأشكال لا). يعني 300 تنزل لـ ~100 طلب AI.<br>
+            ثانياً: الفقرات قصيرة = tokens قليلة = تكلفة منخفضة لكل طلب.<br>
+            ثالثاً: نستخدم نماذج أرخص (مثل Claude Haiku) للفقرات البسيطة ونماذج أقوى للتحليلية.
+        </div>
+    </div>
+
+    <!-- Critique 3 -->
+    <div class="critique">
+        <h4>⚠️ مشكلة 3: المساهم قد يرفض إدخال بيانات تفصيلية</h4>
+        <p>"أنا ما عندي وقت أعبّئ 33 جنسية! أعطيني الرقم الإجمالي وخلص."</p>
+        <div class="fix">
+            <strong>✅ الحل:</strong>
+            البيانات التفصيلية اختيارية. إذا المساهم أدخل رقم فقط:<br>
+            - النظام يولّد فقرة نصية فقط (بدون جدول)<br>
+            - أو يولّد جدول مبسّط (رقم واحد: الحالي والسابق)<br>
+            كل ما أدخل بيانات أكثر — التقرير يطلع أغنى. لكن ما نجبره.
+        </div>
+    </div>
+
+    <!-- Critique 4 -->
+    <div class="critique">
+        <h4>⚠️ مشكلة 4: الاتساق بين الفقرات المولّدة</h4>
+        <p>كل فقرة تُولّد بطلب منفصل. ممكن الأسلوب يختلف بين فقرة وأخرى.</p>
+        <div class="fix">
+            <strong>✅ الحل:</strong>
+            كل prompt يحتوي على نفس تعليمات الأسلوب (system prompt موحد).<br>
+            كذلك: إذا المستخدم رفع تقرير سابق — نستخرج عينة من أسلوب الكتابة ونرسلها مع كل prompt.<br>
+            مثال: "اكتب بنفس أسلوب هذه العينة: بلغ عدد... وقد حققت الجامعة... وتسعى..."
+        </div>
+    </div>
+
+    <!-- Critique 5 -->
+    <div class="critique">
+        <h4>⚠️ مشكلة 5: وقت التوليد طويل</h4>
+        <p>300 طلب AI × 3 ثوان = 15 دقيقة. المستخدم قد ينتظر كثير.</p>
+        <div class="fix">
+            <strong>✅ الحل:</strong>
+            1. التوليد بالخلفية — المستخدم يرجع يشوف النتيجة لاحقاً<br>
+            2. توليد متوازي — بنود مختلفة تُولّد بنفس الوقت (5-10 بنود معاً)<br>
+            3. التوليد التدريجي — البنود الجاهزة تظهر فوراً بينما الباقي يُولّد<br>
+            4. Cache — إذا البيانات ما تغيرت، ما نعيد التوليد
+        </div>
+    </div>
+
+    <!-- Critique 6 -->
+    <div class="critique">
+        <h4>⚠️ مشكلة 6: ماذا لو بيانات Response لا تتطابق مع structure الجدول؟</h4>
+        <p>الـ structure يقول "جدول فيه 3 أعمدة" لكن المساهم رفع Excel فيه 5 أعمدة.</p>
+        <div class="fix">
+            <strong>✅ الحل:</strong>
+            1. عند الرفع — النظام يتحقق: هل الأعمدة متوافقة؟<br>
+            2. إذا في أعمدة إضافية — يسأل: "هل تريد إضافة هذه الأعمدة للجدول؟"<br>
+            3. إذا في أعمدة ناقصة — يسأل: "هذه الأعمدة مطلوبة ولم تُرفع. هل تريد إضافتها؟"<br>
+            4. المرونة: المساهم يقدر يغيّر تعريف الجدول من خلال البيانات المرفوعة.
+        </div>
+    </div>
+
+    <!-- Critique 7 -->
+    <div class="critique">
+        <h4>⚠️ مشكلة 7: بناء القوالب الجاهزة يحتاج وقت</h4>
+        <p>لازم تبني قالب لكل نوع مؤسسة: جامعة، مستشفى، شركة... هذا شغل كثير.</p>
+        <div class="fix">
+            <strong>✅ الحل:</strong>
+            ابدأ بقالب واحد فقط: "تقرير سنوي — جامعة" (لأن هذا السوق الأول).<br>
+            القوالب الأخرى تُبنى لاحقاً حسب الطلب.<br>
+            كذلك: أي عميل يرفع تقرير سابق = النظام يتعلم = ممكن نبني منه قالب لعملاء آخرين بنفس القطاع (بإذن العميل).
+        </div>
+    </div>
+
+    <!-- Final summary -->
+    <div class="box box-green" style="margin-top: 30px;">
+        <strong>الخلاصة النهائية:</strong>
+        <p>التصميم سليم واستراتيجي. المشاكل المذكورة أعلاه كلها لها حلول عملية. الأهم: نبدأ بالحد الأدنى (MVP) ونتوسع تدريجياً.</p>
+        <ul>
+            <li><strong>المرحلة 1 (الآن):</strong> Structure بالداتابيز + توليد حبة حبة + بيانات Response محسّنة</li>
+            <li><strong>المرحلة 2:</strong> رفع تقرير سابق + استخراج تلقائي</li>
+            <li><strong>المرحلة 3:</strong> قوالب جاهزة + واجهة تعديل structure مرئية</li>
+            <li><strong>المرحلة 4:</strong> توليد متوازي + cache + تحسين الأداء</li>
+        </ul>
+    </div>
+</section>
+
+</div>
+
+<!-- ==================== FOOTER ==================== -->
+<footer style="background: var(--gray-900); color: white; text-align: center; padding: 30px;">
+    <p style="color: white; font-size: 1.2em; font-weight: 700;">تقرير.ai — المستند الاستراتيجي v1.0</p>
+    <p style="color: var(--gray-300); margin-top: 5px;">تم إعداده كمرجع لتصميم وبناء النظام</p>
+</footer>
+
+</body>
+</html>

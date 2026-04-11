@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { api } from '@/lib/api';
+import { PageTransition, FadeIn } from '@/components/ui/motion';
 
 interface Template {
   id: number;
@@ -110,30 +111,35 @@ export default function TemplateStructurePage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-64">
-        <div className="animate-spin h-12 w-12 border-4 border-blue-600 border-t-transparent rounded-full"></div>
+      <div className="space-y-6 animate-pulse">
+        <div>
+          <div className="h-7 bg-gray-200 dark:bg-gray-700 rounded w-40 mb-2" />
+          <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-72" />
+        </div>
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <div key={i} className="card h-64 bg-gray-100 dark:bg-gray-800" />
+          ))}
+        </div>
       </div>
     );
   }
 
   return (
+    <PageTransition>
     <div className="space-y-6">
       {/* Header */}
+      <FadeIn>
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
-            <span>🏗️</span>
-            <span>المحاور والبنود</span>
-          </h1>
-          <p className="text-gray-500 mt-1">
-            إدارة هيكل القالب (المحاور وبنود البيانات)
-          </p>
+          <h1 className="text-2xl font-bold text-gray-900">المحاور والبنود</h1>
+          <p className="text-gray-500 mt-1">إدارة هيكل القالب (المحاور وبنود البيانات)</p>
         </div>
       </div>
+      </FadeIn>
 
       {templates.length === 0 ? (
         <div className="card text-center py-12">
-          <div className="text-6xl mb-4">📋</div>
           <h3 className="text-xl font-bold text-gray-900 mb-2">لا توجد قوالب</h3>
           <p className="text-gray-500 mb-4">أنشئ قالباً أولاً لإضافة المحاور والبنود</p>
           <Link href="/dashboard/templates" className="btn btn-primary">
@@ -144,10 +150,7 @@ export default function TemplateStructurePage() {
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
           {/* Templates List */}
           <div className="card">
-            <h2 className="font-bold text-gray-900 mb-4 flex items-center gap-2">
-              <span>📋</span>
-              <span>القوالب</span>
-            </h2>
+            <h2 className="font-bold text-gray-900 mb-4">القوالب</h2>
             <div className="space-y-2">
               {templates.map((template) => (
                 <button
@@ -168,17 +171,13 @@ export default function TemplateStructurePage() {
           {/* Axes List */}
           <div className="card">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="font-bold text-gray-900 flex items-center gap-2">
-                <span>📊</span>
-                <span>المحاور</span>
-              </h2>
+              <h2 className="font-bold text-gray-900">المحاور</h2>
               <button className="text-blue-600 hover:text-blue-700 text-sm">
                 + إضافة
               </button>
             </div>
             {axes.length === 0 ? (
               <div className="text-center py-8 text-gray-500">
-                <div className="text-3xl mb-2">📊</div>
                 <p>لا توجد محاور</p>
               </div>
             ) : (
@@ -189,7 +188,7 @@ export default function TemplateStructurePage() {
                     onClick={() => setSelectedAxis(axis.id)}
                     className={`w-full text-right px-4 py-3 rounded-xl transition-all ${
                       selectedAxis === axis.id
-                        ? 'bg-green-50 text-green-700 font-medium border-2 border-green-500'
+                        ? 'bg-emerald-50 text-emerald-700 font-medium border-2 border-emerald-500'
                         : 'bg-gray-50 hover:bg-gray-100 text-gray-700 border-2 border-transparent'
                     }`}
                   >
@@ -206,10 +205,7 @@ export default function TemplateStructurePage() {
           {/* Items List */}
           <div className="lg:col-span-2 card">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="font-bold text-gray-900 flex items-center gap-2">
-                <span>📋</span>
-                <span>البنود</span>
-              </h2>
+              <h2 className="font-bold text-gray-900">البنود</h2>
               {selectedAxis && (
                 <button className="text-blue-600 hover:text-blue-700 text-sm">
                   + إضافة بند
@@ -218,12 +214,10 @@ export default function TemplateStructurePage() {
             </div>
             {!selectedAxis ? (
               <div className="text-center py-8 text-gray-500">
-                <div className="text-3xl mb-2">👈</div>
                 <p>اختر محوراً لعرض البنود</p>
               </div>
             ) : items.length === 0 ? (
               <div className="text-center py-8 text-gray-500">
-                <div className="text-3xl mb-2">📋</div>
                 <p>لا توجد بنود في هذا المحور</p>
               </div>
             ) : (
@@ -253,14 +247,12 @@ export default function TemplateStructurePage() {
                         <div className="flex items-center gap-2">
                           <Link
                             href={`/dashboard/templates/items/${item.id}/components`}
-                            className="px-3 py-1 rounded-full text-sm bg-purple-50 text-purple-700 hover:bg-purple-100 flex items-center gap-1"
+                            className="px-3 py-1 rounded-full text-sm bg-blue-50 text-blue-700 hover:bg-blue-100"
                           >
-                            <span>🧩</span>
-                            <span>المكونات</span>
+                            المكونات
                           </Link>
-                          <span className={`px-3 py-1 rounded-full text-sm bg-blue-50 text-blue-700 flex items-center gap-1`}>
-                            <span>{fieldType.icon}</span>
-                            <span>{fieldType.label}</span>
+                          <span className="px-3 py-1 rounded-full text-sm bg-gray-100 text-gray-600">
+                            {fieldType.label}
                           </span>
                         </div>
                       </div>
@@ -273,5 +265,6 @@ export default function TemplateStructurePage() {
         </div>
       )}
     </div>
+    </PageTransition>
   );
 }
