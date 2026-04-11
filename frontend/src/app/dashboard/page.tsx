@@ -27,7 +27,7 @@ function FirstTimeBanner({ onDismiss }: { onDismiss: () => void }) {
       <p className="text-sm font-medium flex-1">
         مرحباً! ابدأ بـ:{' '}
         <Link href="/dashboard/projects/new" className="underline underline-offset-2 hover:text-blue-100">إنشاء مشروع</Link>
-        {' '}← دعوة المساهمين ← مراجعة البيانات ← توليد التقرير ← تصديره
+        {' '} &larr; دعوة المساهمين &larr; مراجعة البيانات &larr; توليد التقرير &larr; تصديره
       </p>
       <button onClick={onDismiss} className="text-blue-200 hover:text-white p-1 rounded-lg hover:bg-white/10">
         <X className="w-4 h-4" />

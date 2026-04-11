@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { api } from '@/lib/api';
 import { PageTransition, FadeIn } from '@/components/ui/motion';
+import { FileText, Paperclip } from 'lucide-react';
 
 interface Template {
   id: number;
@@ -178,7 +179,7 @@ export default function NewProjectPage() {
 
             {templates.length === 0 ? (
               <div className="text-center py-8">
-                <div className="text-4xl mb-2">📋</div>
+                <div className="mb-2"><FileText className="w-10 h-10 text-gray-400 mx-auto" /></div>
                 <p className="text-gray-500">لا توجد قوالب متاحة</p>
               </div>
             ) : (
@@ -367,13 +368,13 @@ export default function NewProjectPage() {
                   </div>
                 ) : previousReport ? (
                   <div className="flex flex-col items-center gap-2">
-                    <span className="text-3xl">📄</span>
+                    <FileText className="w-8 h-8 text-green-600" />
                     <span className="text-green-600 font-medium">{previousReport.name}</span>
                     <span className="text-sm text-gray-500">اضغط لتغيير الملف</span>
                   </div>
                 ) : (
                   <div className="flex flex-col items-center gap-2">
-                    <span className="text-4xl text-gray-300">📎</span>
+                    <Paperclip className="w-10 h-10 text-gray-300" />
                     <span className="text-blue-600 font-medium">اضغط لرفع ملف Word (.docx)</span>
                     <span className="text-sm text-gray-500">أو تخطَّ هذه الخطوة</span>
                   </div>

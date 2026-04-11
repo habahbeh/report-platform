@@ -13,7 +13,7 @@ import { ContributorsTab } from './components/ContributorsTab';
 import { SkeletonTab } from './components/SkeletonTab';
 import { GenerateTab } from './components/GenerateTab';
 import { ExportTab } from './components/ExportTab';
-import { RefreshCw } from 'lucide-react';
+import { RefreshCw, ChevronRight } from 'lucide-react';
 
 type TabKey = 'overview' | 'contributors' | 'skeleton' | 'generate' | 'export';
 
@@ -199,7 +199,7 @@ export default function ProjectDetailPage() {
             <Link href="/dashboard/projects" className="hover:text-gray-700 dark:hover:text-gray-300 shrink-0">
               المشاريع
             </Link>
-            <span className="shrink-0">←</span>
+            <ChevronRight className="w-4 h-4 shrink-0 text-gray-400" />
             <span className="text-gray-900 dark:text-white truncate">{project.name}</span>
           </div>
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white truncate">{project.name}</h1>

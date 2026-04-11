@@ -141,7 +141,7 @@ export default function EntitiesPage() {
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="🔍 بحث عن جهة..."
+              placeholder="بحث عن جهة..."
               className="input w-full md:w-96"
             />
           </div>

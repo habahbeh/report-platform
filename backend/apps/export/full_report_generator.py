@@ -62,7 +62,7 @@ class FullReportGenerator:
             self.stats['axes'] += 1
             axis_content = {'type': 'axis', 'data': axis, 'items': []}
             
-            items = Item.objects.filter(axis=axis).order_by('code')
+            items = sorted(Item.objects.filter(axis=axis), key=lambda i: [int(x) for x in i.code.split('.') if x.isdigit()])
             for item in items:
                 self.stats['items'] += 1
                 components = ItemComponent.objects.filter(item=item).order_by('order')
@@ -115,58 +115,105 @@ class FullReportGenerator:
     
     def _generate_html(self, output_path: Path):
         """Generate full report as HTML."""
-        html = '''<!DOCTYPE html>
+        project_name = self.project.name if self.project else 'التقرير السنوي'
+        org_name = self.project.organization.name if self.project and self.project.organization else 'جامعة البترا'
+        period = self.project.period if self.project else '2023-2024'
+
+        html = f'''<!DOCTYPE html>
 <html dir="rtl" lang="ar">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>التقرير السنوي - جامعة البترا 2023-2024</title>
+    <title>{project_name}</title>
     <style>
-        * { box-sizing: border-box; }
-        body { 
+        * {{ box-sizing: border-box; margin: 0; padding: 0; }}
+        body {{
             font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
             direction: rtl;
-            padding: 40px;
-            max-width: 1000px;
-            margin: 0 auto;
-            line-height: 1.8;
-            color: #333;
-            background: #f9f9f9;
-        }
-        .report { background: white; padding: 40px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        .title-page { text-align: center; padding: 100px 0; border-bottom: 3px solid #1a5f7a; margin-bottom: 40px; }
-        .title-page h1 { color: #1a5f7a; font-size: 2.5em; margin: 20px 0; }
-        .title-page h2 { color: #333; font-size: 2em; }
-        .axis { margin: 40px 0; padding-top: 30px; border-top: 2px solid #1a5f7a; }
-        .axis-title { color: #1a5f7a; font-size: 1.5em; margin-bottom: 20px; }
-        .item { margin: 30px 0; padding: 20px; background: #fafafa; border-radius: 8px; }
-        .item-title { color: #2c3e50; font-size: 1.2em; margin-bottom: 15px; border-bottom: 1px solid #ddd; padding-bottom: 10px; }
-        .text { margin: 15px 0; text-align: justify; }
-        .table-container { margin: 20px 0; overflow-x: auto; }
-        .table-title { font-weight: bold; text-align: center; margin-bottom: 10px; color: #1a5f7a; }
-        table { width: 100%; border-collapse: collapse; font-size: 13px; }
-        th, td { border: 1px solid #ddd; padding: 10px; text-align: center; }
-        th { background: #1a5f7a; color: white; }
-        tr:nth-child(even) { background: #f5f5f5; }
-        .figure { text-align: center; margin: 20px 0; }
-        .figure img { max-width: 100%; border-radius: 8px; }
-        .figure-title { font-style: italic; color: #666; margin-top: 10px; }
-        .toc { margin: 30px 0; padding: 20px; background: #f0f7fa; border-radius: 8px; }
-        .toc h3 { color: #1a5f7a; }
-        .toc ul { list-style: none; padding: 0; }
-        .toc li { padding: 5px 0; }
-        .toc a { color: #333; text-decoration: none; }
-        .toc a:hover { color: #1a5f7a; }
-        .footer { text-align: center; margin-top: 50px; padding: 20px; color: #666; font-size: 12px; border-top: 1px solid #ddd; }
-        @media print { body { background: white; } .report { box-shadow: none; } }
+            padding: 0;
+            margin: 0;
+            line-height: 1.9;
+            color: #2d2d2d;
+            background: #f4f4f4;
+        }}
+        .report {{ background: white; max-width: 1000px; margin: 0 auto; padding: 0; box-shadow: 0 2px 20px rgba(0,0,0,0.08); }}
+
+        /* Title Page */
+        .title-page {{
+            text-align: center;
+            padding: 80px 40px;
+            background: linear-gradient(135deg, #f8f4f0 0%, #fff 50%, #f8f4f0 100%);
+            border-bottom: 4px solid #8B1A1A;
+            position: relative;
+        }}
+        .title-page::before {{
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 6px;
+            background: linear-gradient(to right, #8B1A1A, #C4A35A, #8B1A1A);
+        }}
+        .title-page .org-name {{ color: #8B1A1A; font-size: 1.8em; font-weight: 700; margin-bottom: 10px; }}
+        .title-page h1 {{ color: #2d2d2d; font-size: 2.2em; margin: 20px 0; font-weight: 700; }}
+        .title-page .period {{ color: #8B1A1A; font-size: 1.5em; font-weight: 600; }}
+        .title-page .subtitle {{ color: #666; font-size: 0.95em; margin-top: 20px; line-height: 1.6; }}
+
+        /* Content area */
+        .content {{ padding: 40px; }}
+
+        /* Axis (Section) */
+        .axis {{ margin: 50px 0 30px; padding-top: 30px; border-top: 3px solid #8B1A1A; }}
+        .axis-title {{ color: #8B1A1A; font-size: 1.4em; font-weight: 700; margin-bottom: 5px; }}
+        .axis-subtitle {{ color: #C4A35A; font-size: 0.85em; font-weight: 600; margin-bottom: 20px; }}
+
+        /* Item (Sub-section) */
+        .item {{ margin: 25px 0; padding: 20px 25px; background: #fefefe; border-right: 4px solid #C4A35A; border-radius: 0 8px 8px 0; }}
+        .item-title {{ color: #8B1A1A; font-size: 1.1em; font-weight: 700; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid #eee; }}
+
+        /* Text */
+        .text {{ margin: 12px 0; text-align: justify; font-size: 0.95em; }}
+
+        /* Tables */
+        .table-container {{ margin: 20px 0; overflow-x: auto; }}
+        .table-title {{ font-weight: 700; text-align: center; margin-bottom: 8px; color: #8B1A1A; font-size: 0.95em; }}
+        table {{ width: 100%; border-collapse: collapse; font-size: 12.5px; }}
+        th, td {{ border: 1px solid #d4d4d4; padding: 8px 10px; text-align: center; }}
+        th {{ background: #8B1A1A; color: white; font-weight: 600; font-size: 12px; }}
+        tr:nth-child(even) {{ background: #faf8f5; }}
+        tr:hover {{ background: #f0ebe3; }}
+
+        /* Figures */
+        .figure {{ text-align: center; margin: 25px 0; }}
+        .figure img {{ max-width: 100%; border-radius: 4px; border: 1px solid #eee; }}
+        .figure-title {{ font-weight: 600; color: #8B1A1A; margin-top: 8px; font-size: 0.9em; }}
+
+        /* TOC */
+        .toc {{ margin: 0; padding: 30px 40px; background: #faf8f5; border-bottom: 2px solid #e8e0d4; }}
+        .toc h3 {{ color: #8B1A1A; font-size: 1.2em; margin-bottom: 15px; }}
+        .toc ul {{ list-style: none; padding: 0; }}
+        .toc li {{ padding: 4px 0; font-size: 0.9em; }}
+        .toc li a {{ color: #444; text-decoration: none; }}
+        .toc li a:hover {{ color: #8B1A1A; }}
+        .toc li strong {{ color: #8B1A1A; }}
+
+        /* Footer */
+        .footer {{ text-align: center; margin-top: 50px; padding: 25px 40px; color: #999; font-size: 11px; border-top: 2px solid #e8e0d4; background: #faf8f5; }}
+
+        @media print {{
+            body {{ background: white; padding: 0; }}
+            .report {{ box-shadow: none; }}
+            .title-page {{ page-break-after: always; }}
+            .axis {{ page-break-before: always; }}
+        }}
     </style>
 </head>
 <body>
     <div class="report">
         <div class="title-page">
-            <h2>جامعة البترا</h2>
-            <h1>التقرير السنوي</h1>
-            <h2>2023-2024</h2>
+            <div class="org-name">{org_name}</div>
+            <h1>التقرير السنوي عن أداء الجامعة</h1>
+            <div class="period">للعام الجامعي ({period})</div>
+            <div class="subtitle">حسب النموذج المعتمد في قرار مجلس التعليم العالي</div>
         </div>
         
         <div class="toc">
@@ -184,8 +231,9 @@ class FullReportGenerator:
         html += '''
             </ul>
         </div>
+        <div class="content">
 '''
-        
+
         # Content
         for axis_content in self.content:
             axis = axis_content['data']
@@ -207,6 +255,7 @@ class FullReportGenerator:
             html += '        </div>\n'
         
         html += f'''
+        </div><!-- end content -->
         <div class="footer">
             تم التوليد بواسطة نظام تقرير.ai<br>
             المحاور: {self.stats['axes']} | البنود: {self.stats['items']} | النصوص: {self.stats['texts']} | الجداول: {self.stats['tables']} | الأشكال: {self.stats['figures']}

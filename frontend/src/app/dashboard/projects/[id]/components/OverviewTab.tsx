@@ -16,12 +16,12 @@ export function OverviewTab({ project, actionLoading, updateStatus, handleInvite
   const currentStatus = statusConfig[project.status];
   const [showMore, setShowMore] = useState(false);
 
-  const nextStepConfig: Record<string, { message: string; label?: string; href?: string; action?: string; type: 'info' | 'success' | 'warning' }> = {
-    draft:      { message: 'المشروع في مرحلة الإعداد — أضف المساهمين وأرسل الدعوات', label: 'المساهمون', href: undefined, type: 'info' },
-    collecting: { message: 'جمع البيانات جارٍ — راجع تقدم المساهمين وانتظر اكتمال الإدخال', label: 'المساهمون', href: undefined, type: 'info' },
-    reviewing:  { message: 'البيانات مكتملة — ابنِ الهيكل HTML وراجع الجداول والأشكال قبل التوليد', label: 'الهيكل HTML', href: undefined, type: 'warning' },
-    generating: { message: 'بناء الهيكل جاهز — ولّد النصوص واعتمد الفقرات', label: 'توليد + مراجعة', href: undefined, type: 'info' },
-    published:  { message: 'التقرير منشور — صدّر النسخة النهائية', label: 'التصدير', href: undefined, type: 'success' },
+  const nextStepConfig: Record<string, { message: string; step: string; label?: string; href?: string; action?: string; type: 'info' | 'success' | 'warning' }> = {
+    draft:      { step: 'الخطوة 1 من 5', message: 'أضف المساهمين (الجهات المسؤولة) ثم أرسل لهم دعوات إدخال البيانات', label: 'انتقل لتبويب المساهمون ←', href: undefined, type: 'info' },
+    collecting: { step: 'الخطوة 2 من 5', message: 'المساهمون يدخلون بياناتهم — تابع التقدم وأرسل تذكيرات للمتأخرين', label: 'تابع تقدم المساهمين ←', href: undefined, type: 'info' },
+    reviewing:  { step: 'الخطوة 3 من 5', message: 'البيانات جاهزة — افتح تبويب "الهيكل" واضغط "بناء الهيكل" لإنشاء هيكل التقرير', label: 'انتقل لبناء الهيكل ←', href: undefined, type: 'warning' },
+    generating: { step: 'الخطوة 4 من 5', message: 'الهيكل جاهز — افتح تبويب "التوليد" واضغط "ولّد كل الفقرات" ثم راجع واعتمد كل فقرة', label: 'انتقل للتوليد والمراجعة ←', href: undefined, type: 'info' },
+    published:  { step: 'الخطوة 5 من 5', message: 'التقرير جاهز — افتح تبويب "التصدير" وحمّل النسخة النهائية بصيغة Word أو PDF', label: 'انتقل للتصدير ←', href: undefined, type: 'success' },
   };
 
   const ns = nextStepConfig[project.status];
@@ -125,7 +125,10 @@ export function OverviewTab({ project, actionLoading, updateStatus, handleInvite
         </div>
 
         {ns && (
-          <NextStep message={ns.message} actionLabel={ns.label} type={ns.type} />
+          <div className="mt-4">
+            <div className="text-xs font-bold text-blue-600 mb-1">{ns.step}</div>
+            <NextStep message={ns.message} actionLabel={ns.label} type={ns.type} />
+          </div>
         )}
       </div>
     </div>

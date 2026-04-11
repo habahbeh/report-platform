@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { api } from '@/lib/api';
 import { PageTransition, FadeIn } from '@/components/ui/motion';
+import { FileText, Hash, BarChart3, DollarSign, Calendar, Paperclip, ClipboardList, CheckSquare, AlignLeft } from 'lucide-react';
+import { ReactNode } from 'react';
 
 interface Template {
   id: number;
@@ -31,16 +33,16 @@ interface Item {
   order: number;
 }
 
-const fieldTypes: Record<string, { label: string; icon: string }> = {
-  text: { label: 'نص', icon: '📝' },
-  number: { label: 'رقم', icon: '🔢' },
-  percentage: { label: 'نسبة', icon: '📊' },
-  currency: { label: 'مبلغ', icon: '💰' },
-  date: { label: 'تاريخ', icon: '📅' },
-  file: { label: 'ملف', icon: '📎' },
-  select: { label: 'اختيار', icon: '📋' },
-  multiselect: { label: 'اختيار متعدد', icon: '☑️' },
-  textarea: { label: 'نص طويل', icon: '📄' },
+const fieldTypes: Record<string, { label: string; icon: ReactNode }> = {
+  text: { label: 'نص', icon: <FileText className="w-4 h-4" /> },
+  number: { label: 'رقم', icon: <Hash className="w-4 h-4" /> },
+  percentage: { label: 'نسبة', icon: <BarChart3 className="w-4 h-4" /> },
+  currency: { label: 'مبلغ', icon: <DollarSign className="w-4 h-4" /> },
+  date: { label: 'تاريخ', icon: <Calendar className="w-4 h-4" /> },
+  file: { label: 'ملف', icon: <Paperclip className="w-4 h-4" /> },
+  select: { label: 'اختيار', icon: <ClipboardList className="w-4 h-4" /> },
+  multiselect: { label: 'اختيار متعدد', icon: <CheckSquare className="w-4 h-4" /> },
+  textarea: { label: 'نص طويل', icon: <AlignLeft className="w-4 h-4" /> },
 };
 
 export default function TemplateStructurePage() {
@@ -223,7 +225,7 @@ export default function TemplateStructurePage() {
             ) : (
               <div className="space-y-3">
                 {items.map((item) => {
-                  const fieldType = fieldTypes[item.field_type] || { label: item.field_type, icon: '📝' };
+                  const fieldType = fieldTypes[item.field_type] || { label: item.field_type, icon: <FileText className="w-4 h-4" /> };
                   return (
                     <div
                       key={item.id}

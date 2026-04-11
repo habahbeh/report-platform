@@ -5,7 +5,7 @@ import { api } from '@/lib/api';
 import {
   Loader2, FileCode2, CheckCircle, AlertTriangle,
   ChevronDown, ChevronUp, RefreshCw, Play, Eye, X,
-  Settings2, Trash2, Plus, Save,
+  Settings2, Trash2, Plus, Save, FileText, Table2, BarChart3,
 } from 'lucide-react';
 
 interface SkeletonComponent {
@@ -46,10 +46,16 @@ interface Props {
   onMoveToGenerate: () => void;
 }
 
+const typeIcons = {
+  paragraph: FileText,
+  table: Table2,
+  chart: BarChart3,
+};
+
 const typeLabels = {
-  paragraph: { label: 'فقرة نصية (AI)', color: 'bg-purple-100 text-purple-700', icon: '📝' },
-  table:     { label: 'جدول بيانات',    color: 'bg-emerald-100 text-emerald-700', icon: '📋' },
-  chart:     { label: 'شكل بياني',      color: 'bg-amber-100 text-amber-700',    icon: '📊' },
+  paragraph: { label: 'فقرة نصية (AI)', color: 'bg-purple-100 text-purple-700' },
+  table:     { label: 'جدول بيانات',    color: 'bg-emerald-100 text-emerald-700' },
+  chart:     { label: 'شكل بياني',      color: 'bg-amber-100 text-amber-700' },
 };
 
 const chartTypeLabels: Record<string, string> = {
@@ -291,12 +297,12 @@ export function SkeletonTab({ projectId, projectStatus, onMoveToGenerate }: Prop
           <h3 className="font-semibold text-teal-800 dark:text-teal-300 mb-3">ما هو الهيكل؟</h3>
           <div className="grid gap-3 sm:grid-cols-3 text-sm">
             {[
-              { icon: '📋', title: 'جداول حقيقية', desc: 'مبنية من البيانات التي أدخلها المساهمون' },
-              { icon: '📊', title: 'أشكال بيانية', desc: 'مرسومة تلقائياً من البيانات' },
-              { icon: '📝', title: 'فراغات للنصوص', desc: 'يملأها الذكاء الاصطناعي في المرحلة التالية' },
-            ].map(({ icon, title, desc }) => (
+              { Icon: Table2, title: 'جداول حقيقية', desc: 'مبنية من البيانات التي أدخلها المساهمون' },
+              { Icon: BarChart3, title: 'أشكال بيانية', desc: 'مرسومة تلقائياً من البيانات' },
+              { Icon: FileText, title: 'فراغات للنصوص', desc: 'يملأها الذكاء الاصطناعي في المرحلة التالية' },
+            ].map(({ Icon, title, desc }) => (
               <div key={title} className="flex gap-2">
-                <span className="text-lg">{icon}</span>
+                <Icon className="w-5 h-5 text-teal-600 dark:text-teal-400 flex-shrink-0 mt-0.5" />
                 <div>
                   <div className="font-medium text-teal-700 dark:text-teal-400">{title}</div>
                   <div className="text-teal-600 dark:text-teal-500">{desc}</div>
@@ -386,7 +392,7 @@ export function SkeletonTab({ projectId, projectStatus, onMoveToGenerate }: Prop
                                 : 'border-amber-200 dark:border-amber-800 bg-amber-50/50 dark:bg-amber-900/10'
                             }`}
                           >
-                            <span className="text-lg flex-shrink-0">{typeInfo.icon}</span>
+                            {(() => { const Icon = typeIcons[comp.type as keyof typeof typeIcons]; return Icon ? <Icon className="w-5 h-5 flex-shrink-0 opacity-70" /> : null; })()}
                             <div className="flex-1 min-w-0">
                               <div className="flex items-center gap-2 mb-0.5 flex-wrap">
                                 <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${typeInfo.color}`}>
@@ -395,8 +401,8 @@ export function SkeletonTab({ projectId, projectStatus, onMoveToGenerate }: Prop
                                 </span>
                                 {comp.type !== 'paragraph' && (
                                   comp.has_data
-                                    ? <span className="text-xs text-emerald-600 font-medium">✓ جاهز</span>
-                                    : <span className="text-xs text-amber-600 font-medium">⚠ بيانات ناقصة</span>
+                                    ? <span className="text-xs text-emerald-600 font-medium flex items-center gap-1"><CheckCircle className="w-3 h-3" /> جاهز</span>
+                                    : <span className="text-xs text-amber-600 font-medium flex items-center gap-1"><AlertTriangle className="w-3 h-3" /> بيانات ناقصة</span>
                                 )}
                                 {comp.type === 'paragraph' && (
                                   <span className="text-xs text-purple-500">ينتظر الذكاء الاصطناعي</span>
@@ -455,7 +461,7 @@ export function SkeletonTab({ projectId, projectStatus, onMoveToGenerate }: Prop
                                   </button>
                                 </div>
 
-                                <span className="text-sm">{typeLabels[comp.type as keyof typeof typeLabels]?.icon || '?'}</span>
+                                {(() => { const Icon = typeIcons[comp.type as keyof typeof typeIcons]; return Icon ? <Icon className="w-4 h-4 opacity-60" /> : null; })()}
                                 <span className="text-xs flex-1 text-gray-700 dark:text-gray-300 truncate">
                                   {comp.title || (comp.type === 'paragraph' ? 'فقرة نصية' : comp.type === 'table' ? 'جدول' : 'شكل')}
                                 </span>

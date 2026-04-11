@@ -5,6 +5,7 @@ import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { api } from '@/lib/api';
 import { PageTransition } from '@/components/ui/motion';
+import { FileText, Bot, Table2, BarChart3, Image, Minus, Trash2, ArrowUp, ArrowDown, Pencil, Plus, Puzzle, Eye } from 'lucide-react';
 
 interface Item {
   id: number;
@@ -27,12 +28,12 @@ interface ItemComponent {
 }
 
 const componentTypes = [
-  { value: 'text', label: 'نص', icon: '📝', color: 'bg-gray-100' },
-  { value: 'text_ai', label: 'نص (AI)', icon: '🤖', color: 'bg-purple-100' },
-  { value: 'table', label: 'جدول', icon: '📊', color: 'bg-blue-100' },
-  { value: 'chart', label: 'رسم بياني', icon: '📈', color: 'bg-green-100' },
-  { value: 'image', label: 'صورة', icon: '🖼️', color: 'bg-yellow-100' },
-  { value: 'divider', label: 'فاصل', icon: '➖', color: 'bg-gray-50' },
+  { value: 'text', label: 'نص', icon: <FileText className="w-6 h-6" />, color: 'bg-gray-100' },
+  { value: 'text_ai', label: 'نص (AI)', icon: <Bot className="w-6 h-6" />, color: 'bg-purple-100' },
+  { value: 'table', label: 'جدول', icon: <Table2 className="w-6 h-6" />, color: 'bg-blue-100' },
+  { value: 'chart', label: 'رسم بياني', icon: <BarChart3 className="w-6 h-6" />, color: 'bg-green-100' },
+  { value: 'image', label: 'صورة', icon: <Image className="w-6 h-6" />, color: 'bg-yellow-100' },
+  { value: 'divider', label: 'فاصل', icon: <Minus className="w-6 h-6" />, color: 'bg-gray-50' },
 ];
 
 const sourceTypes = [
@@ -250,7 +251,7 @@ export default function ItemComponentsPage() {
             onClick={() => setShowAddModal(true)}
             className="btn btn-primary flex items-center gap-2"
           >
-            <span>➕</span>
+            <Plus className="w-4 h-4" />
             <span>إضافة مكوّن</span>
           </button>
         </div>
@@ -259,14 +260,14 @@ export default function ItemComponentsPage() {
       {/* Components List */}
       {components.length === 0 ? (
         <div className="card text-center py-12">
-          <div className="text-6xl mb-4">🧩</div>
+          <div className="mb-4"><Puzzle className="w-16 h-16 text-gray-300 mx-auto" /></div>
           <h3 className="text-xl font-bold text-gray-900 mb-2">لا توجد مكوّنات</h3>
           <p className="text-gray-500 mb-6">أضف المكوّنات لتحديد ترتيب محتوى البند</p>
           <button
             onClick={() => setShowAddModal(true)}
             className="btn btn-primary"
           >
-            ➕ إضافة مكوّن
+            إضافة مكوّن
           </button>
         </div>
       ) : (
@@ -308,26 +309,26 @@ export default function ItemComponentsPage() {
                     disabled={index === 0}
                     className="p-2 text-gray-400 hover:text-gray-600 disabled:opacity-30"
                   >
-                    ⬆️
+                    <ArrowUp className="w-4 h-4" />
                   </button>
                   <button
                     onClick={() => handleMoveComponent(comp.id, 'down')}
                     disabled={index === components.length - 1}
                     className="p-2 text-gray-400 hover:text-gray-600 disabled:opacity-30"
                   >
-                    ⬇️
+                    <ArrowDown className="w-4 h-4" />
                   </button>
                   <button
                     onClick={() => openEditModal(comp)}
                     className="p-2 text-blue-600 hover:text-blue-700"
                   >
-                    ✏️
+                    <Pencil className="w-4 h-4" />
                   </button>
                   <button
                     onClick={() => handleDeleteComponent(comp.id)}
                     className="p-2 text-red-600 hover:text-red-700"
                   >
-                    🗑️
+                    <Trash2 className="w-4 h-4" />
                   </button>
                 </div>
               </div>
@@ -338,7 +339,7 @@ export default function ItemComponentsPage() {
 
       {/* Preview */}
       <div className="card bg-gray-50">
-        <h3 className="font-bold text-gray-900 mb-4">🔮 معاينة التقرير</h3>
+        <h3 className="font-bold text-gray-900 mb-4 flex items-center gap-2"><Eye className="w-5 h-5" /> معاينة التقرير</h3>
         <div className="bg-white rounded-lg p-6 border">
           <h4 className="text-lg font-bold text-blue-800 mb-4">{item.code}: {item.name}</h4>
           {components.map((comp, index) => {
@@ -350,16 +351,16 @@ export default function ItemComponentsPage() {
                     [نص {comp.source === 'ai' ? 'سيُولّد بالذكاء الاصطناعي' : 'يدوي'}]
                   </p>
                 ) : comp.component_type === 'table' ? (
-                  <div className="bg-blue-50 p-4 rounded border-r-4 border-blue-400 text-center">
-                    📊 جدول {comp.title || `(${index + 1})`}
+                  <div className="bg-blue-50 p-4 rounded border-r-4 border-blue-400 text-center flex items-center justify-center gap-2">
+                    <Table2 className="w-5 h-5" /> جدول {comp.title || `(${index + 1})`}
                   </div>
                 ) : comp.component_type === 'chart' ? (
-                  <div className="bg-green-50 p-4 rounded border-r-4 border-green-400 text-center">
-                    📈 رسم بياني {comp.title || `(${index + 1})`}
+                  <div className="bg-green-50 p-4 rounded border-r-4 border-green-400 text-center flex items-center justify-center gap-2">
+                    <BarChart3 className="w-5 h-5" /> رسم بياني {comp.title || `(${index + 1})`}
                   </div>
                 ) : comp.component_type === 'image' ? (
-                  <div className="bg-yellow-50 p-4 rounded border-r-4 border-yellow-400 text-center">
-                    🖼️ صورة {comp.title || `(${index + 1})`}
+                  <div className="bg-yellow-50 p-4 rounded border-r-4 border-yellow-400 text-center flex items-center justify-center gap-2">
+                    <Image className="w-5 h-5" /> صورة {comp.title || `(${index + 1})`}
                   </div>
                 ) : (
                   <hr className="my-4" />

@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { api, setAuthToken } from '@/lib/api';
+import { BarChart3 } from 'lucide-react';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -68,8 +69,8 @@ export default function LoginPage() {
       <div className="w-full max-w-md">
         {/* Logo */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-blue-600 text-white text-2xl font-bold mb-4">
-            📊
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-blue-600 text-white mb-4">
+            <BarChart3 className="w-8 h-8" />
           </div>
           <h1 className="text-2xl font-bold text-gray-900">منصة توليد التقارير</h1>
           <p className="text-gray-600 mt-1">تقارير مؤسسية ذكية بالذكاء الاصطناعي</p>

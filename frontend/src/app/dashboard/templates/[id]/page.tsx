@@ -5,6 +5,7 @@ import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { api } from '@/lib/api';
 import { PageTransition, FadeIn } from '@/components/ui/motion';
+import { FileText, GraduationCap, Building2 } from 'lucide-react';
 
 interface Item {
   id: number;
@@ -196,7 +197,7 @@ export default function TemplateDetailPage() {
           <div className="text-sm text-gray-500">جهة</div>
         </div>
         <div className="card text-center">
-          <div className="text-3xl">📋</div>
+          <div><FileText className="w-8 h-8 text-gray-600" /></div>
           <div className="text-sm text-gray-500">{categoryLabels[template.category]}</div>
         </div>
       </div>
@@ -323,7 +324,7 @@ export default function TemplateDetailPage() {
             <div key={entity.id} className="card">
               <div className="flex items-start justify-between mb-3">
                 <div className="flex items-center gap-2">
-                  <span className="text-2xl">{entity.is_college ? '🎓' : '🏢'}</span>
+                  <span className="text-2xl">{entity.is_college ? <GraduationCap className="w-6 h-6" /> : <Building2 className="w-6 h-6" />}</span>
                   <div>
                     <div className="font-semibold text-gray-900">{entity.name}</div>
                     {entity.name_en && (

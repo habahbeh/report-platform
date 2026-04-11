@@ -1,4 +1,4 @@
-import { CheckCircle } from 'lucide-react';
+import { CheckCircle, ArrowLeft } from 'lucide-react';
 import { Project, statusConfig } from './types';
 
 // 7 workflow phases — maps to backend statuses
@@ -69,7 +69,7 @@ export function WorkflowStepper({ project, actionLoading, updateStatus }: Props)
             disabled={actionLoading}
             className="btn btn-primary text-sm"
           >
-            {actionLoading ? '...' : currentStatus.nextLabel} ←
+            {actionLoading ? '...' : currentStatus.nextLabel} <ArrowLeft className="w-4 h-4 inline-block mr-1" />
           </button>
         )}
       </div>
