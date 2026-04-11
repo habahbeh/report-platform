@@ -36,6 +36,9 @@ db.sqlite3
 *.swo
 .DS_Store
 
+# Word/Excel lock files
+~$*
+
 # Logs
 *.log
 npm-debug.log*
