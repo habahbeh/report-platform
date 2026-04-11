@@ -14,7 +14,7 @@ import { ExportTab } from './components/ExportTab';
 import {
   RefreshCw, ChevronRight, ChevronDown, ChevronUp,
   CheckCircle, Lock, Settings, Users, FileCode2,
-  Sparkles, Download, ClipboardList, ArrowLeft,
+  Sparkles, Download, ClipboardList, ArrowLeft, Layers,
 } from 'lucide-react';
 
 // ═══════════════════════════════════════
@@ -517,8 +517,16 @@ export default function ProjectDetailPage() {
         </div>
       )}
 
-      {/* ── Quick Stats ── */}
+      {/* ── Quick Stats + Structure Link ── */}
       <div className="flex flex-wrap items-center gap-x-5 gap-y-2 px-5 py-3 bg-white dark:bg-gray-900 rounded-xl border border-gray-100 dark:border-gray-800 text-sm">
+        <Link
+          href={`/dashboard/projects/${projectId}/structure`}
+          className="flex items-center gap-1.5 text-blue-600 hover:text-blue-700 font-medium transition-colors"
+        >
+          <Layers className="w-4 h-4" />
+          هيكل التقرير
+        </Link>
+        <div className="w-px h-4 bg-gray-200 dark:bg-gray-700 hidden sm:block" />
         <div className="flex items-center gap-2">
           <div className="w-2 h-2 rounded-full bg-blue-500" />
           <span className="text-gray-500">البيانات</span>
