@@ -107,6 +107,9 @@ export function Sidebar({ user, collapsed, onCollapse, onLogout, isMobile = fals
   };
 
   const isActive = (item: NavItem) => {
+    // If we're inside a specific project, don't highlight "المشاريع"
+    // The Active Project card handles that context
+    if (activeProjectId && item.href === '/dashboard/projects') return false;
     if (item.matchPrefix) return pathname.startsWith(item.href);
     return pathname === item.href;
   };
@@ -171,7 +174,7 @@ export function Sidebar({ user, collapsed, onCollapse, onLogout, isMobile = fals
     <TooltipProvider delayDuration={0}>
       <aside
         className={cn(
-          'h-screen flex flex-col border-e border-gray-200 dark:border-gray-800',
+          'h-screen flex flex-col border-e border-gray-200 dark:border-gray-800 overflow-hidden',
           isMobile
             ? 'relative w-[280px] max-w-[85vw] bg-white dark:bg-gray-950 shadow-2xl'
             : cn(
@@ -214,14 +217,14 @@ export function Sidebar({ user, collapsed, onCollapse, onLogout, isMobile = fals
 
           {/* Active Project Context */}
           {activeProject && !collapsed && (
-            <div className="my-3 px-2">
+            <div className="my-3">
               <div className="flex items-center gap-1.5 mb-2 px-1">
                 <div className="h-px flex-1 bg-gradient-to-r from-blue-200 to-transparent dark:from-blue-800" />
                 <span className="text-[10px] font-bold text-blue-600 dark:text-blue-400 uppercase tracking-wider">المشروع النشط</span>
                 <div className="h-px flex-1 bg-gradient-to-l from-blue-200 to-transparent dark:from-blue-800" />
               </div>
 
-              <div className="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-950/20 dark:to-indigo-950/20 rounded-xl p-3 border border-blue-100 dark:border-blue-900/30">
+              <div className="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-950/20 dark:to-indigo-950/20 rounded-xl p-3 border border-blue-100 dark:border-blue-900/30 overflow-hidden">
                 {/* Project name */}
                 <div className="flex items-start gap-2 mb-2">
                   <div className="w-7 h-7 rounded-lg bg-blue-600 flex items-center justify-center shrink-0">
