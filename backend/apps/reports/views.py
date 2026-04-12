@@ -163,13 +163,13 @@ class ProjectViewSet(viewsets.ModelViewSet):
 
     @action(detail=True, methods=['post'])
     def generate(self, request, pk=None):
-        """Generate the final report"""
+        """Generate the final report using FullReportGenerator (branded)"""
         import threading
+        import os
+        from pathlib import Path
+        from django.conf import settings
         from django.core.files.base import ContentFile
-        from apps.export.services import (
-            export_project_to_word, export_project_to_pdf,
-            get_project_export_filename
-        )
+        from apps.export.full_report_generator import FullReportGenerator
 
         project = self.get_object()
 
@@ -191,20 +191,30 @@ class ProjectViewSet(viewsets.ModelViewSet):
 
         def do_generate():
             try:
-                if format_type == 'pdf':
-                    buffer = export_project_to_pdf(project, generated_report)
-                    if buffer is None:
-                        generated_report.status = 'failed'
-                        generated_report.error_message = 'PDF غير متاح - WeasyPrint غير مثبت'
-                        generated_report.save()
-                        return
-                else:
-                    buffer = export_project_to_word(project, generated_report)
+                # Generate using FullReportGenerator (branded + project-aware)
+                output_dir = Path(settings.MEDIA_ROOT) / 'generated' / str(project.id)
+                output_dir.mkdir(parents=True, exist_ok=True)
 
-                # Save file
-                filename = get_project_export_filename(project, format_type)
-                generated_report.file.save(filename, ContentFile(buffer.getvalue()))
-                generated_report.file_size = len(buffer.getvalue())
+                generator = FullReportGenerator(
+                    project=project,
+                    output_dir=str(output_dir)
+                )
+                results = generator.generate(formats=format_type)
+
+                # Get the generated file path
+                file_path = results.get(format_type)
+                if not file_path or not os.path.exists(file_path):
+                    generated_report.status = 'failed'
+                    generated_report.error_message = f'فشل توليد ملف {format_type}'
+                    generated_report.save()
+                    return
+
+                # Save file to GeneratedReport
+                with open(file_path, 'rb') as f:
+                    file_content = f.read()
+                filename = os.path.basename(file_path)
+                generated_report.file.save(filename, ContentFile(file_content))
+                generated_report.file_size = len(file_content)
                 generated_report.status = 'completed'
                 generated_report.completed_at = timezone.now()
                 generated_report.save()
@@ -215,8 +225,9 @@ class ProjectViewSet(viewsets.ModelViewSet):
                 project.save(update_fields=['status', 'published_at'])
 
             except Exception as e:
+                import traceback
                 generated_report.status = 'failed'
-                generated_report.error_message = str(e)
+                generated_report.error_message = f'{str(e)}\n{traceback.format_exc()}'
                 generated_report.save()
 
         # Run in background thread (for demo - use Celery in production)

@@ -42,26 +42,51 @@ class FullReportGenerator:
     def generate(self, include_toc: bool = True, formats: str = 'all') -> dict:
         """
         Generate full report document.
-        
+
+        Uses project-specific data when available:
+        - GeneratedContent for AI-generated paragraph text
+        - TableData for contributor-submitted table rows
+        - ItemStructure for modified component ordering
+        Falls back to template defaults when project data is not available.
+
         Args:
-            formats: 'html', 'docx', or 'all'
-        
+            formats: 'html', 'docx', 'pdf', or 'all'
+
         Returns:
-            Dict with paths: {'html': '...', 'docx': '...'}
+            Dict with paths: {'html': '...', 'docx': '...', 'pdf': '...'}
         """
         from apps.templates_app.models import Axis, Item, ItemComponent
-        
+        from apps.reports.models import ItemStructure, GeneratedContent, TableData
+
         timestamp = datetime.now().strftime('%Y%m%d_%H%M')
         results = {}
-        
-        # Collect all content first
+
+        # Pre-load project-specific data for efficient lookups
+        self.generated_contents = {}  # {(item_id, component_id): GeneratedContent}
+        self.table_data = {}  # {(item_id, table_def_id): TableData}
+
+        if self.project:
+            # Load all GeneratedContent for this project
+            for gc in GeneratedContent.objects.filter(project=self.project).select_related('item_structure__item'):
+                key = (gc.item_structure.item_id, gc.component_id)
+                self.generated_contents[key] = gc
+
+            # Load all TableData for this project
+            for td in TableData.objects.filter(project=self.project).select_related('table_definition'):
+                key = (td.table_definition.id if td.table_definition else None,)
+                self.table_data[key] = td
+
+        # Collect all content — FILTERED BY PROJECT TEMPLATE
         self.content = []
-        axes = Axis.objects.all().order_by('order')
-        
+        if self.project and self.project.template:
+            axes = Axis.objects.filter(template=self.project.template).order_by('order')
+        else:
+            axes = Axis.objects.all().order_by('order')
+
         for axis in axes:
             self.stats['axes'] += 1
             axis_content = {'type': 'axis', 'data': axis, 'items': []}
-            
+
             items = sorted(Item.objects.filter(axis=axis), key=lambda i: [int(x) for x in i.code.split('.') if x.isdigit()])
             for item in items:
                 self.stats['items'] += 1
@@ -70,7 +95,7 @@ class FullReportGenerator:
                     'item': item,
                     'components': list(components)
                 })
-            
+
             self.content.append(axis_content)
         
         # Generate HTML
@@ -248,7 +273,7 @@ class FullReportGenerator:
                 <h3 class="item-title">{item.code}: {item.name}</h3>
 '''
                 for comp in item_data['components']:
-                    html += self._component_to_html(comp)
+                    html += self._component_to_html(comp, item=item)
                 
                 html += '            </div>\n'
             
@@ -267,21 +292,47 @@ class FullReportGenerator:
         with open(output_path, 'w', encoding='utf-8') as f:
             f.write(html)
     
-    def _component_to_html(self, comp) -> str:
-        """Convert component to HTML."""
+    def _component_to_html(self, comp, item=None) -> str:
+        """Convert component to HTML.
+
+        Prefers project data (GeneratedContent, TableData) over template defaults.
+        """
         config = comp.config or {}
-        
-        if comp.component_type == 'text':
-            content = config.get('full_text', '') or config.get('preview', '')
+
+        if comp.component_type in ('text', 'text_ai'):
+            # 1. Try GeneratedContent (AI-generated or user-edited) first
+            content = ''
+            if item and comp.ref_id:
+                gc = self.generated_contents.get((item.id, comp.ref_id))
+                if gc and gc.status in ('generated', 'edited', 'approved'):
+                    content = gc.manual_edit or gc.content
+
+            # 2. Fall back to template's original text
+            if not content:
+                content = config.get('full_text', '') or config.get('preview', '')
+
             if content:
                 self.stats['texts'] += 1
                 return f'<p class="text">{content}</p>\n'
-        
+
         elif comp.component_type == 'table':
-            extracted = config.get('extracted_data', {})
-            headers = extracted.get('headers', [])
-            data_rows = extracted.get('data', [])
-            
+            # 1. Try TableData (contributor-submitted) first
+            headers = []
+            data_rows = []
+            if comp.table_ref_id:
+                td = self.table_data.get((comp.table_ref_id,))
+                if td and td.rows:
+                    # TableData.rows format: list of dicts or lists
+                    if td.table_definition and td.table_definition.columns:
+                        headers = [c.get('name', c) if isinstance(c, dict) else c for c in td.table_definition.columns]
+                    data_rows = td.rows
+
+            # 2. Fall back to template's extracted_data
+            if not (headers and data_rows):
+                extracted = config.get('extracted_data', {})
+                headers = extracted.get('headers', [])
+                data_rows = extracted.get('data', [])
+
             if headers and data_rows:
                 self.stats['tables'] += 1
                 html = '<div class="table-container">\n'
@@ -291,14 +342,14 @@ class FullReportGenerator:
                 for h in headers:
                     html += f'<th>{h}</th>'
                 html += '</tr></thead><tbody>\n'
-                
+
                 for row in data_rows[:100]:
                     html += '<tr>'
                     for j, h in enumerate(headers):
                         val = row[j] if isinstance(row, list) and j < len(row) else row.get(h, '') if isinstance(row, dict) else ''
                         html += f'<td>{val}</td>'
                     html += '</tr>\n'
-                
+
                 html += '</tbody></table>\n'
                 if len(data_rows) > 100:
                     html += f'<p style="text-align:center;font-size:12px;color:#666;">... و {len(data_rows)-100} صف إضافي</p>\n'
