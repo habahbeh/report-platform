@@ -209,6 +209,16 @@ export const api = {
         method: 'POST',
         body: JSON.stringify({ format: format || 'docx', options }),
       }),
+    generateAxis: (id: string, axisCode: string, format: string = 'html') =>
+      fetchAPI(`/reports/projects/${id}/generate/`, {
+        method: 'POST',
+        body: JSON.stringify({ format, axis_code: axisCode }),
+      }),
+    generateItem: (id: string, itemCode: string, format: string = 'html') =>
+      fetchAPI(`/reports/projects/${id}/generate/`, {
+        method: 'POST',
+        body: JSON.stringify({ format, item_code: itemCode }),
+      }),
     reports: (id: string) => fetchAPI(`/reports/projects/${id}/reports/`),
 
     // Skeleton-First Workflow

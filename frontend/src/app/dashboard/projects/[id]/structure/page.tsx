@@ -8,7 +8,7 @@ import { PageTransition } from '@/components/ui/motion';
 import {
   ChevronRight, ChevronDown, ChevronUp, CheckCircle,
   AlertCircle, Clock, FileText, Table2, BarChart3,
-  Heading, Loader2, ArrowLeft, Layers,
+  Heading, Loader2, ArrowLeft, Layers, Download, FileDown, Code,
 } from 'lucide-react';
 
 // ═══════════════════════════════════════
@@ -101,6 +101,65 @@ export default function ProjectStructurePage() {
   const [loading, setLoading] = useState(true);
   const [expandedAxes, setExpandedAxes] = useState<Set<string>>(new Set());
   const [expandedItems, setExpandedItems] = useState<Set<string>>(new Set());
+  const [generating, setGenerating] = useState<{ type: 'axis' | 'item'; code: string } | null>(null);
+  const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' | 'info' } | null>(null);
+
+  function showToast(message: string, type: 'success' | 'error' | 'info' = 'info') {
+    setToast({ message, type });
+    setTimeout(() => setToast(null), 5000);
+  }
+
+  async function handleExportAxis(axisCode: string, format: 'html' | 'docx' | 'pdf' = 'html', e?: React.MouseEvent) {
+    if (e) e.stopPropagation();
+    setGenerating({ type: 'axis', code: axisCode });
+    try {
+      const result = await api.projects.generateAxis(projectId, axisCode, format);
+      showToast(`بدأ توليد محور ${axisCode}. ستظهر في تبويب التصدير عند الانتهاء.`, 'success');
+      // Poll for completion and auto-download
+      pollForReport(result.report_id);
+    } catch (e: any) {
+      showToast(e.message || 'فشل التوليد', 'error');
+    } finally {
+      setTimeout(() => setGenerating(null), 1500);
+    }
+  }
+
+  async function handleExportItem(itemCode: string, format: 'html' | 'docx' | 'pdf' = 'html', e?: React.MouseEvent) {
+    if (e) e.stopPropagation();
+    setGenerating({ type: 'item', code: itemCode });
+    try {
+      const result = await api.projects.generateItem(projectId, itemCode, format);
+      showToast(`بدأ توليد البند ${itemCode}. ستظهر في تبويب التصدير عند الانتهاء.`, 'success');
+      pollForReport(result.report_id);
+    } catch (e: any) {
+      showToast(e.message || 'فشل التوليد', 'error');
+    } finally {
+      setTimeout(() => setGenerating(null), 1500);
+    }
+  }
+
+  function pollForReport(reportId: string) {
+    const interval = setInterval(async () => {
+      try {
+        const reports = await api.projects.reports(projectId);
+        const report = Array.isArray(reports) ? reports.find((r: any) => r.id === reportId) : null;
+        if (report && report.status === 'completed' && report.file) {
+          clearInterval(interval);
+          // Open the file in a new tab
+          const url = report.file.startsWith('http') ? report.file : `http://localhost:8002${report.file}`;
+          window.open(url, '_blank');
+          showToast('تم توليد التقرير! فتحناه في تبويب جديد.', 'success');
+        } else if (report && report.status === 'failed') {
+          clearInterval(interval);
+          showToast(`فشل التوليد: ${report.error_message || 'خطأ غير معروف'}`, 'error');
+        }
+      } catch {
+        clearInterval(interval);
+      }
+    }, 2000);
+    // Stop polling after 2 minutes
+    setTimeout(() => clearInterval(interval), 120000);
+  }
 
   useEffect(() => {
     async function load() {
@@ -252,22 +311,61 @@ export default function ProjectStructurePage() {
           const axisItemsCount = axis.items.length;
           const axisComponents = axis.items.reduce((sum, i) => sum + i.components.length, 0);
 
+          const isGeneratingAxis = generating?.type === 'axis' && generating.code === axis.code;
+
           return (
             <div key={axis.code} className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm overflow-hidden">
               {/* Axis header */}
-              <button
-                onClick={() => toggleAxis(axis.code)}
-                className="w-full flex items-center gap-3 px-5 py-4 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
-              >
-                <div className="w-10 h-10 rounded-xl bg-blue-600 text-white flex items-center justify-center font-bold text-lg shrink-0">
-                  {axis.code}
+              <div className="flex items-center gap-2 px-5 py-4 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                <button
+                  onClick={() => toggleAxis(axis.code)}
+                  className="flex items-center gap-3 flex-1 text-right"
+                >
+                  <div className="w-10 h-10 rounded-xl bg-blue-600 text-white flex items-center justify-center font-bold text-lg shrink-0">
+                    {axis.code}
+                  </div>
+                  <div className="flex-1 text-right">
+                    <div className="font-bold text-gray-900 dark:text-white">المحور {axis.code}: {axis.name}</div>
+                    <div className="text-xs text-gray-500 mt-0.5">{axisItemsCount} بند · {axisComponents} مكون</div>
+                  </div>
+                </button>
+                {/* Axis export buttons */}
+                <div className="flex items-center gap-1 shrink-0">
+                  {isGeneratingAxis ? (
+                    <div className="flex items-center gap-1.5 text-xs text-blue-600 px-2">
+                      <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                      جارٍ التوليد...
+                    </div>
+                  ) : (
+                    <>
+                      <button
+                        onClick={(e) => handleExportAxis(axis.code, 'html', e)}
+                        title="تصدير المحور كـ HTML"
+                        className="p-2 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-950/30 text-blue-600 transition-colors"
+                      >
+                        <Code className="w-4 h-4" />
+                      </button>
+                      <button
+                        onClick={(e) => handleExportAxis(axis.code, 'docx', e)}
+                        title="تصدير المحور كـ Word"
+                        className="p-2 rounded-lg hover:bg-indigo-50 dark:hover:bg-indigo-950/30 text-indigo-600 transition-colors"
+                      >
+                        <FileText className="w-4 h-4" />
+                      </button>
+                      <button
+                        onClick={(e) => handleExportAxis(axis.code, 'pdf', e)}
+                        title="تصدير المحور كـ PDF"
+                        className="p-2 rounded-lg hover:bg-red-50 dark:hover:bg-red-950/30 text-red-600 transition-colors"
+                      >
+                        <FileDown className="w-4 h-4" />
+                      </button>
+                    </>
+                  )}
+                  <button onClick={() => toggleAxis(axis.code)} className="p-1">
+                    {isExpanded ? <ChevronUp className="w-5 h-5 text-gray-400" /> : <ChevronDown className="w-5 h-5 text-gray-400" />}
+                  </button>
                 </div>
-                <div className="flex-1 text-right">
-                  <div className="font-bold text-gray-900 dark:text-white">المحور {axis.code}: {axis.name}</div>
-                  <div className="text-xs text-gray-500 mt-0.5">{axisItemsCount} بند · {axisComponents} مكون</div>
-                </div>
-                {isExpanded ? <ChevronUp className="w-5 h-5 text-gray-400" /> : <ChevronDown className="w-5 h-5 text-gray-400" />}
-              </button>
+              </div>
 
               {/* Items */}
               {isExpanded && (
@@ -278,38 +376,76 @@ export default function ProjectStructurePage() {
                     const itemApproved = itemGC.filter(gc => gc.status === 'approved').length;
                     const itemGenerated = itemGC.filter(gc => ['generated', 'edited', 'approved'].includes(gc.status)).length;
                     const itemParagraphs = item.paragraphs_count;
+                    const isGeneratingItem = generating?.type === 'item' && generating.code === item.item_code;
 
                     return (
                       <div key={item.id} className="border-b border-gray-50 dark:border-gray-800 last:border-b-0">
                         {/* Item header */}
-                        <button
-                          onClick={() => toggleItem(item.id)}
-                          className="w-full flex items-center gap-3 px-5 py-3 pr-14 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors"
-                        >
-                          <div className="w-8 h-8 rounded-lg bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 flex items-center justify-center text-sm font-bold shrink-0">
-                            {item.item_code}
-                          </div>
-                          <div className="flex-1 text-right min-w-0">
-                            <div className="text-sm font-semibold text-gray-800 dark:text-gray-200 truncate">{item.item_name}</div>
-                            <div className="flex items-center gap-3 mt-1 text-xs text-gray-400">
-                              {item.paragraphs_count > 0 && <span className="flex items-center gap-1"><FileText className="w-3 h-3" />{item.paragraphs_count}</span>}
-                              {item.tables_count > 0 && <span className="flex items-center gap-1"><Table2 className="w-3 h-3" />{item.tables_count}</span>}
-                              {item.charts_count > 0 && <span className="flex items-center gap-1"><BarChart3 className="w-3 h-3" />{item.charts_count}</span>}
-                              {itemParagraphs > 0 && (
-                                <span className={`px-1.5 py-0.5 rounded text-xs font-medium ${
-                                  itemApproved === itemParagraphs ? 'bg-emerald-100 text-emerald-700' :
-                                  itemGenerated > 0 ? 'bg-purple-100 text-purple-700' :
-                                  'bg-gray-100 text-gray-500'
-                                }`}>
-                                  {itemApproved === itemParagraphs ? 'مكتمل' :
-                                   itemGenerated > 0 ? `${itemGenerated}/${itemParagraphs}` :
-                                   'لم يُولّد'}
-                                </span>
-                              )}
+                        <div className="flex items-center gap-2 px-5 py-3 pr-14 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
+                          <button
+                            onClick={() => toggleItem(item.id)}
+                            className="flex items-center gap-3 flex-1 text-right min-w-0"
+                          >
+                            <div className="w-8 h-8 rounded-lg bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 flex items-center justify-center text-sm font-bold shrink-0">
+                              {item.item_code}
                             </div>
+                            <div className="flex-1 text-right min-w-0">
+                              <div className="text-sm font-semibold text-gray-800 dark:text-gray-200 truncate">{item.item_name}</div>
+                              <div className="flex items-center gap-3 mt-1 text-xs text-gray-400">
+                                {item.paragraphs_count > 0 && <span className="flex items-center gap-1"><FileText className="w-3 h-3" />{item.paragraphs_count}</span>}
+                                {item.tables_count > 0 && <span className="flex items-center gap-1"><Table2 className="w-3 h-3" />{item.tables_count}</span>}
+                                {item.charts_count > 0 && <span className="flex items-center gap-1"><BarChart3 className="w-3 h-3" />{item.charts_count}</span>}
+                                {itemParagraphs > 0 && (
+                                  <span className={`px-1.5 py-0.5 rounded text-xs font-medium ${
+                                    itemApproved === itemParagraphs ? 'bg-emerald-100 text-emerald-700' :
+                                    itemGenerated > 0 ? 'bg-purple-100 text-purple-700' :
+                                    'bg-gray-100 text-gray-500'
+                                  }`}>
+                                    {itemApproved === itemParagraphs ? 'مكتمل' :
+                                     itemGenerated > 0 ? `${itemGenerated}/${itemParagraphs}` :
+                                     'لم يُولّد'}
+                                  </span>
+                                )}
+                              </div>
+                            </div>
+                          </button>
+                          {/* Item export buttons */}
+                          <div className="flex items-center gap-0.5 shrink-0">
+                            {isGeneratingItem ? (
+                              <div className="flex items-center gap-1 text-[10px] text-blue-600 px-2">
+                                <Loader2 className="w-3 h-3 animate-spin" />
+                                جارٍ...
+                              </div>
+                            ) : (
+                              <>
+                                <button
+                                  onClick={(e) => handleExportItem(item.item_code, 'html', e)}
+                                  title="تصدير البند كـ HTML"
+                                  className="p-1.5 rounded-md hover:bg-blue-50 dark:hover:bg-blue-950/30 text-blue-600 transition-colors"
+                                >
+                                  <Code className="w-3.5 h-3.5" />
+                                </button>
+                                <button
+                                  onClick={(e) => handleExportItem(item.item_code, 'docx', e)}
+                                  title="تصدير البند كـ Word"
+                                  className="p-1.5 rounded-md hover:bg-indigo-50 dark:hover:bg-indigo-950/30 text-indigo-600 transition-colors"
+                                >
+                                  <FileText className="w-3.5 h-3.5" />
+                                </button>
+                                <button
+                                  onClick={(e) => handleExportItem(item.item_code, 'pdf', e)}
+                                  title="تصدير البند كـ PDF"
+                                  className="p-1.5 rounded-md hover:bg-red-50 dark:hover:bg-red-950/30 text-red-600 transition-colors"
+                                >
+                                  <FileDown className="w-3.5 h-3.5" />
+                                </button>
+                              </>
+                            )}
+                            <button onClick={() => toggleItem(item.id)} className="p-1">
+                              {isItemExpanded ? <ChevronUp className="w-4 h-4 text-gray-400" /> : <ChevronDown className="w-4 h-4 text-gray-400" />}
+                            </button>
                           </div>
-                          {isItemExpanded ? <ChevronUp className="w-4 h-4 text-gray-400" /> : <ChevronDown className="w-4 h-4 text-gray-400" />}
-                        </button>
+                        </div>
 
                         {/* Components (leaf level) */}
                         {isItemExpanded && (
@@ -380,6 +516,22 @@ export default function ProjectStructurePage() {
           <Link href={`/dashboard/projects/${projectId}`} className="btn btn-primary mt-4 inline-flex items-center gap-2">
             <ArrowLeft className="w-4 h-4" /> العودة للمشروع
           </Link>
+        </div>
+      )}
+
+      {/* Toast notification */}
+      {toast && (
+        <div className="fixed bottom-6 left-6 z-50 animate-in slide-in-from-bottom-4">
+          <div className={`px-4 py-3 rounded-xl shadow-2xl flex items-center gap-3 min-w-[280px] ${
+            toast.type === 'success' ? 'bg-emerald-50 border border-emerald-200 text-emerald-700 dark:bg-emerald-900/30 dark:border-emerald-700' :
+            toast.type === 'error'   ? 'bg-red-50 border border-red-200 text-red-700 dark:bg-red-900/30 dark:border-red-700' :
+                                       'bg-blue-50 border border-blue-200 text-blue-700 dark:bg-blue-900/30 dark:border-blue-700'
+          }`}>
+            {toast.type === 'success' ? <CheckCircle className="w-5 h-5 shrink-0" /> :
+             toast.type === 'error'   ? <AlertCircle className="w-5 h-5 shrink-0" /> :
+                                       <Loader2 className="w-5 h-5 shrink-0 animate-spin" />}
+            <span className="text-sm font-medium">{toast.message}</span>
+          </div>
         </div>
       )}
     </div>

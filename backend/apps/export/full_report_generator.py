@@ -39,7 +39,13 @@ class FullReportGenerator:
             'figures': 0,
         }
     
-    def generate(self, include_toc: bool = True, formats: str = 'all') -> dict:
+    def generate(
+        self,
+        include_toc: bool = True,
+        formats: str = 'all',
+        axis_codes: list = None,
+        item_codes: list = None,
+    ) -> dict:
         """
         Generate full report document.
 
@@ -51,6 +57,8 @@ class FullReportGenerator:
 
         Args:
             formats: 'html', 'docx', 'pdf', or 'all'
+            axis_codes: Optional list of axis codes to include (e.g. ['1', '3'])
+            item_codes: Optional list of item codes to include (e.g. ['1.1', '3.5'])
 
         Returns:
             Dict with paths: {'html': '...', 'docx': '...', 'pdf': '...'}
@@ -61,33 +69,45 @@ class FullReportGenerator:
         timestamp = datetime.now().strftime('%Y%m%d_%H%M')
         results = {}
 
+        # Suffix for partial reports
+        suffix = ''
+        if item_codes:
+            suffix = f"_بند_{item_codes[0].replace('.', '_')}"
+        elif axis_codes:
+            suffix = f"_محور_{axis_codes[0]}"
+
         # Pre-load project-specific data for efficient lookups
         self.generated_contents = {}  # {(item_id, component_id): GeneratedContent}
-        self.table_data = {}  # {(item_id, table_def_id): TableData}
+        self.table_data = {}  # {(table_def_id,): TableData}
 
         if self.project:
-            # Load all GeneratedContent for this project
             for gc in GeneratedContent.objects.filter(project=self.project).select_related('item_structure__item'):
                 key = (gc.item_structure.item_id, gc.component_id)
                 self.generated_contents[key] = gc
 
-            # Load all TableData for this project
             for td in TableData.objects.filter(project=self.project).select_related('table_definition'):
                 key = (td.table_definition.id if td.table_definition else None,)
                 self.table_data[key] = td
 
-        # Collect all content — FILTERED BY PROJECT TEMPLATE
+        # Collect content — filtered by project template + optional axis/item filters
         self.content = []
         if self.project and self.project.template:
-            axes = Axis.objects.filter(template=self.project.template).order_by('order')
+            axes_qs = Axis.objects.filter(template=self.project.template).order_by('order')
         else:
-            axes = Axis.objects.all().order_by('order')
+            axes_qs = Axis.objects.all().order_by('order')
 
-        for axis in axes:
+        if axis_codes:
+            axes_qs = axes_qs.filter(code__in=axis_codes)
+
+        for axis in axes_qs:
             self.stats['axes'] += 1
             axis_content = {'type': 'axis', 'data': axis, 'items': []}
 
-            items = sorted(Item.objects.filter(axis=axis), key=lambda i: [int(x) for x in i.code.split('.') if x.isdigit()])
+            items_qs = Item.objects.filter(axis=axis)
+            if item_codes:
+                items_qs = items_qs.filter(code__in=item_codes)
+
+            items = sorted(items_qs, key=lambda i: [int(x) for x in i.code.split('.') if x.isdigit()])
             for item in items:
                 self.stats['items'] += 1
                 components = ItemComponent.objects.filter(item=item).order_by('order')
@@ -96,11 +116,13 @@ class FullReportGenerator:
                     'components': list(components)
                 })
 
-            self.content.append(axis_content)
+            # Only include axis if it has items after filtering
+            if axis_content['items']:
+                self.content.append(axis_content)
         
         # Generate HTML
         if formats in ('html', 'all'):
-            html_path = self.output_dir / f"التقرير_السنوي_{timestamp}.html"
+            html_path = self.output_dir / f"التقرير_السنوي{suffix}_{timestamp}.html"
             self._generate_html(html_path)
             results['html'] = str(html_path)
         
@@ -117,19 +139,19 @@ class FullReportGenerator:
                 for item_data in axis_content['items']:
                     self._add_item_from_data(item_data)
 
-            docx_path = self.output_dir / f"التقرير_السنوي_{timestamp}.docx"
+            docx_path = self.output_dir / f"التقرير_السنوي{suffix}_{timestamp}.docx"
             self.doc.save(str(docx_path))
             results['docx'] = str(docx_path)
 
         # Generate PDF (from HTML via WeasyPrint)
         if formats in ('pdf', 'all'):
             # Ensure HTML exists first
-            html_path = self.output_dir / f"التقرير_السنوي_{timestamp}.html"
+            html_path = self.output_dir / f"التقرير_السنوي{suffix}_{timestamp}.html"
             if not html_path.exists():
                 self._generate_html(html_path)
             try:
                 import weasyprint
-                pdf_path = self.output_dir / f"التقرير_السنوي_{timestamp}.pdf"
+                pdf_path = self.output_dir / f"التقرير_السنوي{suffix}_{timestamp}.pdf"
                 weasyprint.HTML(filename=str(html_path)).write_pdf(str(pdf_path))
                 results['pdf'] = str(pdf_path)
             except Exception as e:

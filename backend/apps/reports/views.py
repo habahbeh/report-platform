@@ -176,18 +176,26 @@ class ProjectViewSet(viewsets.ModelViewSet):
         format_type = request.data.get('format', 'docx')
         options = request.data.get('options', {})
 
+        # Optional: generate only specific axis or item
+        axis_code = request.data.get('axis_code')
+        item_code = request.data.get('item_code')
+        axis_codes = [axis_code] if axis_code else None
+        item_codes = [item_code] if item_code else None
+
         # Create GeneratedReport record
         generated_report = GeneratedReport.objects.create(
             project=project,
             format=format_type,
-            options=options,
+            options={**options, 'axis_code': axis_code, 'item_code': item_code},
             status='processing',
             current_step='بدء التوليد',
             created_by=request.user if request.user.is_authenticated else None
         )
 
-        project.status = 'generating'
-        project.save(update_fields=['status'])
+        # Only transition to 'generating' for full report exports
+        if not axis_code and not item_code:
+            project.status = 'generating'
+            project.save(update_fields=['status'])
 
         def do_generate():
             try:
@@ -199,7 +207,11 @@ class ProjectViewSet(viewsets.ModelViewSet):
                     project=project,
                     output_dir=str(output_dir)
                 )
-                results = generator.generate(formats=format_type)
+                results = generator.generate(
+                    formats=format_type,
+                    axis_codes=axis_codes,
+                    item_codes=item_codes,
+                )
 
                 # Get the generated file path
                 file_path = results.get(format_type)
@@ -219,10 +231,11 @@ class ProjectViewSet(viewsets.ModelViewSet):
                 generated_report.completed_at = timezone.now()
                 generated_report.save()
 
-                # Update project status
-                project.status = 'published'
-                project.published_at = timezone.now()
-                project.save(update_fields=['status', 'published_at'])
+                # Only publish project for full report exports
+                if not axis_code and not item_code:
+                    project.status = 'published'
+                    project.published_at = timezone.now()
+                    project.save(update_fields=['status', 'published_at'])
 
             except Exception as e:
                 import traceback
